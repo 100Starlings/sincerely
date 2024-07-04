@@ -1,0 +1,40 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.4.4
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:3.3.0
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            gem install bundler
+            bundle install --jobs=4 --retry=3
+      - run:
+          name: RuboCop
+          command: |
+            bundle exec rubocop
+      - run:
+          name: RSpec
+          command: |
+            bundle exec rspec
+
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
+workflows:
+  version: 2
+  build_and_notify:
+    jobs:
+      - build:
+          context:
+            - SLACK_ACCESS_TOKEN
