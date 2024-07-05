@@ -2,7 +2,7 @@
 
 ENV['RAILS_ENV'] = 'test'
 
-require 'notifications'
+require 'sincerely'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|

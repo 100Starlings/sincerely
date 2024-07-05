@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'notifications/version'
+require_relative 'sincerely/version'
 
-module Notifications
+module Sincerely
   class Error < StandardError; end
   # Your code goes here...
 end
