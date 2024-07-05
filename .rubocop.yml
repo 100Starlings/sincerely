@@ -1,0 +1,14 @@
+require:
+  - rubocop-rspec
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1.X
+
+Documentation:
+  Enabled: false
+Layout/LineLength:
+  Max: 120
+RSpec/NestedGroups:
+  Enabled: false
