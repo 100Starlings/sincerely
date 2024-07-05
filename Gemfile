@@ -10,7 +10,6 @@ group :development, :test do
   gem 'bundler'
   gem 'database_cleaner-active_record'
   gem 'generator_spec'
-  gem 'pry'
   gem 'rails'
   gem 'rspec'
   gem 'rubocop'
