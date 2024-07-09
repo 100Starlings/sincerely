@@ -25,7 +25,7 @@ rails g sincerely:install
 
 2. Now let's generate and run a migration to create the `notifications` table and the `Notification` model:
 ```bash
-rails g sincerely:migration NOTIFICATION
+rails g sincerely:migration Notification
 
 rails db:migrate
 ```
