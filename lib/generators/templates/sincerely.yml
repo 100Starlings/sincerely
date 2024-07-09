@@ -1,0 +1,14 @@
+defaults: &defaults
+  model_name: Notification
+
+test:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults

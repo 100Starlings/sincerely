@@ -1,39 +1,47 @@
-# Notifications
+# Sincerely
+## Introduction
+Sincerely is a versatile Ruby gem designed for ...
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/notifications`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Table of Contents
+1. [Installation](#installation)
+2. [Getting Started](#getting-started)
+3. [How to Run Tests](#how-to-run-tests)
+4. [Guide for Contributing](#guide-for-contributing)
+5. [How to Contact Us](#how-to-contact-us)
+6. [License](#license)
 
 ## Installation
+Sincerely 1.0 works with Rails 6.0 onwards. Run:
+```bash
+bundle add sincerely
+```
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+## Getting Started
 
-Install the gem and add to the application's Gemfile by executing:
+1. First, you need to run the install generator, which will create the initializer for you:
+```bash
+rails g sincerely:install
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+2. Now let's generate and run a migration to create the `notifications` table and the `Notification` model:
+```bash
+rails g sincerely:migration Notification
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+rails db:migrate
+```
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+## How to Run Tests
+You can run unit tests for RubyBlok with the following command:
+```
+bundle exec rspec
+```
 
-## Usage
+## Guide for Contributing
+Contributions are made to this repository via Issues and Pull Requests (PRs).
+Issues should be used to report bugs, request a new feature, or to discuss potential changes before a PR is created.
 
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/notifications. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/notifications/blob/main/CODE_OF_CONDUCT.md).
+## How to Contact Us
+For any inquiries, reach out to us at: info@rubyblok.com
 
 ## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Notifications project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/notifications/blob/main/CODE_OF_CONDUCT.md).
+RubyBlok is released under the MIT License.

@@ -1,0 +1,20 @@
+class Create<%= class_name.pluralize %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :<%= table_name %> do |t|
+      t.string   :recipient
+      t.string   :notification_type
+      t.text     :delivery_options
+      t.string   :delivery_system
+      t.string   :delivery_state
+      t.datetime :sent_at
+      t.datetime :scheduled_at
+      t.integer  :delivery_attempts
+      t.string   :message_id
+      t.string   :error_message
+
+      t.timestamps
+    end
+
+    add_index :<%= table_name %>, :recipient
+  end
+end
