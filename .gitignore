@@ -1,3 +1,5 @@
 /.bundle/
 /coverage/
 /tmp/
+
+spec/test.log
