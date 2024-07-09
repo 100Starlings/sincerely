@@ -1,0 +1,16 @@
+class Update<%= class_name.pluralize %> < ActiveRecord::Migration<%= migration_version %>
+  def change
+    add_column :<%= table_name %>, :recipient, :string
+    add_column :<%= table_name %>, :notification_type, :string
+    add_column :<%= table_name %>, :delivery_options, :text
+    add_column :<%= table_name %>, :delivery_system, :string
+    add_column :<%= table_name %>, :delivery_state, :string
+    add_column :<%= table_name %>, :sent_at, :datetime
+    add_column :<%= table_name %>, :scheduled_at, :datetime
+    add_column :<%= table_name %>, :delivery_attempts, :integer
+    add_column :<%= table_name %>, :message_id, :string
+    add_column :<%= table_name %>, :error_message, :string
+
+    add_index :<%= table_name %>, :recipient
+  end
+end
