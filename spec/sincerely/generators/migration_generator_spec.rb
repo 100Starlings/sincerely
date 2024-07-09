@@ -36,7 +36,7 @@ RSpec.describe Sincerely::Generators::MigrationGenerator, type: :generator do
     end
   end
 
-  context 'when the table already exist' do
+  context 'when the table already exists' do
     let(:table_exists) { true }
 
     before do
