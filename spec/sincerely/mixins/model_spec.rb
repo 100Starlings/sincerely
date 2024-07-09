@@ -14,7 +14,7 @@ RSpec.describe 'Model' do
       end
     end
 
-    context 'with missing receipient' do
+    context 'with missing recipient' do
       let(:attributes) { {} }
 
       it 'is invalid' do
