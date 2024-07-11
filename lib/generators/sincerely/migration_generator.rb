@@ -13,16 +13,16 @@ module Sincerely
 
       def install # rubocop:disable Metrics/MethodLength
         if table_exist?
-          migration_template('update_notifications.rb.erb', "db/migrate/update_#{plural_file_name}.rb",
+          migration_template('notifications_update.rb.erb', "db/migrate/update_#{plural_file_name}.rb",
                              migration_version:)
           add_mixins_to_existing_model
         else
-          migration_template('create_notifications.rb.erb', "db/migrate/create_#{plural_file_name}.rb",
+          migration_template('notifications_create.rb.erb', "db/migrate/create_#{plural_file_name}.rb",
                              migration_version:)
-          generate_model
+          generate_notification_model
         end
 
-        migration_template('create_templates.rb.erb', "db/migrate/create_#{file_name}_templates.rb",
+        migration_template('templates_create.rb.erb', "db/migrate/create_#{file_name}_templates.rb",
                            migration_version:)
         generate_template_model
 
@@ -52,7 +52,7 @@ module Sincerely
         end
       end
 
-      def generate_model
+      def generate_notification_model
         template('notification_model.rb.erb', "app/models/#{file_name}.rb")
       end
 
