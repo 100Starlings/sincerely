@@ -5,7 +5,7 @@ require 'active_support/concern'
 
 module Sincerely
   module Mixins
-    module Model
+    module NotificationModel
       extend ActiveSupport::Concern
 
       included do # rubocop:disable Metrics/BlockLength

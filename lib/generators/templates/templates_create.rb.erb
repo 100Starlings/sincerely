@@ -4,8 +4,8 @@ class Create<%= class_name %>Templates < ActiveRecord::Migration<%= migration_ve
       t.integer :template_id
       t.string  :name
       t.string  :description
-      t.binary  :html_content
-      t.binary  :text_content
+      t.string  :html_content
+      t.string  :text_content
 
       t.timestamps
     end
