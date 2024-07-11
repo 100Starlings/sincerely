@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe 'Model' do
+RSpec.describe 'NotificationModel' do
   describe 'validations' do
     subject(:model) { Notification.new(**attributes) }
 
