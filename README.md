@@ -23,7 +23,7 @@ bundle add sincerely
 rails g sincerely:install
 ```
 
-2. Now let's generate and run a migration to create the `notifications` table and the `Notification` model:
+2. Now let's generate and run a migration to create the `notifications` and `notification_templates` tables and the `Notification` and the `NotificationTemplate` model:
 ```bash
 rails g sincerely:migration Notification
 

@@ -11,16 +11,20 @@ module Sincerely
       source_root File.expand_path('../templates', __dir__)
       desc 'Installs Sincerely migration and model files.'
 
-      def install
+      def install # rubocop:disable Metrics/MethodLength
         if table_exist?
-          migration_template('migration_update.rb.erb', "db/migrate/update_#{plural_file_name}.rb",
+          migration_template('update_notifications.rb.erb', "db/migrate/update_#{plural_file_name}.rb",
                              migration_version:)
           add_mixins_to_existing_model
         else
-          migration_template('migration_create.rb.erb', "db/migrate/create_#{plural_file_name}.rb",
+          migration_template('create_notifications.rb.erb', "db/migrate/create_#{plural_file_name}.rb",
                              migration_version:)
-          generate_new_model_from_template
+          generate_model
         end
+
+        migration_template('create_templates.rb.erb', "db/migrate/create_#{file_name}_templates.rb",
+                           migration_version:)
+        generate_template_model
 
         add_model_name_to_config
       end
@@ -48,8 +52,12 @@ module Sincerely
         end
       end
 
-      def generate_new_model_from_template
-        template('model.rb.erb', "app/models/#{file_name}.rb")
+      def generate_model
+        template('notification_model.rb.erb', "app/models/#{file_name}.rb")
+      end
+
+      def generate_template_model
+        template('template_model.rb.erb', "app/models/#{file_name}_template.rb")
       end
 
       def add_model_name_to_config
