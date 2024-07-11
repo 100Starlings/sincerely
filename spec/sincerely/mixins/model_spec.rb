@@ -40,4 +40,19 @@ RSpec.describe 'Model' do
       end
     end
   end
+
+  describe 'delivery state' do
+    let(:model) do
+      Notification.create(recipient: 'recipient', notification_type: 'email')
+    end
+
+    it 'is draft by default' do
+      expect(model.draft?).to be true
+    end
+
+    it 'changes state on events' do
+      model.set_delivered!
+      expect(model.reload.delivered?).to be true
+    end
+  end
 end
