@@ -30,6 +30,7 @@ module DatabaseConfig
         t.text     :delivery_options
         t.string   :delivery_system
         t.string   :delivery_state
+        t.string   :template_id
         t.datetime :sent_at
         t.datetime :scheduled_at
         t.integer  :delivery_attempts
@@ -41,7 +42,7 @@ module DatabaseConfig
     end
   end
 
-  def create_templates
+  def create_templates # rubocop:disable Metrics/MethodLength
     ActiveRecord::Schema.define do
       create_table :notification_templates do |t|
         t.integer :template_id
@@ -49,6 +50,7 @@ module DatabaseConfig
         t.string  :description
         t.string  :html_content
         t.string  :text_content
+        t.string  :template_type
 
         t.timestamps
       end

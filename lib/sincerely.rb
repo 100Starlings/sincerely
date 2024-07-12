@@ -9,5 +9,9 @@ require_relative 'sincerely/mixins/template_model'
 require_relative 'sincerely/version'
 
 module Sincerely
+  def self.config
+    @config ||= SincerelyConfig.new
+  end
+
   class Error < StandardError; end
 end

@@ -13,6 +13,8 @@ module Sincerely
 
         serialize :delivery_options, coder: JSON
 
+        belongs_to :template, class_name: Sincerely.config.template_model_name.to_s
+
         validates :recipient, presence: true
         validates :notification_type, inclusion: { in: %w[email sms push] }
 
@@ -58,6 +60,10 @@ module Sincerely
           event :set_clicked do
             transitions to: :clicked
           end
+        end
+
+        def render_content(content_type)
+          template.render(content_type, delivery_options)
         end
       end
     end

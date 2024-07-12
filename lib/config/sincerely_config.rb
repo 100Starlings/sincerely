@@ -2,6 +2,11 @@
 
 module Sincerely
   class SincerelyConfig < ApplicationConfig
-    attr_config :model_name
+    config_name :sincerely
+
+    attr_config(
+      notification_model_name: 'Notification',
+      template_model_name: 'NotificationTemplate'
+    )
   end
 end
