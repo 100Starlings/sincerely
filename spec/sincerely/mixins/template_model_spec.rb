@@ -55,26 +55,46 @@ RSpec.describe 'TemplateModel' do
   end
 
   describe '#render' do
-    subject(:render) { template.render(content_type) }
+    subject(:render) { template.render(content_type, options) }
 
-    let(:template) { NotificationTemplate.create_template(:liquid, **attributes) }
-    let(:html_content) { 'html' }
-    let(:text_content) { 'text' }
-    let(:attributes) { { name: 'template', html_content:, text_content: } }
-
-    context 'when rendering html content' do
-      let(:content_type) { :html }
-
-      it 'returns rendered html content' do
-        expect(render).to eq(html_content)
+    context 'with liquid renderer' do
+      let(:options) { { name: 'John Doe' } }
+      let(:template) do
+        NotificationTemplate.create_template(:liquid, name: 'template', html_content:, text_content:)
       end
-    end
+      let(:html_content) do
+        <<~HTML
+          <ul id="products">
+            <li>
+              <h2>{{ name }}</h2>
+            </li>
+          </ul>
+        HTML
+      end
+      let(:text_content) { 'hi {{name}}' }
 
-    context 'when rendering text content' do
-      let(:content_type) { :text }
+      context 'when rendering html content' do
+        let(:content_type) { :html }
 
-      it 'returns rendered text content' do
-        expect(render).to eq(text_content)
+        it 'returns rendered html content' do # rubocop:disable RSpec/ExampleLength
+          html_content =
+            <<~HTML
+              <ul id="products">
+                <li>
+                  <h2>John Doe</h2>
+                </li>
+              </ul>
+            HTML
+          expect(render).to eq(html_content)
+        end
+      end
+
+      context 'when rendering text content' do
+        let(:content_type) { :text }
+
+        it 'returns rendered text content' do
+          expect(render).to eq('hi John Doe')
+        end
       end
     end
   end

@@ -16,7 +16,7 @@ module Sincerely
 
         def render(content_type, options = {})
           content = public_send("#{content_type}_content")
-          renderer.render(content, options)
+          renderer.render(content, options&.stringify_keys)
         end
 
         private
