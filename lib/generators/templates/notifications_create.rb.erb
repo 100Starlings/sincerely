@@ -6,6 +6,7 @@ class Create<%= class_name.pluralize %> < ActiveRecord::Migration<%= migration_v
       t.text     :delivery_options
       t.string   :delivery_system
       t.string   :delivery_state
+      t.string   :template_id
       t.datetime :sent_at
       t.datetime :scheduled_at
       t.integer  :delivery_attempts

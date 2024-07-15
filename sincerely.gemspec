@@ -28,6 +28,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'aasm', '~> 5.3'
   spec.add_dependency 'anyway_config', '>= 2.6.0'
+  spec.add_dependency 'liquid', '>= 5.5'
+  spec.add_dependency 'railties', '>= 6'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

@@ -13,14 +13,8 @@ RSpec.describe Sincerely::Generators::MigrationGenerator, type: :generator do
 
   shared_examples 'a template generator' do
     it 'creates the template migration file with the right content' do
-      assert_migration("db/migrate/create_#{name}_templates.rb") do |migration|
+      assert_migration('db/migrate/create_notification_templates.rb') do |migration|
         expect(migration).to match(/create_table :notification_templates/)
-      end
-    end
-
-    it 'creates the template model file' do
-      assert_file("app/models/#{name}_template.rb") do |content|
-        expect(content).to match(/NotificationTemplate/)
       end
     end
   end
@@ -76,7 +70,7 @@ RSpec.describe Sincerely::Generators::MigrationGenerator, type: :generator do
 
     it 'creates the model file' do
       assert_file("app/models/#{name}.rb") do |content|
-        expect(content).to match(/include Sincerely::Mixins::Model/)
+        expect(content).to match(/include Sincerely::Mixins::NotificationModel/)
       end
     end
   end

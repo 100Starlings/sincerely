@@ -22,10 +22,8 @@ module Sincerely
           generate_notification_model
         end
 
-        migration_template('templates_create.rb.erb', "db/migrate/create_#{file_name}_templates.rb",
+        migration_template('templates_create.rb.erb', 'db/migrate/create_notification_templates.rb',
                            migration_version:)
-        generate_template_model
-
         add_model_name_to_config
       end
 
@@ -45,7 +43,7 @@ module Sincerely
 
       def add_mixins_to_existing_model
         model_path = "app/models/#{file_name}.rb"
-        mixins_code = "\n  include Sincerely::Mixins::Model\n"
+        mixins_code = "\n  include Sincerely::Mixins::NotificationModel\n"
 
         insert_into_file model_path, after: "class #{class_name} < ApplicationRecord" do
           mixins_code
@@ -56,13 +54,9 @@ module Sincerely
         template('notification_model.rb.erb', "app/models/#{file_name}.rb")
       end
 
-      def generate_template_model
-        template('template_model.rb.erb', "app/models/#{file_name}_template.rb")
-      end
-
       def add_model_name_to_config
         model_path = 'config/sincerely.yml'
-        insert_into_file model_path, after: 'model_name: ' do
+        insert_into_file model_path, after: 'notification_model_name: ' do
           class_name
         end
       end

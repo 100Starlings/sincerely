@@ -55,4 +55,32 @@ RSpec.describe 'NotificationModel' do
       expect(model.reload.delivered?).to be true
     end
   end
+
+  describe '#render_content' do
+    subject(:render_content) { model.render_content(content_type) }
+
+    let(:attributes) { { name: 'template', html_content: 'html', text_content: 'text' } }
+    let(:template) { Sincerely::Templates::EmailLiquidTemplate.create(**attributes) }
+
+    let(:model) do
+      Notification
+        .create(recipient: 'recipient', notification_type: 'email', template:)
+    end
+
+    context 'when rendering html content' do
+      let(:content_type) { :html }
+
+      it 'returns rendered html content' do
+        expect(render_content).to eq('html')
+      end
+    end
+
+    context 'when rendering text content' do
+      let(:content_type) { :text }
+
+      it 'returns rendered text content' do
+        expect(render_content).to eq('text')
+      end
+    end
+  end
 end
