@@ -13,7 +13,7 @@ module Sincerely
 
         serialize :delivery_options, coder: JSON
 
-        belongs_to :template, class_name: Sincerely.config.template_model_name.to_s
+        belongs_to :template, class_name: 'Sincerely::Templates::NotificationTemplate'
 
         validates :recipient, presence: true
         validates :notification_type, inclusion: { in: %w[email sms push] }

@@ -5,6 +5,7 @@ PATH
       aasm (~> 5.3)
       anyway_config (>= 2.6.0)
       liquid (>= 5.5)
+      railties (>= 6)
 
 GEM
   remote: https://rubygems.org/

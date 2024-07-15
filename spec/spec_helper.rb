@@ -9,7 +9,6 @@ require 'generator_spec'
 
 require 'support/database_config'
 require 'support/notification'
-require 'support/notification_template'
 
 include DatabaseConfig # rubocop:disable Style/MixinUsage
 

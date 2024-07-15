@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-RSpec.describe 'TemplateModel' do
+RSpec.describe Sincerely::Templates::EmailTemplate do
   describe 'validations' do
-    subject(:model) { NotificationTemplate.new(**attributes) }
+    subject(:model) { described_class.new(**attributes) }
 
     context 'with proper attributes' do
       let(:attributes) { { name: 'template', template_type: 'liquid' } }
@@ -55,12 +55,12 @@ RSpec.describe 'TemplateModel' do
   end
 
   describe '#render' do
-    subject(:render) { template.render(content_type, options) }
+    subject(:render) { model.render(content_type, options) }
 
     context 'with liquid renderer' do
       let(:options) { { name: 'John Doe' } }
-      let(:template) do
-        NotificationTemplate.create_template(:liquid, name: 'template', html_content:, text_content:)
+      let(:model) do
+        described_class.create(name: 'template', html_content:, text_content:, template_type: 'liquid')
       end
       let(:html_content) do
         <<~HTML
@@ -96,18 +96,6 @@ RSpec.describe 'TemplateModel' do
           expect(render).to eq('hi John Doe')
         end
       end
-    end
-  end
-
-  describe '.create_template' do
-    subject(:create_template) { NotificationTemplate.create_template(:liquid, **attributes) }
-
-    let(:attributes) { { name: 'template' } }
-
-    before { create_template }
-
-    it 'creates the appropriate template' do
-      expect(NotificationTemplate.last).to have_attributes(name: 'template', template_type: 'liquid')
     end
   end
 end

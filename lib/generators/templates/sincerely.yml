@@ -1,6 +1,5 @@
 defaults: &defaults
   notification_model_name: Notification
-  template_model_name: NotificationTemplate
 
 test:
   <<: *defaults

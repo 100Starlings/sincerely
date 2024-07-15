@@ -47,10 +47,12 @@ module DatabaseConfig
       create_table :notification_templates do |t|
         t.integer :template_id
         t.string  :name
-        t.string  :description
+        t.string  :subject
+        t.string  :sender
         t.string  :html_content
         t.string  :text_content
         t.string  :template_type
+        t.string  :type
 
         t.timestamps
       end
