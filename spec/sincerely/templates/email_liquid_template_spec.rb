@@ -2,12 +2,12 @@
 
 require 'spec_helper'
 
-RSpec.describe Sincerely::Templates::EmailTemplate do
+RSpec.describe Sincerely::Templates::EmailLiquidTemplate do
   describe 'validations' do
     subject(:model) { described_class.new(**attributes) }
 
     context 'with proper attributes' do
-      let(:attributes) { { name: 'template', template_type: 'liquid' } }
+      let(:attributes) { { name: 'template' } }
 
       it 'is valid' do
         expect(model.valid?).to be true
@@ -15,7 +15,7 @@ RSpec.describe Sincerely::Templates::EmailTemplate do
     end
 
     context 'with missing name' do
-      let(:attributes) { { template_type: 'liquid' } }
+      let(:attributes) { {} }
 
       it 'is invalid' do
         expect(model.valid?).to be false
@@ -26,32 +26,6 @@ RSpec.describe Sincerely::Templates::EmailTemplate do
         expect(model.errors.full_messages).to include("Name can't be blank")
       end
     end
-
-    context 'with missing template_type' do
-      let(:attributes) { { name: 'template' } }
-
-      it 'is invalid' do
-        expect(model.valid?).to be false
-      end
-
-      it 'shows error message' do
-        model.valid?
-        expect(model.errors.full_messages).to include("Template type can't be blank")
-      end
-    end
-
-    context 'with invalid template_type' do
-      let(:attributes) { { name: 'template', template_type: 'type' } }
-
-      it 'is invalid' do
-        expect(model.valid?).to be false
-      end
-
-      it 'shows error message' do
-        model.valid?
-        expect(model.errors.full_messages).to include('Template type is not included in the list')
-      end
-    end
   end
 
   describe '#render' do
@@ -60,7 +34,7 @@ RSpec.describe Sincerely::Templates::EmailTemplate do
     context 'with liquid renderer' do
       let(:options) { { name: 'John Doe' } }
       let(:model) do
-        described_class.create(name: 'template', html_content:, text_content:, template_type: 'liquid')
+        described_class.create(name: 'template', html_content:, text_content:)
       end
       let(:html_content) do
         <<~HTML

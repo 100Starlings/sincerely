@@ -51,7 +51,6 @@ module DatabaseConfig
         t.string  :sender
         t.string  :html_content
         t.string  :text_content
-        t.string  :template_type
         t.string  :type
 
         t.timestamps

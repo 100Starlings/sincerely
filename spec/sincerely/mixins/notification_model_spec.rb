@@ -59,8 +59,8 @@ RSpec.describe 'NotificationModel' do
   describe '#render_content' do
     subject(:render_content) { model.render_content(content_type) }
 
-    let(:attributes) { { name: 'template', html_content: 'html', text_content: 'text', template_type: 'liquid' } }
-    let(:template) { Sincerely::Templates::EmailTemplate.create(**attributes) }
+    let(:attributes) { { name: 'template', html_content: 'html', text_content: 'text' } }
+    let(:template) { Sincerely::Templates::EmailLiquidTemplate.create(**attributes) }
 
     let(:model) do
       Notification
