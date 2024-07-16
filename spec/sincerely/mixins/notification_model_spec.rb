@@ -83,4 +83,44 @@ RSpec.describe 'NotificationModel' do
       end
     end
   end
+
+  describe 'deliver' do
+    let(:model) { Notification.create(recipient: 'john@doe.com', notification_type: 'email') }
+
+    context 'when there is no delivery method configured' do
+      it 'raises an error' do
+        expect { model.deliver }.to(raise_error(StandardError, 'Delivery method not configured for email.'))
+      end
+    end
+
+    context 'when there is a delivery method configured' do
+      let(:delivery_method_options) do
+        { region: 'region', access_key_id: 'access_key_id', secret_access_key: 'secret_access_key' }
+      end
+
+      let(:configured_delivery_methods) do
+        instance_double(
+          Sincerely::SincerelyConfig,
+          delivery_methods: {
+            'email' => {
+              'class_name' => 'Sincerely::DeliveryMethods::EmailAwsSes',
+              'options' => delivery_method_options
+            }
+          }
+        )
+      end
+
+      before do
+        allow(Sincerely).to(receive(:config).and_return(configured_delivery_methods))
+        allow(Sincerely::DeliveryMethods::EmailAwsSes).to(receive(:call))
+      end
+
+      it 'calls the delivery method call' do
+        model.deliver
+
+        expect(Sincerely::DeliveryMethods::EmailAwsSes)
+          .to(have_received(:call).with(notification: model, options: delivery_method_options))
+      end
+    end
+  end
 end
