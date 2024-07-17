@@ -31,44 +31,42 @@ RSpec.describe Sincerely::Templates::EmailLiquidTemplate do
   describe '#render' do
     subject(:render) { model.render(content_type, options) }
 
-    context 'with liquid renderer' do
-      let(:options) { { name: 'John Doe' } }
-      let(:model) do
-        described_class.create(name: 'template', html_content:, text_content:)
+    let(:options) { { template_data: { name: 'John Doe' } } }
+    let(:model) do
+      described_class.create(name: 'template', html_content:, text_content:)
+    end
+    let(:html_content) do
+      <<~HTML
+        <ul id="products">
+          <li>
+            <h2>{{ name }}</h2>
+          </li>
+        </ul>
+      HTML
+    end
+    let(:text_content) { 'hi {{name}}' }
+
+    context 'when rendering html content' do
+      let(:content_type) { :html }
+
+      it 'returns rendered html content' do # rubocop:disable RSpec/ExampleLength
+        html_content =
+          <<~HTML
+            <ul id="products">
+              <li>
+                <h2>John Doe</h2>
+              </li>
+            </ul>
+          HTML
+        expect(render).to eq(html_content)
       end
-      let(:html_content) do
-        <<~HTML
-          <ul id="products">
-            <li>
-              <h2>{{ name }}</h2>
-            </li>
-          </ul>
-        HTML
-      end
-      let(:text_content) { 'hi {{name}}' }
+    end
 
-      context 'when rendering html content' do
-        let(:content_type) { :html }
+    context 'when rendering text content' do
+      let(:content_type) { :text }
 
-        it 'returns rendered html content' do # rubocop:disable RSpec/ExampleLength
-          html_content =
-            <<~HTML
-              <ul id="products">
-                <li>
-                  <h2>John Doe</h2>
-                </li>
-              </ul>
-            HTML
-          expect(render).to eq(html_content)
-        end
-      end
-
-      context 'when rendering text content' do
-        let(:content_type) { :text }
-
-        it 'returns rendered text content' do
-          expect(render).to eq('hi John Doe')
-        end
+      it 'returns rendered text content' do
+        expect(render).to eq('hi John Doe')
       end
     end
   end
