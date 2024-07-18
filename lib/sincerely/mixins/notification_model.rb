@@ -65,6 +65,24 @@ module Sincerely
         def render_content(content_type)
           template.render(content_type, delivery_options)
         end
+
+        def deliver
+          raise StandardError, "Delivery method not configured for #{notification_type}." if delivery_method.blank?
+
+          call_delivery_method
+        end
+
+        private
+
+        def delivery_method
+          @delivery_method ||= Sincerely.config.delivery_methods&.fetch(notification_type, {})
+        end
+
+        def call_delivery_method
+          class_name, options = delivery_method.values_at('class_name', 'options')
+          klass = class_name.constantize
+          klass.call(notification: self, options:)
+        end
       end
     end
   end
