@@ -25,8 +25,12 @@ module Sincerely
             simple: {
               subject: { data: subject },
               body: {
-                html: notification.render_content(:html),
-                text: notification.render_content(:text)
+                html: {
+                  data: notification.render_content(:html)
+                },
+                text: {
+                  data: notification.render_content(:text)
+                }
               }
             }
           }
@@ -43,7 +47,7 @@ module Sincerely
       end
 
       def subject
-        notification.delivery_options&.fetch('subject', template.subject)
+        notification.delivery_options&.fetch('subject', nil) || template.subject
       end
 
       def update_notification(response)
