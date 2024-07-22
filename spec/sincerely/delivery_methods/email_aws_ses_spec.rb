@@ -7,7 +7,14 @@ RSpec.describe Sincerely::DeliveryMethods::EmailAwsSes do
     context 'when sending an email notification via Amazon SES' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:template) { Sincerely::Templates::EmailLiquidTemplate.create(subject: 'Spam') }
       let(:notification) { Notification.create(recipient: 'john@doe.com', notification_type: 'email', template:) }
-      let(:options) { { region: 'region', access_key_id: 'access_key_id', secret_access_key: 'secret_access_key' } }
+      let(:options) do
+        {
+          region: 'region',
+          access_key_id: 'access_key_id',
+          secret_access_key: 'secret_access_key',
+          configuration_set_name: 'config_set'
+        }
+      end
       let(:ses_client_response) { instance_double(Aws::SESV2::Types::SendEmailResponse, message_id: 1) }
       let(:ses_client) { instance_double(Aws::SESV2::Client, send_email: ses_client_response) }
 
@@ -25,7 +32,8 @@ RSpec.describe Sincerely::DeliveryMethods::EmailAwsSes do
             }
           },
           destination: { to_addresses: ['john@doe.com'] },
-          from_email_address: nil
+          from_email_address: nil,
+          configuration_set_name: 'config_set'
         }
       end
 
@@ -63,7 +71,8 @@ RSpec.describe Sincerely::DeliveryMethods::EmailAwsSes do
               }
             },
             destination: { to_addresses: ['john@doe.com'] },
-            from_email_address: nil
+            from_email_address: nil,
+            configuration_set_name: 'config_set'
           }
         end
 

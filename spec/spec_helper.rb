@@ -6,9 +6,12 @@ require 'sincerely'
 
 require 'database_cleaner/active_record'
 require 'generator_spec'
+require 'action_controller'
 
+require 'support/application_controller'
 require 'support/database_config'
 require 'support/notification'
+require 'support/ses_webhook_controller'
 
 include DatabaseConfig # rubocop:disable Style/MixinUsage
 

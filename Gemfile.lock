@@ -3,9 +3,10 @@ PATH
   specs:
     sincerely (0.1.0)
       aasm (~> 5.3)
-      anyway_config (>= 2.6.0)
+      anyway_config (~> 2.6)
       aws-sdk-sesv2 (~> 1.54)
-      liquid (>= 5.5)
+      aws-sdk-sns (~> 1.82)
+      liquid (~> 5.5)
       railties (>= 6)
 
 GEM
@@ -100,6 +101,9 @@ GEM
       aws-sigv4 (~> 1.8)
       jmespath (~> 1, >= 1.6.1)
     aws-sdk-sesv2 (1.54.0)
+      aws-sdk-core (~> 3, >= 3.201.0)
+      aws-sigv4 (~> 1.5)
+    aws-sdk-sns (1.82.0)
       aws-sdk-core (~> 3, >= 3.201.0)
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.8.0)

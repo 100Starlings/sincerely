@@ -17,8 +17,22 @@ module Sincerely
         @options = options.symbolize_keys
       end
 
-      def deliver # rubocop:disable Metrics/MethodLength
-        response = client.send_email(
+      def deliver
+        response = client.send_email(email_options)
+        update_notification(response)
+      end
+
+      private
+
+      attr_reader :notification, :template, :options
+
+      def client
+        client_options = options.slice(:region, :access_key_id, :secret_access_key)
+        @client ||= Aws::SESV2::Client.new(**client_options)
+      end
+
+      def email_options # rubocop:disable Metrics/MethodLength
+        opts = {
           from_email_address: template.sender,
           destination: { to_addresses: [notification.recipient] },
           content: {
@@ -34,16 +48,10 @@ module Sincerely
               }
             }
           }
-        )
-        update_notification(response)
-      end
-
-      private
-
-      attr_reader :notification, :template, :options
-
-      def client
-        @client ||= Aws::SESV2::Client.new(**options)
+        }
+        config_set = options[:configuration_set_name]
+        opts = opts.merge(configuration_set_name: config_set) if config_set.present?
+        opts
       end
 
       def subject
