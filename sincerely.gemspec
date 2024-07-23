@@ -27,9 +27,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'aasm', '~> 5.3'
-  spec.add_dependency 'anyway_config', '>= 2.6.0'
+  spec.add_dependency 'anyway_config', '~> 2.6'
   spec.add_dependency 'aws-sdk-sesv2', '~> 1.54'
-  spec.add_dependency 'liquid', '>= 5.5'
+  spec.add_dependency 'aws-sdk-sns', '~> 1.82'
+  spec.add_dependency 'liquid', '~> 5.5'
   spec.add_dependency 'railties', '>= 6'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
