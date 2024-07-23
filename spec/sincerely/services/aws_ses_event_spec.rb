@@ -3,11 +3,11 @@
 require 'spec_helper'
 
 # rubocop:disable RSpec/ExampleLength
-RSpec.describe Sincerely::Services::SesEvent do
+RSpec.describe Sincerely::Services::AwsSesEvent do
   subject(:ses_event) { described_class.new(event) }
 
   context 'when send event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/send.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/send.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -20,7 +20,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when bounce event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/bounce.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/bounce.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -33,7 +33,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when complaint event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/complaint.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/complaint.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -46,7 +46,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when delivery event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/delivery.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/delivery.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -59,7 +59,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when reject event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/reject.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/reject.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -72,7 +72,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when open event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/open.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/open.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(
@@ -85,7 +85,7 @@ RSpec.describe Sincerely::Services::SesEvent do
   end
 
   context 'when click event' do
-    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/ses_events/click.json')) }
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/click.json')) }
 
     it 'returns event properties' do
       expect(ses_event).to have_attributes(

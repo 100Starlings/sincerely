@@ -4,7 +4,7 @@ require 'active_support/concern'
 require 'aws-sdk-sns'
 
 require 'sincerely/services/process_delivery_event'
-require 'sincerely/services/ses_event'
+require 'sincerely/services/aws_ses_event'
 
 module Sincerely
   module Mixins
@@ -23,7 +23,7 @@ module Sincerely
               confirm_subscription
             when 'Notification'
               logger&.info event_payload # temporary log
-              event = Sincerely::Services::SesEvent.new(event_payload)
+              event = Sincerely::Services::AwsSesEvent.new(event_payload)
               Sincerely::Services::ProcessDeliveryEvent.call(event:)
             end
 

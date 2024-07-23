@@ -2,7 +2,7 @@
 
 module Sincerely
   module Services
-    class SesEvent
+    class AwsSesEvent
       attr_reader :event
 
       def initialize(event)
@@ -14,7 +14,7 @@ module Sincerely
       end
 
       def message_id
-        event['mail']['messageId']
+        event.dig('mail', 'messageId')
       end
 
       def recipient
