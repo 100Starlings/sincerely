@@ -22,6 +22,7 @@ module Sincerely
             when 'SubscriptionConfirmation'
               confirm_subscription
             when 'Notification'
+              logger&.info event_payload # temporary log
               event = Sincerely::Services::SesEvent.new(event_payload)
               Sincerely::Services::ProcessDeliveryEvent.call(event:)
             end
@@ -52,7 +53,8 @@ module Sincerely
           end
 
           def event_payload
-            posted_message_body['Message']
+            message = posted_message_body['Message']
+            JSON.parse(message) if message.present?
           end
 
           def delivery_options
