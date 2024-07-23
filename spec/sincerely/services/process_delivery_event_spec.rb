@@ -7,8 +7,11 @@ describe Sincerely::Services::ProcessDeliveryEvent do
     subject(:process) { described_class.call(event:) }
 
     let(:message_id) { '12345' }
-    let(:notification) { Notification.create(recipient: 'john@doe.com', notification_type: 'email', message_id:) }
-    let(:event) { double(:event, event_type:, message_id:) } # rubocop:disable RSpec/VerifiedDoubles
+    let(:recipient) { 'john@doe.com' }
+    let(:timestamp) { '2024-07-01T00:40:02.012Z' }
+    let(:delivery_system) { 'aws_ses2' }
+    let(:notification) { Notification.create(recipient:, notification_type: 'email', message_id:) }
+    let(:event) { double(:event, event_type:, message_id:, recipient:, timestamp:) } # rubocop:disable RSpec/VerifiedDoubles
 
     before do
       notification
@@ -31,6 +34,13 @@ describe Sincerely::Services::ProcessDeliveryEvent do
       it 'updates the status' do
         expect(notification.reload.bounced?).to be true
       end
+
+      it 'creates an event record' do
+        expect(
+          Sincerely::BounceEvent.first.attributes.symbolize_keys.slice(:message_id, :delivery_system, :recipient,
+                                                                       :timestamp)
+        ).to(eq({ message_id:, delivery_system:, recipient:, timestamp: }))
+      end
     end
 
     context 'when complaint event' do
@@ -38,6 +48,13 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
       it 'updates the status' do
         expect(notification.reload.complained?).to be true
+      end
+
+      it 'creates an event record' do
+        expect(
+          Sincerely::ComplaintEvent.first.attributes.symbolize_keys.slice(:message_id, :delivery_system, :recipient,
+                                                                          :timestamp)
+        ).to(eq({ message_id:, delivery_system:, recipient:, timestamp: }))
       end
     end
 
@@ -63,6 +80,13 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
       it 'updates the status' do
         expect(notification.reload.opened?).to be true
+      end
+
+      it 'creates an event record' do
+        expect(
+          Sincerely::EngagementEvent.first.attributes.symbolize_keys.slice(:message_id, :delivery_system, :recipient,
+                                                                           :timestamp)
+        ).to(eq({ message_id:, delivery_system:, recipient:, timestamp: }))
       end
     end
 

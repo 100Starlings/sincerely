@@ -9,6 +9,7 @@ module DatabaseConfig
 
     create_notifications
     create_templates
+    create_delivery_events
   end
 
   def truncate_database
@@ -52,6 +53,21 @@ module DatabaseConfig
         t.string  :html_content
         t.string  :text_content
         t.string  :type
+
+        t.timestamps
+      end
+    end
+  end
+
+  def create_delivery_events # rubocop:disable Metrics/MethodLength
+    ActiveRecord::Schema.define do
+      create_table :sincerely_delivery_events do |t|
+        t.string :message_id
+        t.string :delivery_system
+        t.string :type
+        t.string :recipient
+        t.text :options
+        t.datetime :timestamp
 
         t.timestamps
       end

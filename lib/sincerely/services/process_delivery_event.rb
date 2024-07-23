@@ -23,9 +23,9 @@ module Sincerely
 
         case event_type.to_sym
         when :bounce
-          notification.set_bounced!
+          process_bounce_event
         when :complaint
-          notification.set_complained!
+          process_complaint_event
         when :delivery
           notification.set_delivered!
         when :send
@@ -34,7 +34,7 @@ module Sincerely
           notification.set_rejected!
           notification.update(error_message: event.rejection_reason)
         when :open
-          notification.set_opened!
+          process_engagement_event
         when :click
           notification.set_clicked!
         end
@@ -46,6 +46,21 @@ module Sincerely
       private
 
       attr_reader :event
+
+      def process_bounce_event
+        notification.set_bounced!
+        Sincerely::BounceEvent.create(message_id:, delivery_system:, recipient:, timestamp:)
+      end
+
+      def process_complaint_event
+        notification.set_complained!
+        Sincerely::ComplaintEvent.create(message_id:, delivery_system:, recipient:, timestamp:)
+      end
+
+      def process_engagement_event
+        notification.set_opened!
+        Sincerely::EngagementEvent.create(message_id:, delivery_system:, recipient:, timestamp:)
+      end
 
       def notification
         model = Sincerely.config.notification_model_name.constantize
