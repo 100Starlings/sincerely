@@ -1,0 +1,5 @@
+class Sincerely::DeliveryEvent < ApplicationRecord
+  self.table_name = :sincerely_delivery_events
+
+  serialize :options, coder: JSON
+end
