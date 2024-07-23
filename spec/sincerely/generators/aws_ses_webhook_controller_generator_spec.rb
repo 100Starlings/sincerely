@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Sincerely::Generators::SesWebhookControllerGenerator, type: :generator do
+RSpec.describe Sincerely::Generators::AwsSesWebhookControllerGenerator, type: :generator do
   include Rails::Generators::Testing::Assertions
 
   let(:name) { 'ses_webhook' }

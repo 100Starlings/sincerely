@@ -5,13 +5,13 @@ require 'rails/generators/active_record'
 
 module Sincerely
   module Generators
-    class SesWebhookControllerGenerator < ::Rails::Generators::NamedBase
+    class AwsSesWebhookControllerGenerator < ::Rails::Generators::NamedBase
       source_root File.expand_path('../templates', __dir__)
 
-      desc 'Generates a ses webhook controller and a route file.'
+      desc 'Generates an AWS SES webhook controller and a route file.'
 
       def copy_initializer
-        template('ses_webhook_controller.rb.erb', "app/controllers/#{file_name}_controller.rb")
+        template('aws_ses_webhook_controller.rb.erb', "app/controllers/#{file_name}_controller.rb")
       end
 
       def routes_config

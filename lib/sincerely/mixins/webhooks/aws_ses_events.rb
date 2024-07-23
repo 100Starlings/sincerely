@@ -6,7 +6,7 @@ require 'aws-sdk-sns'
 module Sincerely
   module Mixins
     module Webhooks
-      module SesEvents
+      module AwsSesEvents
         extend ActiveSupport::Concern
 
         included do # rubocop:disable Metrics/BlockLength
