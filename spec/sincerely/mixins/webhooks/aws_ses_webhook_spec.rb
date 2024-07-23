@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.describe 'SesWebhook' do
-  let(:webhook_controller) { SesWebhookController.new }
+RSpec.describe 'AwsSesWebhook' do
+  let(:webhook_controller) { AwsSesWebhookController.new }
 
   describe 'create' do
     subject(:create) { webhook_controller.create }

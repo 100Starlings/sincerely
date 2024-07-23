@@ -9,7 +9,7 @@ require 'sincerely/services/ses_event'
 module Sincerely
   module Mixins
     module Webhooks
-      module SesEvents
+      module AwsSesEvents
         extend ActiveSupport::Concern
 
         included do # rubocop:disable Metrics/BlockLength
