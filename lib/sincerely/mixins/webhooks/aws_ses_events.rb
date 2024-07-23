@@ -3,6 +3,9 @@
 require 'active_support/concern'
 require 'aws-sdk-sns'
 
+require 'sincerely/services/process_delivery_event'
+require 'sincerely/services/aws_ses_event'
+
 module Sincerely
   module Mixins
     module Webhooks
@@ -19,7 +22,9 @@ module Sincerely
             when 'SubscriptionConfirmation'
               confirm_subscription
             when 'Notification'
-              # TBD
+              logger&.info event_payload # temporary log
+              event = Sincerely::Services::AwsSesEvent.new(event_payload)
+              Sincerely::Services::ProcessDeliveryEvent.call(event:)
             end
 
             render json: { message: 'ok' }, status: :ok
@@ -47,8 +52,9 @@ module Sincerely
             posted_message_body['Token']
           end
 
-          def event
-            posted_message_body['Message']
+          def event_payload
+            message = posted_message_body['Message']
+            JSON.parse(message) if message.present?
           end
 
           def delivery_options

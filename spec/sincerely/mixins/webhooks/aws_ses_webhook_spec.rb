@@ -8,14 +8,6 @@ RSpec.describe 'AwsSesWebhook' do
   describe 'create' do
     subject(:create) { webhook_controller.create }
 
-    let(:params) do
-      {
-        'Type' => 'SubscriptionConfirmation',
-        'TopicArn' => 'arn',
-        'Token' => 'token'
-      }
-    end
-
     let(:configured_delivery_methods) do
       instance_double(
         Sincerely::SincerelyConfig,
@@ -42,6 +34,14 @@ RSpec.describe 'AwsSesWebhook' do
     context 'when SubscriptionConfirmation' do
       let(:client) { instance_double(Aws::SNS::Client) }
 
+      let(:params) do
+        {
+          'Type' => 'SubscriptionConfirmation',
+          'TopicArn' => 'arn',
+          'Token' => 'token'
+        }
+      end
+
       before do
         allow(Aws::SNS::Client).to receive(:new).and_return(client)
         allow(client).to receive(:confirm_subscription)
@@ -55,6 +55,25 @@ RSpec.describe 'AwsSesWebhook' do
 
       it 'confirms subscription' do
         expect(client).to have_received(:confirm_subscription).with(topic_arn: 'arn', token: 'token')
+      end
+    end
+
+    context 'when Notification' do
+      let(:params) do
+        {
+          'Type' => 'Notification',
+          'Message' => {}
+        }
+      end
+
+      before do
+        allow(Sincerely::Services::ProcessDeliveryEvent).to receive(:call)
+        create
+      end
+
+      it 'calls ProcessDeliveryEvent' do
+        expect(Sincerely::Services::ProcessDeliveryEvent)
+          .to have_received(:call).with(event: instance_of(Sincerely::Services::AwsSesEvent))
       end
     end
   end
