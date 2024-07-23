@@ -53,7 +53,7 @@ module Sincerely
       end
 
       def delivery_system
-        :ses
+        :aws_ses2
       end
     end
   end

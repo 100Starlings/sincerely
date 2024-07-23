@@ -4,13 +4,13 @@ require 'spec_helper'
 
 # rubocop:disable RSpec/ExampleLength
 RSpec.describe Sincerely::Services::AwsSesEvent do
-  subject(:ses_event) { described_class.new(event) }
+  subject(:aws_ses_event) { described_class.new(event) }
 
   context 'when send event' do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/send.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'send',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
@@ -23,7 +23,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/bounce.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'bounce',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
@@ -36,7 +36,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/complaint.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'complaint',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
@@ -49,7 +49,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/delivery.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'delivery',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
@@ -62,7 +62,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/reject.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'reject',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'sender@example.com',
@@ -75,7 +75,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/open.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'open',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
@@ -88,7 +88,7 @@ RSpec.describe Sincerely::Services::AwsSesEvent do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/click.json')) }
 
     it 'returns event properties' do
-      expect(ses_event).to have_attributes(
+      expect(aws_ses_event).to have_attributes(
         event_type: 'click',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',

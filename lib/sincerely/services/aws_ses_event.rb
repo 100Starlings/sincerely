@@ -18,11 +18,11 @@ module Sincerely
       end
 
       def recipient
-        event['mail']['destination'][0]
+        event.dig('mail', 'destination')[0]
       end
 
       def timestamp
-        Time.parse(event[event_type]['timestamp'] || event['mail']['timestamp']) # rubocop:disable Rails/TimeZone
+        Time.parse(event.dig(event_type, 'timestamp') || event.dig('mail', 'timestamp')) # rubocop:disable Rails/TimeZone
       end
     end
   end
