@@ -73,7 +73,7 @@ RSpec.describe 'AwsSesWebhook' do
 
       it 'calls ProcessDeliveryEvent' do
         expect(Sincerely::Services::ProcessDeliveryEvent)
-          .to have_received(:call).with(event: instance_of(Sincerely::Services::AwsSesEvent))
+          .to have_received(:call).with(event: instance_of(Sincerely::Services::Events::AwsSesEvent))
       end
     end
   end

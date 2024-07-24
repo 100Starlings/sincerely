@@ -3,7 +3,7 @@
 module Sincerely
   module Services
     class ProcessDeliveryEvent
-      delegate :event_type, :message_id, :recipient, :timestamp, to: :event
+      delegate :event_type, :message_id, :recipient, :timestamp, :options, to: :event
 
       class << self
         def call(event:)
@@ -23,9 +23,9 @@ module Sincerely
 
         case event_type.to_sym
         when :bounce
-          notification.set_bounced!
+          process_bounce_event
         when :complaint
-          notification.set_complained!
+          process_complaint_event
         when :delivery
           notification.set_delivered!
         when :send
@@ -35,8 +35,10 @@ module Sincerely
           notification.update(error_message: event.rejection_reason)
         when :open
           notification.set_opened!
+          process_engagement_event
         when :click
           notification.set_clicked!
+          process_engagement_event
         end
       end
       # rubocop:enable Metrics/AbcSize
@@ -46,6 +48,23 @@ module Sincerely
       private
 
       attr_reader :event
+
+      def process_bounce_event
+        notification.set_bounced!
+        Sincerely::BounceEvent
+          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
+      end
+
+      def process_complaint_event
+        notification.set_complained!
+        Sincerely::ComplaintEvent
+          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
+      end
+
+      def process_engagement_event
+        Sincerely::EngagementEvent
+          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
+      end
 
       def notification
         model = Sincerely.config.notification_model_name.constantize
