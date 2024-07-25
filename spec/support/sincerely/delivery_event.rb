@@ -2,7 +2,7 @@
 
 module Sincerely
   class DeliveryEvent < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
-    self.table_name = :sincerely_delivery_events
+    self.table_name_prefix = :sincerely_
 
     serialize :options, coder: JSON
   end
