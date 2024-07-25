@@ -18,10 +18,7 @@ module Sincerely
       def generate_migration_and_models
         generate_migration
 
-        generate_event_model(:delivery_event)
-        generate_event_model(:bounce_event)
-        generate_event_model(:complaint_event)
-        generate_event_model(:engagement_event)
+        generate_model
       end
 
       private
@@ -36,8 +33,8 @@ module Sincerely
         "[#{ActiveRecord::VERSION::MAJOR}.#{ActiveRecord::VERSION::MINOR}]"
       end
 
-      def generate_event_model(model_name)
-        template("events/#{model_name}_model.rb.erb", "app/models/sincerely/#{model_name}.rb")
+      def generate_model
+        template('events/delivery_event_model.rb.erb', 'app/models/sincerely/delivery_event.rb')
       end
     end
   end

@@ -64,7 +64,7 @@ module DatabaseConfig
       create_table :sincerely_delivery_events do |t|
         t.string :message_id
         t.string :delivery_system
-        t.string :type
+        t.string :event_type
         t.string :recipient
         t.text :options
         t.datetime :timestamp

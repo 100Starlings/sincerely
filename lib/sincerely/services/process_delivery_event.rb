@@ -23,9 +23,11 @@ module Sincerely
 
         case event_type.to_sym
         when :bounce
-          process_bounce_event
+          notification.set_bounced!
+          create_event(event_type)
         when :complaint
-          process_complaint_event
+          notification.set_complained!
+          create_event(event_type)
         when :delivery
           notification.set_delivered!
         when :send
@@ -35,10 +37,10 @@ module Sincerely
           notification.update(error_message: event.rejection_reason)
         when :open
           notification.set_opened!
-          process_engagement_event
+          create_event(event_type)
         when :click
           notification.set_clicked!
-          process_engagement_event
+          create_event(event_type)
         end
       end
       # rubocop:enable Metrics/AbcSize
@@ -49,21 +51,8 @@ module Sincerely
 
       attr_reader :event
 
-      def process_bounce_event
-        notification.set_bounced!
-        Sincerely::BounceEvent
-          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
-      end
-
-      def process_complaint_event
-        notification.set_complained!
-        Sincerely::ComplaintEvent
-          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
-      end
-
-      def process_engagement_event
-        Sincerely::EngagementEvent
-          .create(message_id:, delivery_system:, recipient:, timestamp:, options:)
+      def create_event(event_type)
+        Sincerely::DeliveryEvent.create(message_id:, delivery_system:, event_type:, recipient:, timestamp:, options:)
       end
 
       def notification

@@ -11,9 +11,10 @@ describe Sincerely::Services::ProcessDeliveryEvent do
     let(:message_id) { '12345' }
     let(:recipient) { 'john@doe.com' }
     let(:timestamp) { '2024-07-01T00:40:02.012Z' }
+    let(:timestamp_parsed) { Time.parse(timestamp) }
     let(:delivery_system) { 'aws_ses2' }
     let(:notification) { Notification.create(recipient:, notification_type: 'email', message_id:) }
-    let(:options) { nil }
+    let(:options) { { 'userAgent' => 'agent' } }
     let(:event) { double(:event, event_type:, message_id:, recipient:, timestamp:, options:) } # rubocop:disable RSpec/VerifiedDoubles
 
     before do
@@ -33,35 +34,29 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when bounce event' do
       let(:event_type) { 'bounce' }
-      let(:options) { { userAgent: 'agent' } }
 
       it 'updates the status' do
         expect(notification.reload.bounced?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::BounceEvent.first)
-          .to have_attributes(
-            message_id:, delivery_system:, recipient:,
-            timestamp: Time.parse(timestamp), options: { 'userAgent' => 'agent' }
-          )
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
+                              options:))
       end
     end
 
     context 'when complaint event' do
       let(:event_type) { 'complaint' }
-      let(:options) { { userAgent: 'agent' } }
 
       it 'updates the status' do
         expect(notification.reload.complained?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::ComplaintEvent.first)
-          .to have_attributes(
-            message_id:, delivery_system:, recipient:,
-            timestamp: Time.parse(timestamp), options: { 'userAgent' => 'agent' }
-          )
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
+                              options:))
       end
     end
 
@@ -84,35 +79,28 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when open event' do
       let(:event_type) { 'open' }
-      let(:options) { { userAgent: 'agent' } }
 
       it 'updates the status' do
         expect(notification.reload.opened?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::EngagementEvent.first)
-          .to have_attributes(
-            message_id:, delivery_system:, recipient:,
-            timestamp: Time.parse(timestamp), options: { 'userAgent' => 'agent' }
-          )
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
+                              options:))
       end
     end
 
     context 'when click event' do
       let(:event_type) { 'click' }
-      let(:options) { { userAgent: 'agent' } }
 
       it 'updates the status' do
         expect(notification.reload.clicked?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::EngagementEvent.first)
-          .to have_attributes(
-            message_id:, delivery_system:, recipient:,
-            timestamp: Time.parse(timestamp), options: { 'userAgent' => 'agent' }
-          )
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, recipient:, timestamp: Time.parse(timestamp), options:))
       end
     end
   end
