@@ -1,6 +1,6 @@
 # Sincerely
 ## Introduction
-Sincerely is a versatile Ruby gem designed for ...
+Sincerely is a versatile Ruby gem designed for creating, delivering and monitoring email, sms or push notifications.
 
 ## Table of Contents
 1. [Installation](#installation)
