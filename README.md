@@ -50,14 +50,14 @@ defaults: &defaults
   notification_model_name: Notification
 ```
 
-2. You need to set the delivery method for each delivery options (email/sms/push) by setting the `delivery_methods` option in the `config/sincerely.yml` file. Please note that right now the gem supports only AWS SES email notification (`Sincerely::DeliveryMethods::EmailAwsSes` module).
+2. You need to set the delivery system for each delivery methods (email/sms/push) by setting the `delivery_methods` option in the `config/sincerely.yml` file. Please note that right now the gem supports only AWS SES email notification (`Sincerely::DeliverySystems::EmailAwsSes` module).
 
 ```
 # config/sincerely.yml
 defaults: &defaults
   delivery_methods:
     email:
-      class_name: Sincerely::DeliveryMethods::EmailAwsSes
+      delivery_system: Sincerely::DeliverySystems::EmailAwsSes
       options:
         region: region
         access_key_id: your_access_key_id
@@ -134,7 +134,7 @@ Please note that the notification status is updated only if the event callback i
 
 ## Callbacks
 
-`EmailAwsSes` delivery method supports SES email sending events. To enable it make sure:
+`EmailAwsSes` delivery system supports SES email sending events. To enable it make sure:
 * you have run the `events` task described in the `Getting Started` section
 * you have set the `configuration_set_name` option described in the `Configuration` section
 * you have run the following task that generates the webhook controller for you

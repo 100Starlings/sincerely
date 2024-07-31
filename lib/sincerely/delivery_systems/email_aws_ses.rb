@@ -3,8 +3,10 @@
 require 'aws-sdk-sesv2'
 
 module Sincerely
-  module DeliveryMethods
+  module DeliverySystems
     class EmailAwsSes
+      DELIVERY_SYSTEM = :aws_ses2
+
       class << self
         def call(notification:, options: {})
           new(notification:, options:).deliver
@@ -59,7 +61,7 @@ module Sincerely
       end
 
       def update_notification(response)
-        notification.update(message_id: response.message_id, delivery_system: :aws_ses2, sent_at: Time.current)
+        notification.update(message_id: response.message_id, delivery_system: DELIVERY_SYSTEM, sent_at: Time.current)
       end
     end
   end
