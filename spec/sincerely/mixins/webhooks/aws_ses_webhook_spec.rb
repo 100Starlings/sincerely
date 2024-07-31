@@ -13,7 +13,7 @@ RSpec.describe 'AwsSesWebhook' do
         Sincerely::SincerelyConfig,
         delivery_methods: {
           'email' => {
-            'class_name' => 'Sincerely::DeliverySystems::EmailAwsSes',
+            'delivery_system' => 'Sincerely::DeliverySystems::EmailAwsSes',
             'options' => { region: 'region', access_key_id: 'access_key_id', secret_access_key: 'secret_access_key' }
           }
         }

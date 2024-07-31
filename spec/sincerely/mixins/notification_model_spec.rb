@@ -103,7 +103,7 @@ RSpec.describe 'NotificationModel' do
           Sincerely::SincerelyConfig,
           delivery_methods: {
             'email' => {
-              'class_name' => 'Sincerely::DeliverySystems::EmailAwsSes',
+              'delivery_system' => 'Sincerely::DeliverySystems::EmailAwsSes',
               'options' => delivery_method_options
             }
           }
