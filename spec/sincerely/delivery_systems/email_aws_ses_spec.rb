@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Sincerely::DeliveryMethods::EmailAwsSes do
+RSpec.describe Sincerely::DeliverySystems::EmailAwsSes do
   describe 'call' do
     context 'when sending an email notification via Amazon SES' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:template) { Sincerely::Templates::EmailLiquidTemplate.create(subject: 'Spam') }

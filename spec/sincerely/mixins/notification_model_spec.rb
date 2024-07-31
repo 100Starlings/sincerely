@@ -103,7 +103,7 @@ RSpec.describe 'NotificationModel' do
           Sincerely::SincerelyConfig,
           delivery_methods: {
             'email' => {
-              'class_name' => 'Sincerely::DeliveryMethods::EmailAwsSes',
+              'class_name' => 'Sincerely::DeliverySystems::EmailAwsSes',
               'options' => delivery_method_options
             }
           }
@@ -112,13 +112,13 @@ RSpec.describe 'NotificationModel' do
 
       before do
         allow(Sincerely).to(receive(:config).and_return(configured_delivery_methods))
-        allow(Sincerely::DeliveryMethods::EmailAwsSes).to(receive(:call))
+        allow(Sincerely::DeliverySystems::EmailAwsSes).to(receive(:call))
       end
 
       it 'calls the delivery method call' do
         model.deliver
 
-        expect(Sincerely::DeliveryMethods::EmailAwsSes)
+        expect(Sincerely::DeliverySystems::EmailAwsSes)
           .to(have_received(:call).with(notification: model, options: delivery_method_options))
       end
     end

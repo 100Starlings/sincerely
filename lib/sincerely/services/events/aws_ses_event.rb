@@ -45,6 +45,10 @@ module Sincerely
         def options
           nil
         end
+
+        def delivery_system
+          Sincerely::DeliverySystems::EmailAwsSes::DELIVERY_SYSTEM
+        end
       end
     end
   end

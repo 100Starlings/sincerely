@@ -3,7 +3,8 @@
 module Sincerely
   module Services
     class ProcessDeliveryEvent
-      delegate :event_type, :message_id, :recipient, :timestamp, :options, to: :event
+      delegate :event_type, :message_id, :recipient, :timestamp, :options, :delivery_system,
+               to: :event
 
       class << self
         def call(event:)
@@ -58,10 +59,6 @@ module Sincerely
       def notification
         model = Sincerely.config.notification_model_name.constantize
         @notification ||= model.find_by(message_id:)
-      end
-
-      def delivery_system
-        :aws_ses2
       end
     end
   end

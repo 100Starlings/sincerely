@@ -15,7 +15,9 @@ describe Sincerely::Services::ProcessDeliveryEvent do
     let(:delivery_system) { 'aws_ses2' }
     let(:notification) { Notification.create(recipient:, notification_type: 'email', message_id:) }
     let(:options) { { 'userAgent' => 'agent' } }
-    let(:event) { double(:event, event_type:, message_id:, recipient:, timestamp:, options:) } # rubocop:disable RSpec/VerifiedDoubles
+    let(:event) do
+      double(:event, event_type:, message_id:, recipient:, timestamp:, options:, delivery_system:) # rubocop:disable RSpec/VerifiedDoubles
+    end
 
     before do
       notification

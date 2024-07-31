@@ -2,7 +2,7 @@ defaults: &defaults
   notification_model_name: Notification
   delivery_methods:
     email:
-      class_name: Sincerely::DeliveryMethods::EmailAwsSes
+      delivery_system: Sincerely::DeliverySystems::EmailAwsSes
       options:
         region: <%%= ENV['AWS_REGION'] %>
         access_key_id: <%%= ENV['AWS_ACCESS_KEY_ID'] %>
