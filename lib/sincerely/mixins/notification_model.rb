@@ -79,7 +79,7 @@ module Sincerely
         end
 
         def call_delivery_method
-          class_name, options = delivery_method.values_at('class_name', 'options')
+          class_name, options = delivery_method.values_at('delivery_system', 'options')
           klass = class_name.constantize
           klass.call(notification: self, options:)
         end
