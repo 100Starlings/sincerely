@@ -4,11 +4,20 @@ module Sincerely
   module Services
     module Events
       class AwsSesOpenEvent < AwsSesEvent
-        def options
-          {
-            ip_address: event.dig('open', 'ipAddress'),
-            user_agent: event.dig('open', 'userAgent')
-          }
+        def ip_address
+          event.dig('open', 'ipAddress')
+        end
+
+        def user_agent
+          event.dig('open', 'userAgent')
+        end
+
+        def link
+          nil
+        end
+
+        def feedback_type
+          nil
         end
       end
     end

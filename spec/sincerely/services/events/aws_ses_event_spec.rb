@@ -28,9 +28,9 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-05T00:41:02.669Z'),
+        delivery_event_subtype: 'General',
+        delivery_event_type: 'Permanent',
         options: {
-          bounce_type: 'Permanent',
-          bounce_subtype: 'General',
           action: 'failed',
           status: '5.1.1',
           diagnostic_code: 'smtp; 550 5.1.1 user unknown'
@@ -48,10 +48,9 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-05T00:41:02.669Z'),
-        options: {
-          complaint_feedback_type: 'abuse',
-          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36' # rubocop:disable Layout/LineLength
-        }
+        feedback_type: 'abuse',
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+                    'Chrome/60.0.3112.90 Safari/537.36'
       )
     end
   end
@@ -91,10 +90,9 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-09T22:00:19.652Z'),
-        options: {
-          ip_address: '192.0.2.1',
-          user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60' # rubocop:disable Layout/LineLength
-        }
+        ip_address: '192.0.2.1',
+        user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 ' \
+                    '(KHTML, like Gecko) Mobile/14G60'
       )
     end
   end
@@ -108,11 +106,10 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-09T23:51:25.570Z'),
-        options: {
-          ip_address: '192.0.2.1',
-          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36', # rubocop:disable Layout/LineLength
-          link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-smtp.html'
-        }
+        ip_address: '192.0.2.1',
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+                    'Chrome/60.0.3112.90 Safari/537.36',
+        link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-smtp.html'
       )
     end
   end

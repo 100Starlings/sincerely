@@ -27,6 +27,9 @@ module Sincerely
         migration_template('events/delivery_events_create.rb.erb',
                            'db/migrate/create_sincerely_delivery_events.rb',
                            migration_version:)
+        migration_template('events/engagement_events_create.rb.erb',
+                           'db/migrate/create_sincerely_engagement_events.rb',
+                           migration_version:)
       end
 
       def migration_version
@@ -35,6 +38,7 @@ module Sincerely
 
       def generate_model
         template('events/delivery_event_model.rb.erb', 'app/models/sincerely/delivery_event.rb')
+        template('events/engagement_event_model.rb.erb', 'app/models/sincerely/engagement_event.rb')
       end
     end
   end

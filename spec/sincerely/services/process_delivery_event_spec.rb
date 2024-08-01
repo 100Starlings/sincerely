@@ -16,7 +16,7 @@ describe Sincerely::Services::ProcessDeliveryEvent do
     let(:notification) { Notification.create(recipient:, notification_type: 'email', message_id:) }
     let(:options) { { 'userAgent' => 'agent' } }
     let(:event) do
-      double(:event, event_type:, message_id:, recipient:, timestamp:, options:, delivery_system:) # rubocop:disable RSpec/VerifiedDoubles
+      double(:event, event_type:, message_id:, recipient:, timestamp:, options: nil, delivery_system:) # rubocop:disable RSpec/VerifiedDoubles
     end
 
     before do
@@ -36,6 +36,10 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when bounce event' do
       let(:event_type) { 'bounce' }
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options:, # rubocop:disable RSpec/VerifiedDoubles
+                       delivery_event_type: 'Permanent', delivery_event_subtype: 'General')
+      end
 
       it 'updates the status' do
         expect(notification.reload.bounced?).to be true
@@ -44,29 +48,42 @@ describe Sincerely::Services::ProcessDeliveryEvent do
       it 'creates an event record' do
         expect(Sincerely::DeliveryEvent.first)
           .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
-                              options:))
+                              options:, delivery_event_type: 'Permanent', delivery_event_subtype: 'General'))
       end
     end
 
     context 'when complaint event' do
       let(:event_type) { 'complaint' }
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
+                       ip_address: nil, user_agent: 'agent', link: nil, feedback_type: 'abuse')
+      end
 
       it 'updates the status' do
         expect(notification.reload.complained?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::DeliveryEvent.first)
+        expect(Sincerely::EngagementEvent.first)
           .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
-                              options:))
+                              ip_address: nil, user_agent: 'agent', link: nil, feedback_type: 'abuse'))
       end
     end
 
     context 'when delivery event' do
       let(:event_type) { 'delivery' }
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
+                       delivery_event_type: nil, delivery_event_subtype: nil)
+      end
 
       it 'updates the status' do
         expect(notification.reload.delivered?).to be true
+      end
+
+      it 'creates an event record' do
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed))
       end
     end
 
@@ -81,28 +98,37 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when open event' do
       let(:event_type) { 'open' }
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
+                       ip_address: 'IP', user_agent: 'agent', link: nil, feedback_type: nil)
+      end
 
       it 'updates the status' do
         expect(notification.reload.opened?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::DeliveryEvent.first)
+        expect(Sincerely::EngagementEvent.first)
           .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
-                              options:))
+                              ip_address: 'IP', user_agent: 'agent'))
       end
     end
 
     context 'when click event' do
       let(:event_type) { 'click' }
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
+                       ip_address: 'IP', user_agent: 'agent', link: 'link', feedback_type: nil)
+      end
 
       it 'updates the status' do
         expect(notification.reload.clicked?).to be true
       end
 
       it 'creates an event record' do
-        expect(Sincerely::DeliveryEvent.first)
-          .to(have_attributes(message_id:, delivery_system:, recipient:, timestamp: Time.parse(timestamp), options:))
+        expect(Sincerely::EngagementEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, recipient:, timestamp: Time.parse(timestamp),
+                              ip_address: 'IP', user_agent: 'agent', link: 'link'))
       end
     end
   end
