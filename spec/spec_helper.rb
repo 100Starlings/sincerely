@@ -12,6 +12,7 @@ require 'support/application_controller'
 require 'support/database_config'
 require 'support/notification'
 require 'support/sincerely/delivery_event'
+require 'support/sincerely/engagement_event'
 require 'support/aws_ses_webhook_controller'
 
 include DatabaseConfig # rubocop:disable Style/MixinUsage

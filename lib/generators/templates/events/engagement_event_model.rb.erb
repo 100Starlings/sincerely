@@ -1,0 +1,5 @@
+class Sincerely::EngagementEvent < ApplicationRecord
+  self.table_name_prefix = :sincerely_
+
+  serialize :options, coder: JSON
+end

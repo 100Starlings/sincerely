@@ -25,12 +25,13 @@ module Sincerely
         case event_type.to_sym
         when :bounce
           notification.set_bounced!
-          create_event(event_type)
+          create_event
         when :complaint
           notification.set_complained!
-          create_event(event_type)
+          create_event
         when :delivery
           notification.set_delivered!
+          create_event
         when :send
           notification.set_accepted! if notification.may_set_accepted?
         when :reject
@@ -38,10 +39,10 @@ module Sincerely
           notification.update(error_message: event.rejection_reason)
         when :open
           notification.set_opened!
-          create_event(event_type)
+          create_event
         when :click
           notification.set_clicked!
-          create_event(event_type)
+          create_event
         end
       end
       # rubocop:enable Metrics/AbcSize
@@ -52,9 +53,25 @@ module Sincerely
 
       attr_reader :event
 
-      def create_event(event_type)
-        Sincerely::DeliveryEvent.create(message_id:, delivery_system:, event_type:, recipient:, timestamp:, options:)
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      def create_event
+        case event_type.to_sym
+        when :bounce, :delivery
+          Sincerely::DeliveryEvent.create(
+            message_id:, delivery_system:, event_type:, recipient:, timestamp:, options:,
+            delivery_event_type: event.delivery_event_type, delivery_event_subtype: event.delivery_event_subtype
+          )
+        else
+          Sincerely::EngagementEvent.create(
+            message_id:, delivery_system:, event_type:, recipient:, timestamp:, options:,
+            ip_address: event.ip_address, user_agent: event.user_agent, link: event.link,
+            feedback_type: event.feedback_type
+          )
+        end
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def notification
         model = Sincerely.config.notification_model_name.constantize

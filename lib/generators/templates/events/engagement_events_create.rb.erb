@@ -1,0 +1,21 @@
+class CreateSincerelyEngagementEvents < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :sincerely_engagement_events do |t|
+      t.string :message_id
+      t.string :delivery_system
+      t.string :event_type
+      t.string :recipient
+      t.string :ip_address
+      t.string :user_agent
+      t.string :link
+      t.string :feedback_type
+      t.text :options
+      t.datetime :timestamp
+
+      t.timestamps
+    end
+
+    add_index :sincerely_engagement_events, :message_id
+    add_index :sincerely_engagement_events, :created_at
+  end
+end

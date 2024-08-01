@@ -5,6 +5,8 @@ class CreateSincerelyDeliveryEvents < ActiveRecord::Migration<%= migration_versi
       t.string :delivery_system
       t.string :event_type
       t.string :recipient
+      t.string :delivery_event_type
+      t.string :delivery_event_subtype
       t.text :options
       t.datetime :timestamp
 
@@ -13,6 +15,6 @@ class CreateSincerelyDeliveryEvents < ActiveRecord::Migration<%= migration_versi
 
     add_index :sincerely_delivery_events, :message_id
     add_index :sincerely_delivery_events, :delivery_system
-    add_index :sincerely_delivery_events, :recipient
+    add_index :sincerely_delivery_events, :created_at
   end
 end

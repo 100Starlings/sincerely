@@ -9,9 +9,10 @@ module Sincerely
         class << self
           def event_for(event_payload)
             case event_type(event_payload)
+            when 'bounce' then AwsSesBounceEvent.new(event_payload)
+            when 'delivery' then AwsSesDeliveryEvent.new(event_payload)
             when 'click' then AwsSesClickEvent.new(event_payload)
             when 'open' then AwsSesOpenEvent.new(event_payload)
-            when 'bounce' then AwsSesBounceEvent.new(event_payload)
             when 'complaint' then AwsSesComplaintEvent.new(event_payload)
             else new(event_payload)
             end
