@@ -49,7 +49,8 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-05T00:41:02.669Z'),
         feedback_type: 'abuse',
-        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36' # rubocop:disable Layout/LineLength
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+                    'Chrome/60.0.3112.90 Safari/537.36'
       )
     end
   end
@@ -90,7 +91,8 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-09T22:00:19.652Z'),
         ip_address: '192.0.2.1',
-        user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 (KHTML, like Gecko) Mobile/14G60' # rubocop:disable Layout/LineLength
+        user_agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_3 like Mac OS X) AppleWebKit/603.3.8 ' \
+                    '(KHTML, like Gecko) Mobile/14G60'
       )
     end
   end
@@ -105,7 +107,8 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         recipient: 'recipient@example.com',
         timestamp: Time.parse('2017-08-09T23:51:25.570Z'),
         ip_address: '192.0.2.1',
-        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36', # rubocop:disable Layout/LineLength
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' \
+                    'Chrome/60.0.3112.90 Safari/537.36',
         link: 'http://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-smtp.html'
       )
     end
