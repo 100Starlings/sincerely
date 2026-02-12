@@ -29,36 +29,41 @@ module Sincerely
           state :opened
           state :clicked
 
+          # Terminal states: bounced, complained, rejected - no transitions allowed from these
+          # Flow: draft -> accepted -> delivered -> opened -> clicked
+          #                        \-> bounced (terminal)
+          #                        \-> complained (terminal from delivered/opened/clicked)
+
           event :set_accepted do
             transitions to: :accepted, from: [:draft]
           end
 
           event :set_rejected do
-            transitions to: :rejected
+            transitions to: :rejected, from: [:draft, :accepted]
           end
 
           event :set_delivered do
-            transitions to: :delivered
+            transitions to: :delivered, from: [:draft, :accepted, :delayed]
           end
 
           event :set_bounced do
-            transitions to: :bounced
+            transitions to: :bounced, from: [:draft, :accepted, :delivered, :delayed]
           end
 
           event :set_complained do
-            transitions to: :complained
+            transitions to: :complained, from: [:delivered, :opened, :clicked]
           end
 
           event :set_delayed do
-            transitions to: :delayed
+            transitions to: :delayed, from: [:draft, :accepted]
           end
 
           event :set_opened do
-            transitions to: :opened
+            transitions to: :opened, from: [:delivered]
           end
 
           event :set_clicked do
-            transitions to: :clicked
+            transitions to: :clicked, from: [:delivered, :opened]
           end
         end
 
