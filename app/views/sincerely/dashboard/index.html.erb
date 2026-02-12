@@ -1,0 +1,117 @@
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-subtitle">Notification overview and metrics</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Notifications</div>
+    <div class="stat-value primary"><%= number_with_delimiter(@total_notifications) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Delivery Rate</div>
+    <div class="stat-value success"><%= @delivery_rate %>%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Open Rate</div>
+    <div class="stat-value warning"><%= @open_rate %>%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Templates</div>
+    <div class="stat-value"><%= @templates_count %></div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Notifications by Status</h2>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Status</th><th>Count</th></tr>
+        </thead>
+        <tbody>
+          <% @notifications_by_state.each do |state, count| %>
+            <tr>
+              <td><span class="badge badge-<%= state %>"><%= state.to_s.humanize %></span></td>
+              <td><%= number_with_delimiter(count) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Notifications</h2>
+      <a href="<%= sincerely.notifications_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Recipient</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          <% @recent_notifications.each do |notification| %>
+            <tr>
+              <td><a href="<%= sincerely.notification_path(notification) %>"><%= truncate(notification.recipient, length: 30) %></a></td>
+              <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
+              <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Delivery Events</h2>
+      <a href="<%= sincerely.delivery_events_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <% @recent_delivery_events.each do |event| %>
+            <tr>
+              <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
+              <td><%= truncate(event.recipient, length: 25) %></td>
+              <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Engagement Events</h2>
+      <a href="<%= sincerely.engagement_events_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <% @recent_engagement_events.each do |event| %>
+            <tr>
+              <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
+              <td><%= truncate(event.recipient, length: 25) %></td>
+              <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
