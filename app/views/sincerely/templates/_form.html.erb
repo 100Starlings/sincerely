@@ -1,0 +1,88 @@
+<%= form_with model: template, url: form_url, local: true, class: 'template-form' do |f| %>
+  <% if template.errors.any? %>
+    <div class="alert alert-danger">
+      <strong>Please fix the following errors:</strong>
+      <ul>
+        <% template.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Basic Information</h2>
+      </div>
+      <div class="form-content">
+        <div class="form-group">
+          <label for="template_name">Name *</label>
+          <%= f.text_field :name, class: 'form-control', required: true, placeholder: 'e.g., Welcome Email' %>
+        </div>
+
+        <div class="form-group">
+          <label for="template_subject">Subject *</label>
+          <%= f.text_field :subject, class: 'form-control', required: true, placeholder: 'e.g., Welcome to {{ app_name }}!' %>
+          <small class="form-hint">You can use Liquid variables like {{ name }}, {{ app_name }}, etc.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="template_sender">Sender *</label>
+          <%= f.text_field :sender, class: 'form-control', required: true, placeholder: 'e.g., noreply@example.com' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Tips</h2>
+      </div>
+      <div class="tips-content">
+        <h4>Liquid Variables</h4>
+        <p>Use double curly braces to insert variables:</p>
+        <code>{{ variable_name }}</code>
+
+        <h4 style="margin-top: 1rem;">Conditionals</h4>
+        <pre>{% if condition %}
+  Show this
+{% endif %}</pre>
+
+        <h4 style="margin-top: 1rem;">Loops</h4>
+        <pre>{% for item in items %}
+  {{ item.name }}
+{% endfor %}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">HTML Content *</h2>
+    </div>
+    <div class="form-content">
+      <%= f.text_area :html_content, class: 'form-control code-editor', rows: 15, required: true, placeholder: '<html>
+<body>
+  <h1>Hello {{ name }}!</h1>
+  <p>Welcome to our platform.</p>
+</body>
+</html>' %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Text Content *</h2>
+    </div>
+    <div class="form-content">
+      <%= f.text_area :text_content, class: 'form-control code-editor', rows: 10, required: true, placeholder: 'Hello {{ name }}!
+
+Welcome to our platform.' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit template.persisted? ? 'Update Template' : 'Create Template', class: 'btn btn-primary' %>
+    <a href="<%= template.persisted? ? sincerely.template_path(template) : sincerely.templates_path %>" class="btn btn-secondary">Cancel</a>
+  </div>
+<% end %>

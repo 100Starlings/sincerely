@@ -1,0 +1,45 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Templates</h1>
+    <p class="page-subtitle">Manage notification templates</p>
+  </div>
+  <a href="<%= sincerely.new_template_path %>" class="btn btn-primary">New Template</a>
+</div>
+
+<div class="card">
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Subject</th>
+          <th>Sender</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @templates.each do |template| %>
+          <tr>
+            <td><strong><%= template.name %></strong></td>
+            <td><span class="badge"><%= template.type.demodulize.underscore.humanize %></span></td>
+            <td><%= truncate(template.subject, length: 40) %></td>
+            <td><%= truncate(template.sender, length: 30) %></td>
+            <td><%= template.created_at.strftime('%b %d, %Y') %></td>
+            <td>
+              <a href="<%= sincerely.template_path(template) %>" class="btn btn-secondary btn-sm">View</a>
+              <a href="<%= sincerely.edit_template_path(template) %>" class="btn btn-secondary btn-sm">Edit</a>
+            </td>
+          </tr>
+        <% end %>
+        <% if @templates.empty? %>
+          <tr>
+            <td colspan="6" class="empty-state">No templates found. <a href="<%= sincerely.new_template_path %>">Create one</a></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render 'sincerely/shared/pagination', pagination: @pagination %>
+</div>

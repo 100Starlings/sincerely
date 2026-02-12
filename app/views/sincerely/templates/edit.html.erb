@@ -1,0 +1,6 @@
+<div class="page-header">
+  <h1 class="page-title">Edit Template</h1>
+  <p class="page-subtitle">Update <%= @template.name %></p>
+</div>
+
+<%= render 'form', template: @template, form_url: sincerely.template_path(@template) %>
