@@ -57,7 +57,8 @@ module Sincerely
       end
 
       def subject
-        notification.delivery_options&.fetch('subject', nil) || template.subject
+        raw_subject = notification.delivery_options&.fetch('subject', nil) || template.subject
+        template.renderer.render(raw_subject, notification.delivery_options&.stringify_keys)
       end
 
       def update_notification(response)
