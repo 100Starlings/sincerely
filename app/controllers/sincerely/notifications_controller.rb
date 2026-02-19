@@ -3,7 +3,7 @@
 module Sincerely
   class NotificationsController < ApplicationController
     def index
-      @notifications = notification_model.order(created_at: :desc)
+      @notifications = apply_time_filter(notification_model).order(created_at: :desc)
 
       # Apply filters
       @notifications = @notifications.where(delivery_state: params[:status]) if params[:status].present?

@@ -3,7 +3,7 @@
 module Sincerely
   class EngagementEventsController < ApplicationController
     def index
-      @events = Sincerely::EngagementEvent.order(created_at: :desc)
+      @events = apply_time_filter(Sincerely::EngagementEvent).order(created_at: :desc)
 
       @events = @events.where(event_type: params[:event_type]) if params[:event_type].present?
       @events = @events.where('recipient LIKE ?', "%#{params[:recipient]}%") if params[:recipient].present?
