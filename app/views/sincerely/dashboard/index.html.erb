@@ -1,6 +1,5 @@
 <div class="page-header">
   <h1 class="page-title">Dashboard</h1>
-  <p class="page-subtitle">Notification overview and metrics</p>
 </div>
 
 <div class="stats-grid">
@@ -27,21 +26,112 @@
     <div class="card-header">
       <h2 class="card-title">Notifications by Status</h2>
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr><th>Status</th><th>Count</th></tr>
-        </thead>
-        <tbody>
+    <% if @notifications_by_state.any? %>
+      <%
+        state_colors = {
+          'draft' => '#9ca3af',
+          'accepted' => '#3b82f6',
+          'delivered' => '#10b981',
+          'opened' => '#f59e0b',
+          'clicked' => '#8b5cf6',
+          'bounced' => '#ef4444',
+          'rejected' => '#dc2626',
+          'complained' => '#be123c',
+          'delayed' => '#f97316'
+        }
+        total = @notifications_by_state.values.sum
+        radius = 68
+        circumference = 2 * Math::PI * radius
+        offset = 0
+      %>
+      <div class="donut-chart-container" id="donutChart">
+        <div class="donut-chart-wrapper">
+          <svg class="donut-chart" viewBox="0 0 200 200">
+            <% @notifications_by_state.each do |state, count| %>
+              <%
+                percentage = count.to_f / total
+                dash_length = circumference * percentage
+                color = state_colors[state.to_s] || '#6b7280'
+              %>
+              <circle
+                class="donut-segment"
+                data-state="<%= state %>"
+                cx="100" cy="100" r="<%= radius %>"
+                stroke="<%= color %>"
+                stroke-dasharray="<%= dash_length %> <%= circumference - dash_length %>"
+                stroke-dashoffset="<%= -offset %>"
+              />
+              <% offset += dash_length %>
+            <% end %>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-center-value"><%= number_with_delimiter(total) %></div>
+            <div class="donut-center-label">Total</div>
+          </div>
+        </div>
+        <div class="donut-legend">
           <% @notifications_by_state.each do |state, count| %>
-            <tr>
-              <td><span class="badge badge-<%= state %>"><%= state.to_s.humanize %></span></td>
-              <td><%= number_with_delimiter(count) %></td>
-            </tr>
+            <% color = state_colors[state.to_s] || '#6b7280' %>
+            <div class="donut-legend-item" data-state="<%= state %>">
+              <span class="donut-legend-color" style="background: <%= color %>"></span>
+              <span class="donut-legend-text"><%= state.to_s.humanize %></span>
+              <span class="donut-legend-count"><%= number_with_delimiter(count) %></span>
+            </div>
           <% end %>
-        </tbody>
-      </table>
-    </div>
+        </div>
+      </div>
+      <script>
+        (function() {
+          const chart = document.getElementById('donutChart');
+          if (!chart) return;
+
+          const segments = chart.querySelectorAll('.donut-segment');
+          const legendItems = chart.querySelectorAll('.donut-legend-item');
+
+          function highlightState(state) {
+            segments.forEach(seg => {
+              if (seg.dataset.state === state) {
+                seg.classList.add('highlighted');
+                seg.classList.remove('dimmed');
+              } else {
+                seg.classList.add('dimmed');
+                seg.classList.remove('highlighted');
+              }
+            });
+            legendItems.forEach(item => {
+              if (item.dataset.state === state) {
+                item.classList.add('highlighted');
+                item.classList.remove('dimmed');
+              } else {
+                item.classList.add('dimmed');
+                item.classList.remove('highlighted');
+              }
+            });
+          }
+
+          function resetHighlight() {
+            segments.forEach(seg => {
+              seg.classList.remove('highlighted', 'dimmed');
+            });
+            legendItems.forEach(item => {
+              item.classList.remove('highlighted', 'dimmed');
+            });
+          }
+
+          legendItems.forEach(item => {
+            item.addEventListener('mouseenter', () => highlightState(item.dataset.state));
+            item.addEventListener('mouseleave', resetHighlight);
+          });
+
+          segments.forEach(seg => {
+            seg.addEventListener('mouseenter', () => highlightState(seg.dataset.state));
+            seg.addEventListener('mouseleave', resetHighlight);
+          });
+        })();
+      </script>
+    <% else %>
+      <div class="donut-empty">No notifications in this period</div>
+    <% end %>
   </div>
 
   <div class="card">
@@ -55,12 +145,16 @@
           <tr><th>Recipient</th><th>Status</th><th>Date</th></tr>
         </thead>
         <tbody>
-          <% @recent_notifications.each do |notification| %>
-            <tr>
-              <td><a href="<%= sincerely.notification_path(notification) %>"><%= truncate(notification.recipient, length: 30) %></a></td>
-              <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
-              <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
-            </tr>
+          <% if @recent_notifications.any? %>
+            <% @recent_notifications.each do |notification| %>
+              <tr>
+                <td><a href="<%= sincerely.notification_path(notification) %>"><%= truncate(notification.recipient, length: 30) %></a></td>
+                <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
+                <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No recent notifications</td></tr>
           <% end %>
         </tbody>
       </table>
@@ -80,12 +174,16 @@
           <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
         </thead>
         <tbody>
-          <% @recent_delivery_events.each do |event| %>
-            <tr>
-              <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
-              <td><%= truncate(event.recipient, length: 25) %></td>
-              <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
-            </tr>
+          <% if @recent_delivery_events.any? %>
+            <% @recent_delivery_events.each do |event| %>
+              <tr>
+                <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
+                <td><%= truncate(event.recipient, length: 25) %></td>
+                <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No delivery events</td></tr>
           <% end %>
         </tbody>
       </table>
@@ -103,12 +201,16 @@
           <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
         </thead>
         <tbody>
-          <% @recent_engagement_events.each do |event| %>
-            <tr>
-              <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
-              <td><%= truncate(event.recipient, length: 25) %></td>
-              <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
-            </tr>
+          <% if @recent_engagement_events.any? %>
+            <% @recent_engagement_events.each do |event| %>
+              <tr>
+                <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
+                <td><%= truncate(event.recipient, length: 25) %></td>
+                <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No engagement events</td></tr>
           <% end %>
         </tbody>
       </table>
