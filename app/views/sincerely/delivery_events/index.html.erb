@@ -10,17 +10,37 @@
   <form method="get" action="<%= sincerely.delivery_events_path %>" class="filters-form">
     <div class="filters-grid">
       <div class="filter-group">
-        <label for="event_type">Event Type</label>
+        <label for="event_type">Status</label>
         <select name="event_type" id="event_type">
-          <option value="">All types</option>
+          <option value="">All statuses</option>
           <% @event_types.each do |type| %>
-            <option value="<%= type %>" <%= 'selected' if params[:event_type] == type %>><%= type %></option>
+            <option value="<%= type %>" <%= 'selected' if params[:event_type] == type %>><%= type.to_s.humanize %></option>
+          <% end %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="template_id">Template</label>
+        <select name="template_id" id="template_id">
+          <option value="">All templates</option>
+          <% @templates.each do |template| %>
+            <option value="<%= template.id %>" <%= 'selected' if params[:template_id] == template.id.to_s %>>
+              <%= template.name %>
+            </option>
           <% end %>
         </select>
       </div>
       <div class="filter-group">
         <label for="recipient">Recipient</label>
         <input type="text" name="recipient" id="recipient" value="<%= params[:recipient] %>" placeholder="Search by recipient...">
+      </div>
+      <div class="filter-group">
+        <label for="notification_type">Type</label>
+        <select name="notification_type" id="notification_type">
+          <option value="">All types</option>
+          <option value="email" <%= 'selected' if params[:notification_type] == 'email' %>>Email</option>
+          <option value="sms" <%= 'selected' if params[:notification_type] == 'sms' %>>SMS</option>
+          <option value="push" <%= 'selected' if params[:notification_type] == 'push' %>>Push</option>
+        </select>
       </div>
     </div>
     <div class="filter-actions">
@@ -47,13 +67,14 @@
       </thead>
       <tbody>
         <% @events.each do |event| %>
-          <tr>
+          <% notification = notification_model.find_by(message_id: event.message_id) %>
+          <tr<%= " class=\"clickable-row\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
             <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
             <td><%= truncate(event.recipient, length: 30) %></td>
             <td><code><%= truncate(event.message_id, length: 20) %></code></td>
             <td>
               <% if event.options.present? %>
-                <details>
+                <details onclick="event.stopPropagation()">
                   <summary class="btn btn-secondary btn-sm">View</summary>
                   <pre class="event-details"><%= JSON.pretty_generate(event.options) rescue event.options %></pre>
                 </details>
