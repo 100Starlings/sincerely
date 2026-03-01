@@ -66,26 +66,22 @@
           <th>Type</th>
           <th>Status</th>
           <th>Sent At</th>
-          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <% @notifications.each do |notification| %>
-          <tr>
+          <tr class="clickable-row" onclick="window.location='<%= sincerely.notification_path(notification) %>'">
             <td><%= notification.id %></td>
             <td><%= truncate(notification.recipient, length: 35) %></td>
             <td><%= notification.template&.name || 'N/A' %></td>
             <td><span class="badge"><%= notification.notification_type %></span></td>
             <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
             <td><%= notification.sent_at&.strftime('%b %d, %Y %H:%M') || '-' %></td>
-            <td>
-              <a href="<%= sincerely.notification_path(notification) %>" class="btn btn-secondary btn-sm">View</a>
-            </td>
           </tr>
         <% end %>
         <% if @notifications.empty? %>
           <tr>
-            <td colspan="7" class="empty-state">No notifications found</td>
+            <td colspan="6" class="empty-state">No notifications found</td>
           </tr>
         <% end %>
       </tbody>
