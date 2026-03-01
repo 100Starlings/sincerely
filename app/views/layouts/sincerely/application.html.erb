@@ -5,13 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sincerely Dashboard</title>
   <%= csrf_meta_tags %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jersey+10&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #4f46e5;
-      --primary-dark: #4338ca;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --primary: #D4183D;
+      --primary-dark: #70041E;
+      --success: #8ACB88;
+      --warning: #78c6cc;
+      --danger: #D4183D;
       --gray-50: #f9fafb;
       --gray-100: #f3f4f6;
       --gray-200: #e5e7eb;
@@ -20,15 +23,15 @@
       --gray-700: #374151;
       --gray-900: #111827;
       --bg-primary: #ffffff;
-      --bg-secondary: #f9fafb;
-      --text-primary: #111827;
-      --text-secondary: #6b7280;
+      --bg-secondary: #E6E6E6;
+      --text-primary: #70041E;
+      --text-secondary: #717182;
       --border-color: #e5e7eb;
     }
 
     [data-theme="dark"] {
-      --primary: #818cf8;
-      --primary-dark: #6366f1;
+      --primary: #D4183D;
+      --primary-dark: #490C13;
       --gray-50: #1f2937;
       --gray-100: #374151;
       --gray-200: #4b5563;
@@ -36,8 +39,10 @@
       --gray-500: #9ca3af;
       --gray-700: #d1d5db;
       --gray-900: #f9fafb;
-      --bg-primary: #111827;
-      --bg-secondary: #1f2937;
+      --bg-primary: #1E1E1E;
+      /* --bg-primary: #9393A1; */
+      --bg-secondary: #303030;
+      /* --bg-secondary: #1E1E1E; */
       --text-primary: #f9fafb;
       --text-secondary: #9ca3af;
       --border-color: #374151;
@@ -45,27 +50,40 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { height: 100%; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       background: var(--bg-secondary);
       color: var(--text-primary);
       line-height: 1.5;
       transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      body { overflow: auto; }
     }
 
     a { color: var(--primary); }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
 
     /* Navigation */
-    .nav { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 1rem 0; transition: background-color 0.3s; }
-    .nav-inner { display: flex; justify-content: space-between; align-items: center; }
-    .nav-brand { font-weight: 700; font-size: 1.25rem; color: var(--primary); text-decoration: none; }
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 1rem 0; transition: background-color 0.3s; z-index: 50; box-shadow: 0 1px 3px rgba(0,0,0,0.08); flex-shrink: 0; }
+    .nav-inner { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; position: relative; }
+    .nav-brand { font-family: 'Jersey 10', cursive; font-weight: 400; font-size: 2.25rem; color: #717182; text-decoration: none; }
+    [data-theme="dark"] .nav-brand { color: #9393A1; }
+    .nav-toggle { display: none; background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.5rem; cursor: pointer; color: var(--text-secondary); height: 2.25rem; align-items: center; justify-content: center; }
+    .nav-toggle svg { width: 1.25rem; height: 1.25rem; display: block; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; margin-left: 2rem; }
     .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; padding: 0.5rem 0; border-bottom: 2px solid transparent; }
     .nav-links a:hover, .nav-links a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .nav-utils { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
 
     /* Theme Toggle */
-    .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.5rem; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.5rem; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; transition: all 0.2s; height: 2.25rem; }
     .theme-toggle:hover { background: var(--gray-100); color: var(--text-primary); }
     .theme-toggle svg { width: 1.25rem; height: 1.25rem; }
     .theme-toggle .icon-sun { display: none; }
@@ -74,24 +92,30 @@
     [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
     /* Main */
-    .main { padding: 2rem 0; }
-    .page-header { margin-bottom: 2rem; }
-    .page-title { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); }
-    .page-subtitle { color: var(--gray-500); margin-top: 0.25rem; }
+    .main { padding: 2rem 0; flex: 1; overflow-y: auto; }
+    @media (max-width: 768px) { .main { overflow-y: visible; } }
+    .page-header { margin-bottom: 2rem; display: none; flex-direction: column; gap: 0.25rem; }
+    .page-header--visible { display: flex; }
+    .page-header-top { display: flex; align-items: center; gap: 0.75rem; }
+    .btn-back { display: flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
+    .btn-back:hover { background: var(--gray-100); color: var(--text-primary); }
+    .page-title { font-family: 'Jersey 10', cursive; font-size: 2rem; font-weight: 400; color: var(--gray-900); }
+    .page-subtitle { color: var(--gray-500); }
 
     /* Cards */
     .card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; transition: background-color 0.3s; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-    .card-title { font-weight: 600; font-size: 1rem; }
+    .card-title { font-family: 'Jersey 10', cursive; font-weight: 400; font-size: 1.5rem; }
 
     /* Stats */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
     .stat-card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; transition: background-color 0.3s; }
     .stat-label { color: var(--gray-500); font-size: 0.875rem; }
     .stat-value { font-size: 2rem; font-weight: 700; margin-top: 0.25rem; }
-    .stat-value.primary { color: var(--primary); }
+    .stat-value.primary { color: #8ACB88; }
     .stat-value.success { color: var(--success); }
     .stat-value.warning { color: var(--warning); }
+    .stat-value.danger { color: var(--danger); }
 
     /* Tables */
     .table-wrapper { overflow-x: auto; }
@@ -99,6 +123,9 @@
     th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
     th { background: var(--gray-100); font-weight: 600; font-size: 0.875rem; color: var(--text-secondary); transition: background-color 0.3s; }
     tr:hover { background: var(--gray-100); }
+    tr.clickable-row { cursor: pointer; transition: background-color 0.15s; }
+    tr.clickable-row:hover { background: var(--gray-200); }
+    tr.clickable-row td a { color: inherit; text-decoration: none; }
 
     /* Badges */
     .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
@@ -226,8 +253,6 @@
 
     /* Header Actions */
     .header-actions { display: flex; gap: 0.5rem; }
-    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
-
     /* Event Details */
     .event-details { margin-top: 0.5rem; background: var(--gray-50); padding: 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; max-height: 200px; overflow: auto; }
 
@@ -238,7 +263,7 @@
     .donut-chart-container { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; padding: 1rem 0; }
     .donut-chart-wrapper { position: relative; width: 300px; height: 300px; flex-shrink: 0; }
     .donut-chart { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .donut-segment { fill: none; stroke-width: 32; transition: opacity 0.2s, filter 0.2s; cursor: pointer; }
+    .donut-segment { fill: none; stroke-width: 32; stroke-linecap: butt; transition: opacity 0.2s, filter 0.2s; cursor: pointer; }
     .donut-segment.dimmed { opacity: 0.3; filter: grayscale(60%); }
     .donut-segment.highlighted { filter: brightness(1.1); }
     .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
@@ -254,10 +279,31 @@
     .donut-legend-count { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
     .donut-empty { display: flex; align-items: center; justify-content: center; height: 200px; color: var(--text-secondary); font-size: 0.875rem; }
 
+    /* Line Chart */
+    .line-chart-container { padding: 1rem 0; }
+    .line-chart-wrapper { position: relative; width: 100%; height: 280px; }
+    .line-chart { width: 100%; height: 100%; }
+    .line-chart-line { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: opacity 0.2s, stroke-width 0.2s; cursor: pointer; }
+    .line-chart-line.dimmed { opacity: 0.15; }
+    .line-chart-line.highlighted { stroke-width: 4; }
+    .line-chart-area { opacity: 0.1; transition: opacity 0.2s; }
+    .line-chart-area.dimmed { opacity: 0.02; }
+    .line-chart-area.highlighted { opacity: 0.2; }
+    .line-chart-axis { stroke: var(--border-color); stroke-width: 1; }
+    .line-chart-grid { stroke: var(--border-color); stroke-width: 0.5; opacity: 0.5; }
+    .line-chart-label { font-size: 0.625rem; fill: var(--text-secondary); }
+    .line-chart-label-y { text-anchor: end; }
+    .line-chart-label-x { text-anchor: middle; }
+    .line-chart-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+    .line-chart-legend-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.375rem 0.625rem; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.15s, opacity 0.2s; }
+    .line-chart-legend-item:hover { background: var(--gray-100); }
+    .line-chart-legend-item.dimmed { opacity: 0.4; }
+    .line-chart-legend-item.highlighted { background: var(--gray-100); }
+    .line-chart-empty { display: flex; align-items: center; justify-content: center; height: 280px; color: var(--text-secondary); font-size: 0.875rem; }
+
     /* Time Filter Dropdown */
-    .nav-actions { display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; }
     .time-dropdown { position: relative; }
-    .time-dropdown-btn { display: flex; align-items: center; gap: 0.375rem; background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0.5rem 0.625rem; cursor: pointer; color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; transition: all 0.2s; }
+    .time-dropdown-btn { display: flex; align-items: center; gap: 0.375rem; background: none; border: 1px solid var(--border-color); border-radius: 0.375rem; padding: 0 0.625rem; cursor: pointer; color: var(--text-secondary); font-size: 0.8125rem; font-weight: 500; transition: all 0.2s; height: 2.25rem; }
     .time-dropdown-btn:hover { background: var(--gray-100); color: var(--text-primary); }
     .time-dropdown-btn svg { width: 1rem; height: 1rem; }
     .time-dropdown-menu { position: absolute; top: 100%; right: 0; margin-top: 0.25rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 140px; z-index: 100; display: none; }
@@ -276,42 +322,89 @@
     /* Responsive */
     @media (max-width: 768px) {
       .grid-2 { grid-template-columns: 1fr; }
-      .nav-links { gap: 0.75rem; font-size: 0.875rem; }
+      .page-header { display: flex; justify-content: space-between; align-items: flex-start; }
+      .nav-toggle { display: block; order: 1; position: relative; }
+      .nav-brand { order: 2; }
+      .nav-utils { order: 3; margin-left: auto; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 1rem;
+        margin-top: 0.25rem;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        min-width: 180px;
+        z-index: 100;
+        margin-left: 0;
+        gap: 0;
+        padding: 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a {
+        padding: 0.625rem 1rem;
+        border-bottom: none;
+        color: var(--text-secondary);
+        transition: all 0.15s;
+      }
+      .nav-links a:first-child { border-radius: 0.5rem 0.5rem 0 0; }
+      .nav-links a:last-child { border-radius: 0 0 0.5rem 0.5rem; }
+      .nav-links a:hover { color: var(--text-primary); }
+      .nav-links a.active { color: var(--primary); font-weight: 600; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-value { font-size: 1.5rem; }
+      .donut-chart-wrapper { width: 220px; height: 220px; }
+      .line-chart-wrapper { height: 200px; }
+      .card { padding: 1rem; }
+      .card-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .main { padding: 1rem 0; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .donut-chart-wrapper { width: 180px; height: 180px; }
+      .donut-center-value { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
   <nav class="nav">
     <div class="container nav-inner">
+      <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
       <a href="<%= sincerely.root_path %>" class="nav-brand">Sincerely</a>
-      <div class="nav-links">
+      <div class="nav-links" id="navLinks">
         <a href="<%= sincerely.root_path %>" class="<%= 'active' if controller_name == 'dashboard' %>">Dashboard</a>
         <a href="<%= sincerely.notifications_path %>" class="<%= 'active' if controller_name == 'notifications' %>">Notifications</a>
         <a href="<%= sincerely.templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
         <a href="<%= sincerely.delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
         <a href="<%= sincerely.engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
-        <div class="nav-actions">
-          <% if controller_name != 'templates' %>
-            <div class="time-dropdown" id="timeDropdown">
-              <button class="time-dropdown-btn" onclick="toggleTimeDropdown()" title="Time filter">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span id="timeLabel">24h</span>
-              </button>
-              <div class="time-dropdown-menu">
-                <button class="time-dropdown-item" data-period="1h">1 hour</button>
-                <button class="time-dropdown-item" data-period="24h">24 hours</button>
-                <button class="time-dropdown-item" data-period="7d">7 days</button>
-                <button class="time-dropdown-item" data-period="30d">30 days</button>
-                <button class="time-dropdown-item" data-period="3m">3 months</button>
-                <button class="time-dropdown-item" data-period="all">All time</button>
-              </div>
+      </div>
+      <div class="nav-utils">
+        <% if controller_name != 'templates' %>
+          <div class="time-dropdown" id="timeDropdown">
+            <button class="time-dropdown-btn" onclick="toggleTimeDropdown()" title="Time filter">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span id="timeLabel">24h</span>
+            </button>
+            <div class="time-dropdown-menu">
+              <button class="time-dropdown-item" data-period="1h">1 hour</button>
+              <button class="time-dropdown-item" data-period="24h">24 hours</button>
+              <button class="time-dropdown-item" data-period="7d">7 days</button>
+              <button class="time-dropdown-item" data-period="30d">30 days</button>
+              <button class="time-dropdown-item" data-period="3m">3 months</button>
+              <button class="time-dropdown-item" data-period="all">All time</button>
             </div>
-          <% end %>
-          <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-            <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-          </button>
-        </div>
+          </div>
+        <% end %>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </button>
       </div>
     </div>
   </nav>
@@ -332,6 +425,11 @@
     const TIME_LABELS = { '1h': '1h', '24h': '24h', '7d': '7d', '30d': '30d', '3m': '3m', 'all': 'All' };
     const FILTERED_PAGES = ['dashboard', 'notifications', 'delivery_events', 'engagement_events'];
     const CURRENT_PAGE = '<%= controller_name %>';
+
+    function toggleNav() {
+      const navLinks = document.getElementById('navLinks');
+      if (navLinks) navLinks.classList.toggle('open');
+    }
 
     function toggleTheme() {
       const html = document.documentElement;
@@ -370,9 +468,17 @@
     }
 
     document.addEventListener('click', function(e) {
+      // Close time dropdown when clicking outside
       const dropdown = document.getElementById('timeDropdown');
       if (dropdown && !dropdown.contains(e.target)) {
         dropdown.classList.remove('open');
+      }
+
+      // Close nav menu when clicking outside
+      const navLinks = document.getElementById('navLinks');
+      const navToggle = document.querySelector('.nav-toggle');
+      if (navLinks && !navLinks.contains(e.target) && !navToggle.contains(e.target)) {
+        navLinks.classList.remove('open');
       }
     });
 
@@ -382,6 +488,10 @@
 
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', function(e) {
+        // Close mobile nav on link click
+        const navLinks = document.getElementById('navLinks');
+        if (navLinks) navLinks.classList.remove('open');
+
         const href = this.getAttribute('href');
         const isFilteredPage = FILTERED_PAGES.some(page =>
           href.includes('/' + page) || href.endsWith('/sincerely') || href.endsWith('/sincerely/')
