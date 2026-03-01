@@ -8,6 +8,8 @@ module Sincerely
 
     before_action :authenticate_user!
 
+    helper_method :notification_model
+
     private
 
     def authenticate_user!
