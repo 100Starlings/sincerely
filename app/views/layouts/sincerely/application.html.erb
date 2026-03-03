@@ -383,9 +383,10 @@
         <a href="<%= sincerely.templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
         <a href="<%= sincerely.delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
         <a href="<%= sincerely.engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
+        <a href="<%= sincerely.send_new_path %>" class="<%= 'active' if controller_name == 'send' %>">Send</a>
       </div>
       <div class="nav-utils">
-        <% if controller_name != 'templates' %>
+        <% if !%w[templates send].include?(controller_name) %>
           <div class="time-dropdown" id="timeDropdown">
             <button class="time-dropdown-btn" onclick="toggleTimeDropdown()" title="Time filter">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>

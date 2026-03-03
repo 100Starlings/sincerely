@@ -1,0 +1,592 @@
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Send Email</h2>
+    <span class="recipients-limit">Max 50 recipients</span>
+  </div>
+
+  <div class="send-form">
+    <div class="form-group">
+      <label class="form-label">Recipients</label>
+      <div class="tags-input-container" id="tagsContainer">
+        <div class="tags-list" id="tagsList"></div>
+        <input
+          type="text"
+          class="tags-input"
+          id="recipientInput"
+          placeholder="Enter email addresses..."
+          autocomplete="off"
+        >
+      </div>
+      <span class="form-hint">Type and press Enter, or paste multiple emails separated by comma or space</span>
+      <div class="recipients-count" id="recipientsCount">0 / 50 recipients</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Template</label>
+      <select class="form-control" id="templateSelect">
+        <option value="">Select a template...</option>
+        <% @templates.each do |template| %>
+          <option value="<%= template.id %>"><%= template.name %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="template-variables" id="templateVariables" style="display: none;">
+      <div class="form-group">
+        <label class="form-label">Template Variables</label>
+        <div class="variables-grid" id="variablesGrid"></div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" id="sendButton" disabled>
+        <span class="btn-text">Send Emails</span>
+        <span class="btn-loader" style="display: none;">
+          <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-linecap="round"></circle>
+          </svg>
+          Sending...
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="send-overlay" id="sendOverlay">
+    <div class="send-progress">
+      <svg class="progress-spinner" viewBox="0 0 50 50">
+        <circle cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+      </svg>
+      <span class="progress-text">Sending emails...</span>
+    </div>
+  </div>
+
+  <div class="send-result" id="sendResult" style="display: none;">
+    <div class="result-icon result-success" id="resultSuccess">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 6L9 17l-5-5"></path>
+      </svg>
+    </div>
+    <div class="result-icon result-partial" id="resultPartial">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 8v4M12 16h.01"></path>
+      </svg>
+    </div>
+    <div class="result-message" id="resultMessage"></div>
+    <button type="button" class="btn btn-secondary" id="resetButton">Send More</button>
+  </div>
+</div>
+
+<style>
+  .recipients-limit {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .send-form {
+    position: relative;
+  }
+
+  .tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background: var(--bg-primary);
+    min-height: 2.75rem;
+    cursor: text;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .tags-input-container:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 24, 61, 0.1);
+  }
+
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--gray-100);
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+    animation: tagIn 0.15s ease;
+  }
+
+  @keyframes tagIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .tag.invalid {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .tag-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--gray-500);
+    border-radius: 50%;
+    transition: all 0.15s;
+  }
+
+  .tag-remove:hover {
+    background: var(--gray-200);
+    color: var(--text-primary);
+  }
+
+  .tag-remove svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .tags-input {
+    flex: 1;
+    min-width: 150px;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  .tags-input::placeholder {
+    color: var(--gray-500);
+  }
+
+  .recipients-count {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-align: right;
+  }
+
+  .recipients-count.warning {
+    color: #b45309;
+  }
+
+  .recipients-count.limit {
+    color: #dc2626;
+  }
+
+  .template-variables {
+    animation: slideDown 0.2s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-0.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .variables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .variable-field label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    margin-bottom: 0.25rem;
+  }
+
+  .variable-field input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .variable-field input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 24, 61, 0.1);
+  }
+
+  .btn-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .send-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  [data-theme="dark"] .send-overlay {
+    background: rgba(30, 30, 30, 0.9);
+  }
+
+  .send-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .send-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-spinner {
+    width: 3rem;
+    height: 3rem;
+    animation: spin 1s linear infinite;
+  }
+
+  .progress-spinner circle {
+    stroke: var(--primary);
+    stroke-dasharray: 90;
+    stroke-dashoffset: 30;
+    stroke-linecap: round;
+  }
+
+  .progress-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .send-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .result-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .result-icon svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .result-success {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  .result-partial {
+    background: #fef3c7;
+    color: #b45309;
+    display: none;
+  }
+
+  .result-message {
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .result-message strong {
+    color: var(--success);
+  }
+
+  .result-message .failed {
+    color: var(--danger);
+  }
+</style>
+
+<script>
+(function() {
+  const MAX_RECIPIENTS = 50;
+  let recipients = [];
+
+  const tagsContainer = document.getElementById('tagsContainer');
+  const tagsList = document.getElementById('tagsList');
+  const recipientInput = document.getElementById('recipientInput');
+  const recipientsCount = document.getElementById('recipientsCount');
+  const templateSelect = document.getElementById('templateSelect');
+  const templateVariables = document.getElementById('templateVariables');
+  const variablesGrid = document.getElementById('variablesGrid');
+  const sendButton = document.getElementById('sendButton');
+  const sendOverlay = document.getElementById('sendOverlay');
+  const sendResult = document.getElementById('sendResult');
+  const resultSuccess = document.getElementById('resultSuccess');
+  const resultPartial = document.getElementById('resultPartial');
+  const resultMessage = document.getElementById('resultMessage');
+  const resetButton = document.getElementById('resetButton');
+  const sendForm = document.querySelector('.send-form');
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function addRecipient(email) {
+    email = email.trim().toLowerCase();
+    if (!email || recipients.includes(email) || recipients.length >= MAX_RECIPIENTS) return false;
+
+    recipients.push(email);
+    renderTags();
+    updateCount();
+    updateSendButton();
+    return true;
+  }
+
+  function removeRecipient(email) {
+    recipients = recipients.filter(r => r !== email);
+    renderTags();
+    updateCount();
+    updateSendButton();
+  }
+
+  function renderTags() {
+    tagsList.innerHTML = recipients.map(email => `
+      <span class="tag ${isValidEmail(email) ? '' : 'invalid'}">
+        ${escapeHtml(email)}
+        <button type="button" class="tag-remove" data-email="${escapeHtml(email)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </span>
+    `).join('');
+
+    tagsList.querySelectorAll('.tag-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeRecipient(btn.dataset.email);
+      });
+    });
+  }
+
+  function updateCount() {
+    const count = recipients.length;
+    recipientsCount.textContent = `${count} / ${MAX_RECIPIENTS} recipients`;
+    recipientsCount.className = 'recipients-count';
+    if (count >= MAX_RECIPIENTS) {
+      recipientsCount.classList.add('limit');
+    } else if (count >= 40) {
+      recipientsCount.classList.add('warning');
+    }
+  }
+
+  function updateSendButton() {
+    const hasRecipients = recipients.filter(isValidEmail).length > 0;
+    const hasTemplate = templateSelect.value !== '';
+    sendButton.disabled = !hasRecipients || !hasTemplate;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function parseAndAddEmails(input) {
+    const emails = input.split(/[\s,;]+/).filter(e => e.trim());
+    emails.forEach(addRecipient);
+  }
+
+  // Input handlers
+  recipientInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ',' || e.key === ' ' || e.key === 'Tab') {
+      e.preventDefault();
+      const value = recipientInput.value.trim();
+      if (value) {
+        parseAndAddEmails(value);
+        recipientInput.value = '';
+      }
+    } else if (e.key === 'Backspace' && !recipientInput.value && recipients.length) {
+      removeRecipient(recipients[recipients.length - 1]);
+    }
+  });
+
+  recipientInput.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    parseAndAddEmails(pastedText);
+    recipientInput.value = '';
+  });
+
+  recipientInput.addEventListener('blur', () => {
+    const value = recipientInput.value.trim();
+    if (value) {
+      parseAndAddEmails(value);
+      recipientInput.value = '';
+    }
+  });
+
+  tagsContainer.addEventListener('click', () => {
+    recipientInput.focus();
+  });
+
+  // Template selection
+  templateSelect.addEventListener('change', async () => {
+    updateSendButton();
+
+    const templateId = templateSelect.value;
+    if (!templateId) {
+      templateVariables.style.display = 'none';
+      return;
+    }
+
+    try {
+      const response = await fetch(`<%= sincerely.send_template_variables_path(':id') %>`.replace(':id', templateId));
+      const data = await response.json();
+
+      if (data.variables && data.variables.length > 0) {
+        variablesGrid.innerHTML = data.variables.map(v => {
+          const label = v.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          return `
+            <div class="variable-field">
+              <label for="var_${v}">${label}</label>
+              <input type="text" id="var_${v}" name="template_data[${v}]" placeholder="${label}...">
+            </div>
+          `;
+        }).join('');
+        templateVariables.style.display = 'block';
+      } else {
+        templateVariables.style.display = 'none';
+      }
+    } catch (err) {
+      console.error('Failed to load template variables:', err);
+      templateVariables.style.display = 'none';
+    }
+  });
+
+  // Send handler
+  sendButton.addEventListener('click', async () => {
+    const validRecipients = recipients.filter(isValidEmail);
+    if (validRecipients.length === 0) return;
+
+    const templateId = templateSelect.value;
+    if (!templateId) return;
+
+    // Collect template data
+    const templateData = {};
+    variablesGrid.querySelectorAll('input').forEach(input => {
+      const name = input.name.match(/template_data\[(\w+)\]/);
+      if (name) {
+        templateData[name[1]] = input.value;
+      }
+    });
+
+    // Show loading
+    sendOverlay.classList.add('active');
+    sendButton.querySelector('.btn-text').style.display = 'none';
+    sendButton.querySelector('.btn-loader').style.display = 'inline-flex';
+    sendButton.disabled = true;
+
+    try {
+      const response = await fetch('<%= sincerely.send_create_path %>', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          recipients: validRecipients.join(','),
+          template_id: templateId,
+          template_data: templateData
+        })
+      });
+
+      const result = await response.json();
+
+      // Hide loading, show result
+      sendOverlay.classList.remove('active');
+      sendForm.style.display = 'none';
+
+      if (result.failed > 0) {
+        resultSuccess.style.display = 'none';
+        resultPartial.style.display = 'flex';
+        resultMessage.innerHTML = `<strong>${result.sent}</strong> emails sent, <span class="failed">${result.failed}</span> failed`;
+      } else {
+        resultSuccess.style.display = 'flex';
+        resultPartial.style.display = 'none';
+        resultMessage.innerHTML = `<strong>${result.sent}</strong> emails sent successfully!`;
+      }
+
+      sendResult.style.display = 'flex';
+    } catch (err) {
+      console.error('Send failed:', err);
+      sendOverlay.classList.remove('active');
+      sendButton.querySelector('.btn-text').style.display = 'inline';
+      sendButton.querySelector('.btn-loader').style.display = 'none';
+      sendButton.disabled = false;
+      alert('Failed to send emails. Please try again.');
+    }
+  });
+
+  // Reset handler
+  resetButton.addEventListener('click', () => {
+    recipients = [];
+    renderTags();
+    updateCount();
+    templateSelect.value = '';
+    templateVariables.style.display = 'none';
+    variablesGrid.innerHTML = '';
+    sendResult.style.display = 'none';
+    sendForm.style.display = 'block';
+    sendButton.querySelector('.btn-text').style.display = 'inline';
+    sendButton.querySelector('.btn-loader').style.display = 'none';
+    updateSendButton();
+    recipientInput.focus();
+  });
+
+  // Initialize
+  updateCount();
+  updateSendButton();
+})();
+</script>
