@@ -386,7 +386,7 @@
 
   .api-section-illustration {
     position: absolute;
-    right: 1%;
+    left: 35%;
     top: 160rem;
     opacity: var(--opacity-bg-image);
     transform: rotate(20deg);
