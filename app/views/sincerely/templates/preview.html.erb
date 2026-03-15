@@ -21,7 +21,7 @@
   <div class="preview-header">
     <h1><%= @template.name %></h1>
     <div class="preview-meta">
-      Subject: <%= @template.subject %> | From: <%= @template.sender %>
+      Subject: <%= @rendered_subject %> | From: <%= @template.sender %>
     </div>
   </div>
   <div class="preview-tabs">
@@ -30,10 +30,10 @@
   </div>
   <div class="preview-content">
     <div id="html-preview" class="preview-frame preview-frame-html">
-      <iframe srcdoc="<%= ERB::Util.html_escape(@template.html_content) %>"></iframe>
+      <iframe srcdoc="<%= ERB::Util.html_escape(@rendered_html) %>"></iframe>
     </div>
     <div id="text-preview" class="preview-frame preview-frame-text" style="display: none;">
-<%= @template.text_content %>
+<%= @rendered_text %>
     </div>
   </div>
   <script>
