@@ -1,3 +1,60 @@
+<style>
+  .preview-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+  }
+  .preview-tab {
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: 0.375rem 0.375rem 0 0;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .preview-tab:hover { color: var(--text-primary); }
+  .preview-tab.active {
+    background: var(--bg-primary);
+    color: var(--primary);
+    border-bottom: 1px solid var(--bg-primary);
+  }
+  .preview-tab svg { width: 0.875rem; height: 0.875rem; }
+  .preview-container { position: relative; }
+  .preview-panel { display: none; }
+  .preview-panel.active { display: block; }
+  .preview-frame {
+    width: 100%;
+    min-height: 300px;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0.375rem 0.375rem 0.375rem;
+    background: #fff;
+  }
+  .preview-text {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0.375rem 0.375rem 0.375rem;
+    background: var(--bg-primary);
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 0.8125rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-primary);
+    margin: 0;
+    overflow: auto;
+  }
+</style>
+
 <%= form_with model: template, url: form_url, local: true, class: 'template-form' do |f| %>
   <% if template.errors.any? %>
     <div class="alert alert-danger">
@@ -61,12 +118,29 @@
       <h2 class="card-title">HTML Content *</h2>
     </div>
     <div class="form-content">
-      <%= f.text_area :html_content, class: 'form-control code-editor', rows: 15, required: true, placeholder: '<html>
+      <div class="preview-container" data-preview="html">
+        <div class="preview-tabs">
+          <button type="button" class="preview-tab active" data-target="code">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            Code
+          </button>
+          <button type="button" class="preview-tab" data-target="preview">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            Preview
+          </button>
+        </div>
+        <div class="preview-panel active" data-panel="code">
+          <%= f.text_area :html_content, class: 'form-control code-editor', rows: 15, required: true, id: 'html_content', placeholder: '<html>
 <body>
   <h1>Hello {{ name }}!</h1>
   <p>Welcome to our platform.</p>
 </body>
 </html>' %>
+        </div>
+        <div class="preview-panel" data-panel="preview">
+          <iframe class="preview-frame" id="html_preview" sandbox="allow-same-origin"></iframe>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -75,9 +149,26 @@
       <h2 class="card-title">Text Content *</h2>
     </div>
     <div class="form-content">
-      <%= f.text_area :text_content, class: 'form-control code-editor', rows: 10, required: true, placeholder: 'Hello {{ name }}!
+      <div class="preview-container" data-preview="text">
+        <div class="preview-tabs">
+          <button type="button" class="preview-tab active" data-target="code">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            Code
+          </button>
+          <button type="button" class="preview-tab" data-target="preview">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            Preview
+          </button>
+        </div>
+        <div class="preview-panel active" data-panel="code">
+          <%= f.text_area :text_content, class: 'form-control code-editor', rows: 10, required: true, id: 'text_content', placeholder: 'Hello {{ name }}!
 
 Welcome to our platform.' %>
+        </div>
+        <div class="preview-panel" data-panel="preview">
+          <pre class="preview-text" id="text_preview"></pre>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -86,3 +177,50 @@ Welcome to our platform.' %>
     <a href="<%= template.persisted? ? sincerely.template_path(template) : sincerely.templates_path %>" class="btn btn-secondary">Cancel</a>
   </div>
 <% end %>
+
+<script>
+(function() {
+  function updateHtmlPreview() {
+    const textarea = document.getElementById('html_content');
+    const iframe = document.getElementById('html_preview');
+    if (!textarea || !iframe) return;
+
+    iframe.srcdoc = textarea.value || '';
+  }
+
+  function updateTextPreview() {
+    const textarea = document.getElementById('text_content');
+    const preview = document.getElementById('text_preview');
+    if (!textarea || !preview) return;
+
+    preview.textContent = textarea.value || '';
+  }
+
+  document.querySelectorAll('.preview-container').forEach(container => {
+    const tabs = container.querySelectorAll('.preview-tab');
+    const panels = container.querySelectorAll('.preview-panel');
+    const previewType = container.dataset.preview;
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.target;
+
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        panels.forEach(p => {
+          p.classList.toggle('active', p.dataset.panel === target);
+        });
+
+        if (target === 'preview') {
+          if (previewType === 'html') {
+            updateHtmlPreview();
+          } else if (previewType === 'text') {
+            updateTextPreview();
+          }
+        }
+      });
+    });
+  });
+})();
+</script>

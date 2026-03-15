@@ -1,29 +1,23 @@
-<div class="page-header">
-  <div>
+<div class="page-header page-header--visible">
+  <div class="page-header-top">
+    <button onclick="history.back()" class="btn-back" title="Back">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+    </button>
     <h1 class="page-title"><%= @template.name %></h1>
-    <p class="page-subtitle"><%= @template.type.demodulize.underscore.humanize %></p>
   </div>
-  <div class="header-actions">
-    <a href="<%= sincerely.preview_template_path(@template) %>" class="btn btn-secondary" target="_blank">Preview</a>
-    <a href="<%= sincerely.edit_template_path(@template) %>" class="btn btn-primary">Edit</a>
-    <a href="<%= sincerely.templates_path %>" class="btn btn-secondary">Back to List</a>
-  </div>
+  <p class="page-subtitle"><%= @template.sender %></p>
 </div>
 
 <div class="grid grid-2">
   <div class="card">
     <div class="card-header">
       <h2 class="card-title">Details</h2>
+      <div class="header-actions">
+        <a href="<%= sincerely.preview_template_path(@template) %>" class="btn btn-secondary btn-sm" target="_blank">Preview</a>
+        <a href="<%= sincerely.edit_template_path(@template) %>" class="btn btn-primary btn-sm">Edit</a>
+      </div>
     </div>
     <div class="details-grid">
-      <div class="detail-row">
-        <span class="detail-label">Name</span>
-        <span class="detail-value"><%= @template.name %></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Type</span>
-        <span class="detail-value"><span class="badge"><%= @template.type.demodulize.underscore.humanize %></span></span>
-      </div>
       <div class="detail-row">
         <span class="detail-label">Subject</span>
         <span class="detail-value"><%= @template.subject %></span>
