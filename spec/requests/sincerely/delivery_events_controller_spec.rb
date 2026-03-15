@@ -1,0 +1,142 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe 'Sincerely::DeliveryEventsController', type: :request do
+  describe 'GET /sincerely/delivery_events' do
+    context 'with no events' do
+      it 'returns success' do
+        get '/sincerely/delivery_events'
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'displays delivery events page' do
+        get '/sincerely/delivery_events'
+
+        expect(response.body).to include('Delivery')
+      end
+    end
+
+    context 'with events' do
+      before do
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-1',
+          event_type: 'delivery',
+          recipient: 'delivered@example.com',
+          timestamp: 1.hour.ago
+        )
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-2',
+          event_type: 'bounce',
+          recipient: 'bounced@example.com',
+          timestamp: 2.hours.ago
+        )
+      end
+
+      it 'returns success' do
+        get '/sincerely/delivery_events'
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'displays events list' do
+        get '/sincerely/delivery_events'
+
+        expect(response.body).to include('delivered@example.com')
+        expect(response.body).to include('bounced@example.com')
+      end
+    end
+
+    context 'with filters' do
+      before do
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-1',
+          event_type: 'delivery',
+          recipient: 'delivered@example.com',
+          timestamp: 1.hour.ago
+        )
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-2',
+          event_type: 'bounce',
+          recipient: 'bounced@example.com',
+          timestamp: 2.hours.ago
+        )
+      end
+
+      it 'filters by event_type' do
+        get '/sincerely/delivery_events', params: { event_type: 'delivery' }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('delivered@example.com')
+      end
+
+      it 'filters by recipient' do
+        get '/sincerely/delivery_events', params: { recipient: 'bounced' }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('bounced@example.com')
+      end
+    end
+
+    context 'with time filter' do
+      before do
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-recent',
+          event_type: 'delivery',
+          recipient: 'recent@example.com',
+          timestamp: 30.minutes.ago,
+          created_at: 30.minutes.ago
+        )
+        Sincerely::DeliveryEvent.create!(
+          message_id: 'msg-old',
+          event_type: 'delivery',
+          recipient: 'old@example.com',
+          timestamp: 2.days.ago,
+          created_at: 2.days.ago
+        )
+      end
+
+      it 'filters by 1h period' do
+        get '/sincerely/delivery_events', params: { period: '1h' }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('recent@example.com')
+        expect(response.body).not_to include('old@example.com')
+      end
+
+      it 'shows all with all period' do
+        get '/sincerely/delivery_events', params: { period: 'all' }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('recent@example.com')
+        expect(response.body).to include('old@example.com')
+      end
+    end
+
+    context 'with pagination' do
+      before do
+        30.times do |i|
+          Sincerely::DeliveryEvent.create!(
+            message_id: "msg-#{i}",
+            event_type: 'delivery',
+            recipient: "test#{i}@example.com",
+            timestamp: i.minutes.ago
+          )
+        end
+      end
+
+      it 'paginates results' do
+        get '/sincerely/delivery_events', params: { page: 1 }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'shows page 2' do
+        get '/sincerely/delivery_events', params: { page: 2 }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+end
