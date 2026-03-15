@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function() {
+      var theme = localStorage.getItem('sincerely-theme');
+      if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      }
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sincerely Dashboard</title>
@@ -103,13 +114,13 @@
     .page-subtitle { color: var(--gray-500); }
 
     /* Cards */
-    .card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; transition: background-color 0.3s; }
+    .card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1.5rem; transition: background-color 0.3s; overflow: hidden; min-width: 0; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
     .card-title { font-family: 'Jersey 10', cursive; font-weight: 400; font-size: 1.5rem; }
 
     /* Stats */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; transition: background-color 0.3s; }
+    .stat-card { background: var(--bg-primary); border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem; transition: background-color 0.3s; min-width: 0; overflow: hidden; }
     .stat-label { color: var(--gray-500); font-size: 0.875rem; }
     .stat-value { font-size: 2rem; font-weight: 700; margin-top: 0.25rem; }
     .stat-value.primary { color: #8ACB88; }
@@ -118,9 +129,9 @@
     .stat-value.danger { color: var(--danger); }
 
     /* Tables */
-    .table-wrapper { overflow-x: auto; }
+    .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+    th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     th { background: var(--gray-100); font-weight: 600; font-size: 0.875rem; color: var(--text-secondary); transition: background-color 0.3s; }
     tr:hover { background: var(--gray-100); }
     tr.clickable-row { cursor: pointer; transition: background-color 0.15s; }
@@ -148,7 +159,10 @@
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-secondary { background: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); }
     .btn-secondary:hover { background: var(--gray-100); }
-    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; height: 2rem; }
+    .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 0.375rem; color: var(--text-secondary); transition: all 0.15s; }
+    .btn-icon:hover { background: var(--gray-100); color: var(--primary); }
+    .actions-cell { display: flex; gap: 0.25rem; }
 
     /* Forms */
     .form-group { margin-bottom: 1rem; }
@@ -181,6 +195,7 @@
     /* Grid */
     .grid { display: grid; gap: 1.5rem; }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid > * { min-width: 0; }
 
     /* Pagination */
     .pagination { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding: 1rem; }
@@ -252,7 +267,7 @@
     .stat-mini-label { font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem; }
 
     /* Header Actions */
-    .header-actions { display: flex; gap: 0.5rem; }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
     /* Event Details */
     .event-details { margin-top: 0.5rem; background: var(--gray-50); padding: 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; max-height: 200px; overflow: auto; }
 
@@ -368,6 +383,33 @@
       .donut-chart-wrapper { width: 180px; height: 180px; }
       .donut-center-value { font-size: 1.5rem; }
     }
+
+    /* Return Footer */
+    .return-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      z-index: 40;
+      opacity: 0.85;
+      transition: opacity 0.2s, background-color 0.3s;
+    }
+    .return-footer:hover { opacity: 1; }
+    .return-footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      transition: color 0.15s;
+    }
+    .return-footer-link:hover { color: var(--primary); }
+    .return-footer-link svg { width: 0.875rem; height: 0.875rem; }
+    .main.has-return-footer { padding-bottom: 3.5rem; }
   </style>
 </head>
 <body>
@@ -380,17 +422,18 @@
       <div class="nav-links" id="navLinks">
         <a href="<%= sincerely.root_path %>" class="<%= 'active' if controller_name == 'dashboard' %>">Dashboard</a>
         <a href="<%= sincerely.notifications_path %>" class="<%= 'active' if controller_name == 'notifications' %>">Notifications</a>
-        <a href="<%= sincerely.templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
         <a href="<%= sincerely.delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
         <a href="<%= sincerely.engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
+        <a href="<%= sincerely.templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
         <a href="<%= sincerely.send_new_path %>" class="<%= 'active' if controller_name == 'send' %>">Send</a>
       </div>
       <div class="nav-utils">
         <% if !%w[templates send].include?(controller_name) %>
+          <% time_labels = { '1h' => '1h', '24h' => '24h', '7d' => '7d', '30d' => '30d', '3m' => '3m', 'all' => 'All' } %>
           <div class="time-dropdown" id="timeDropdown">
             <button class="time-dropdown-btn" onclick="toggleTimeDropdown()" title="Time filter">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              <span id="timeLabel">24h</span>
+              <span id="timeLabel"><%= time_labels[params[:period]] || '24h' %></span>
             </button>
             <div class="time-dropdown-menu">
               <button class="time-dropdown-item" data-period="1h">1 hour</button>
@@ -410,7 +453,7 @@
     </div>
   </nav>
 
-  <main class="main">
+  <main class="main<%= ' has-return-footer' if Sincerely.config.return_url.present? %>">
     <div class="container">
       <% if flash[:notice] %>
         <div class="flash flash-notice"><%= flash[:notice] %></div>
@@ -422,6 +465,16 @@
       <%= yield %>
     </div>
   </main>
+
+  <% if Sincerely.config.return_url.present? %>
+    <footer class="return-footer">
+      <a href="<%= Sincerely.config.return_url %>" class="return-footer-link">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        <%= Sincerely.config.return_label.presence || 'Back to app' %>
+      </a>
+    </footer>
+  <% end %>
+
   <script>
     const TIME_LABELS = { '1h': '1h', '24h': '24h', '7d': '7d', '30d': '30d', '3m': '3m', 'all': 'All' };
     const FILTERED_PAGES = ['dashboard', 'notifications', 'delivery_events', 'engagement_events'];
