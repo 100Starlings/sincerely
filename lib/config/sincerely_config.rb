@@ -13,6 +13,11 @@ module Sincerely
     # Set return_url to show a "back to app" link in the footer
     attr_accessor :return_url, :return_label
 
+    # Logout configuration (optional)
+    # Set logout_url to show a logout button in the navigation
+    # The button only appears when authentication is configured
+    attr_accessor :logout_url, :logout_label
+
     def delivery_methods
       as_json.dig('values', 'delivery_methods')
     end
