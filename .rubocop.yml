@@ -12,3 +12,7 @@ Layout/LineLength:
   Max: 120
 RSpec/NestedGroups:
   Enabled: false
+
+# Keep :unprocessable_entity for Rails < 7.1 compatibility
+Rails/ResponseParsedBody:
+  Enabled: false

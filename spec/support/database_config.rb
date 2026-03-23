@@ -15,7 +15,7 @@ module DatabaseConfig
 
   def truncate_database
     ActiveRecord::Base.connection.execute(
-      <<-SQL.squish
+      <<~SQL.squish
         DELETE FROM notifications;
         DELETE FROM notification_templates;
         DELETE FROM sincerely_delivery_events;

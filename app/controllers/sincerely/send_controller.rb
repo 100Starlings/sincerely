@@ -17,7 +17,8 @@ module Sincerely
       end
 
       if recipients.size > MAX_RECIPIENTS
-        render json: { success: false, error: "Maximum #{MAX_RECIPIENTS} recipients allowed" }, status: :unprocessable_entity
+        render json: { success: false, error: "Maximum #{MAX_RECIPIENTS} recipients allowed" },
+               status: :unprocessable_entity
         return
       end
 

@@ -2,7 +2,7 @@
 
 module Sincerely
   class TemplatesController < ApplicationController
-    before_action :set_template, only: [:show, :edit, :update, :preview]
+    before_action :set_template, only: %i[show edit update preview]
 
     def index
       @pagination = paginate(Sincerely::Templates::NotificationTemplate.order(created_at: :desc))
@@ -17,6 +17,8 @@ module Sincerely
       @template = Sincerely::Templates::EmailLiquidTemplate.new
     end
 
+    def edit; end
+
     def create
       @template = Sincerely::Templates::EmailLiquidTemplate.new(template_params)
 
@@ -26,8 +28,6 @@ module Sincerely
         render :new, status: :unprocessable_entity
       end
     end
-
-    def edit; end
 
     def update
       if @template.update(template_params)

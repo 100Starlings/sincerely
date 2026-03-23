@@ -3,7 +3,7 @@
 Sincerely::Engine.routes.draw do
   root to: 'dashboard#index'
 
-  resources :notifications, only: [:index, :show]
+  resources :notifications, only: %i[index show]
 
   resources :templates, except: [:destroy] do
     member do

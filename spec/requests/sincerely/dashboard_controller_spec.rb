@@ -140,7 +140,7 @@ RSpec.describe 'Sincerely::DashboardController', type: :request do
 
     context 'with recent events' do
       before do
-        notification = Notification.create!(
+        Notification.create!(
           recipient: 'test@example.com',
           notification_type: 'email',
           delivery_state: 'delivered',

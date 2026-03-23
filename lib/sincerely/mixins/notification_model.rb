@@ -39,23 +39,23 @@ module Sincerely
           end
 
           event :set_rejected do
-            transitions to: :rejected, from: [:draft, :accepted]
+            transitions to: :rejected, from: %i[draft accepted]
           end
 
           event :set_delivered do
-            transitions to: :delivered, from: [:draft, :accepted, :delayed]
+            transitions to: :delivered, from: %i[draft accepted delayed]
           end
 
           event :set_bounced do
-            transitions to: :bounced, from: [:draft, :accepted, :delivered, :delayed]
+            transitions to: :bounced, from: %i[draft accepted delivered delayed]
           end
 
           event :set_complained do
-            transitions to: :complained, from: [:delivered, :opened, :clicked]
+            transitions to: :complained, from: %i[delivered opened clicked]
           end
 
           event :set_delayed do
-            transitions to: :delayed, from: [:draft, :accepted]
+            transitions to: :delayed, from: %i[draft accepted]
           end
 
           event :set_opened do
@@ -63,7 +63,7 @@ module Sincerely
           end
 
           event :set_clicked do
-            transitions to: :clicked, from: [:delivered, :opened]
+            transitions to: :clicked, from: %i[delivered opened]
           end
         end
 
