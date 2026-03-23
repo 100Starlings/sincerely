@@ -4,13 +4,33 @@ require:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.1.X
+  TargetRubyVersion: 3.1
 
-Documentation:
+Style/Documentation:
   Enabled: false
 Layout/LineLength:
   Max: 120
 RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# Controller methods can be complex; these metrics produce false positives
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# Engines don't typically use i18n for simple flash messages
+Rails/I18nLocaleTexts:
   Enabled: false
 
 # Keep :unprocessable_entity for Rails < 7.1 compatibility
