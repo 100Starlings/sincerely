@@ -54,5 +54,26 @@ module Sincerely
 
       collection.where("#{column} >= ?", start_time)
     end
+
+    def apply_notification_filter(scope)
+      filter = Sincerely.config.filter_notifications_by
+      return scope unless filter.respond_to?(:call)
+
+      conditions = instance_exec(&filter)
+      return scope if conditions.blank?
+
+      scope.where(conditions)
+    end
+
+    def apply_event_filter(scope)
+      filter = Sincerely.config.filter_notifications_by
+      return scope unless filter.respond_to?(:call)
+
+      conditions = instance_exec(&filter)
+      return scope if conditions.blank?
+
+      message_ids = notification_model.where(conditions).where.not(message_id: nil).pluck(:message_id)
+      scope.where(message_id: message_ids)
+    end
   end
 end

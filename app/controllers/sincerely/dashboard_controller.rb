@@ -4,6 +4,7 @@ module Sincerely
   class DashboardController < ApplicationController
     def index
       filtered_notifications = apply_time_filter(notification_model)
+      filtered_notifications = apply_notification_filter(filtered_notifications)
 
       @total_notifications = filtered_notifications.count
       @notifications_by_state = filtered_notifications.group(:delivery_state).count
@@ -19,9 +20,14 @@ module Sincerely
       engaged = filtered_notifications.where(delivery_state: %w[opened clicked]).count
       @open_rate = delivered_count.positive? ? (engaged.to_f / delivered_count * 100).round(1) : 0
 
-      # Recent events
-      @recent_delivery_events = apply_time_filter(Sincerely::DeliveryEvent).order(created_at: :desc).limit(5)
-      @recent_engagement_events = apply_time_filter(Sincerely::EngagementEvent).order(created_at: :desc).limit(5)
+      # Recent events (filtered by user's notifications)
+      user_message_ids = filtered_notifications.where.not(message_id: nil).pluck(:message_id)
+      @recent_delivery_events = apply_time_filter(Sincerely::DeliveryEvent)
+                                  .where(message_id: user_message_ids)
+                                  .order(created_at: :desc).limit(5)
+      @recent_engagement_events = apply_time_filter(Sincerely::EngagementEvent)
+                                    .where(message_id: user_message_ids)
+                                    .order(created_at: :desc).limit(5)
 
       # Bounce rate
       bounced = filtered_notifications.where(delivery_state: 'bounced').count

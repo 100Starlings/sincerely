@@ -5,11 +5,19 @@ module Sincerely
     def index
       @notifications = apply_time_filter(notification_model).order(created_at: :desc)
 
+      # Apply host app filter (e.g., filter by logged-in user's email)
+      @notifications = apply_notification_filter(@notifications)
+
       # Apply filters
       @notifications = @notifications.where(delivery_state: params[:status]) if params[:status].present?
       @notifications = @notifications.where(template_id: params[:template_id]) if params[:template_id].present?
-      @notifications = @notifications.where('recipient LIKE ?', "%#{params[:recipient]}%") if params[:recipient].present?
-      @notifications = @notifications.where(notification_type: params[:notification_type]) if params[:notification_type].present?
+      if params[:recipient].present?
+        @notifications = @notifications.where('recipient LIKE ?',
+                                              "%#{params[:recipient]}%")
+      end
+      if params[:notification_type].present?
+        @notifications = @notifications.where(notification_type: params[:notification_type])
+      end
 
       if params[:date_from].present?
         @notifications = @notifications.where('created_at >= ?', Date.parse(params[:date_from]))
@@ -25,7 +33,7 @@ module Sincerely
     end
 
     def show
-      @notification = notification_model.find(params[:id])
+      @notification = apply_notification_filter(notification_model).find(params[:id])
       @template = @notification.template
       @timeline = build_event_timeline(@notification)
     end
