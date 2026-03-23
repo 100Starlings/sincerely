@@ -37,14 +37,16 @@ module Sincerely
     end
 
     def time_filter_start
-      case params[:period]
+      period = params[:period]
+      period = '24h' unless %w[1h 24h 7d 30d 3m all].include?(period)
+
+      case period
       when '1h' then 1.hour.ago
-      when '24h', nil then 24.hours.ago
+      when '24h' then 24.hours.ago
       when '7d' then 7.days.ago
       when '30d' then 30.days.ago
       when '3m' then 3.months.ago
       when 'all' then nil
-      else 24.hours.ago
       end
     end
 

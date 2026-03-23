@@ -34,10 +34,10 @@ module Sincerely
 
       recipients.each do |recipient|
         notification = notification_model.new(
-          recipient: recipient,
+          recipient:,
           notification_type: 'email',
           template_id: template.id,
-          delivery_options: { 'template_data' => template_data }
+          delivery_options: { template_data: }
         )
 
         if notification.save
@@ -46,11 +46,11 @@ module Sincerely
             results[:sent] += 1
           rescue StandardError => e
             results[:failed] += 1
-            results[:errors] << { recipient: recipient, error: e.message }
+            results[:errors] << { recipient:, error: e.message }
           end
         else
           results[:failed] += 1
-          results[:errors] << { recipient: recipient, error: notification.errors.full_messages.join(', ') }
+          results[:errors] << { recipient:, error: notification.errors.full_messages.join(', ') }
         end
       end
 
@@ -82,8 +82,8 @@ module Sincerely
       # Split by comma, semicolon, space, or newline
       input.split(/[\s,;\n]+/)
            .map(&:strip)
-           .reject(&:blank?)
-           .select { |email| email.match?(/\A[^@\s]+@[^@\s]+\z/) }
+           .compact_blank
+           .grep(/\A[^@\s]+@[^@\s]+\z/)
            .uniq
            .first(MAX_RECIPIENTS)
     end

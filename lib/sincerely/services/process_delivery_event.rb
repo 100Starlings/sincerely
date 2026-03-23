@@ -16,9 +16,6 @@ module Sincerely
         @event = event
       end
 
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/CyclomaticComplexity
       def call
         return if notification.blank?
 
@@ -45,16 +42,11 @@ module Sincerely
           create_event
         end
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       private
 
       attr_reader :event
 
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
       def create_event
         case event_type.to_sym
         when :bounce, :delivery
@@ -70,8 +62,6 @@ module Sincerely
           )
         end
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
 
       def notification
         model = Sincerely.config.notification_model_name.constantize

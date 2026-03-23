@@ -19,11 +19,9 @@ module Sincerely
         @notifications = @notifications.where(notification_type: params[:notification_type])
       end
 
-      if params[:date_from].present?
-        @notifications = @notifications.where('created_at >= ?', Date.parse(params[:date_from]))
-      end
+      @notifications = @notifications.where(created_at: Date.parse(params[:date_from])..) if params[:date_from].present?
       if params[:date_to].present?
-        @notifications = @notifications.where('created_at <= ?', Date.parse(params[:date_to]).end_of_day)
+        @notifications = @notifications.where(created_at: ..Date.parse(params[:date_to]).end_of_day)
       end
 
       @pagination = paginate(@notifications)

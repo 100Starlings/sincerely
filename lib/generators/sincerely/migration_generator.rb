@@ -11,7 +11,7 @@ module Sincerely
       source_root File.expand_path('../templates', __dir__)
       desc 'Installs Sincerely migration and model files.'
 
-      def install # rubocop:disable Metrics/MethodLength
+      def install
         if table_exist?
           migration_template('notifications_update.rb.erb', "db/migrate/update_#{plural_file_name}.rb",
                              migration_version:)

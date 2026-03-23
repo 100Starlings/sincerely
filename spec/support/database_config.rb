@@ -26,7 +26,7 @@ module DatabaseConfig
 
   private
 
-  def create_notifications # rubocop:disable Metrics/MethodLength
+  def create_notifications
     ActiveRecord::Schema.define do
       create_table :notifications do |t|
         t.string   :recipient
@@ -46,7 +46,7 @@ module DatabaseConfig
     end
   end
 
-  def create_templates # rubocop:disable Metrics/MethodLength
+  def create_templates
     ActiveRecord::Schema.define do
       create_table :notification_templates do |t|
         t.integer :template_id
@@ -62,7 +62,7 @@ module DatabaseConfig
     end
   end
 
-  def create_delivery_events # rubocop:disable Metrics/MethodLength
+  def create_delivery_events
     ActiveRecord::Schema.define do
       create_table :sincerely_delivery_events do |t|
         t.string :message_id
@@ -79,7 +79,7 @@ module DatabaseConfig
     end
   end
 
-  def create_engagement_events # rubocop:disable Metrics/MethodLength
+  def create_engagement_events
     ActiveRecord::Schema.define do
       create_table :sincerely_engagement_events do |t|
         t.string :message_id

@@ -23,11 +23,11 @@ module Sincerely
       # Recent events (filtered by user's notifications)
       user_message_ids = filtered_notifications.where.not(message_id: nil).pluck(:message_id)
       @recent_delivery_events = apply_time_filter(Sincerely::DeliveryEvent)
+                                .where(message_id: user_message_ids)
+                                .order(created_at: :desc).limit(5)
+      @recent_engagement_events = apply_time_filter(Sincerely::EngagementEvent)
                                   .where(message_id: user_message_ids)
                                   .order(created_at: :desc).limit(5)
-      @recent_engagement_events = apply_time_filter(Sincerely::EngagementEvent)
-                                    .where(message_id: user_message_ids)
-                                    .order(created_at: :desc).limit(5)
 
       # Bounce rate
       bounced = filtered_notifications.where(delivery_state: 'bounced').count
@@ -62,10 +62,13 @@ module Sincerely
     end
 
     def timeline_bucket_config
-      case params[:period]
+      period = params[:period]
+      period = '24h' unless %w[1h 24h 7d 30d 3m all].include?(period)
+
+      case period
       when '1h'
         { interval: 5.minutes, format: '%H:%M', start: 1.hour.ago }
-      when '24h', nil
+      when '24h'
         { interval: 1.hour, format: '%H:%M', start: 24.hours.ago }
       when '7d'
         { interval: 6.hours, format: '%a %H:%M', start: 7.days.ago }
@@ -75,8 +78,6 @@ module Sincerely
         { interval: 1.week, format: '%b %d', start: 3.months.ago }
       when 'all'
         { interval: 1.month, format: '%b %Y', start: 1.year.ago }
-      else
-        { interval: 1.hour, format: '%H:%M', start: 24.hours.ago }
       end
     end
 
