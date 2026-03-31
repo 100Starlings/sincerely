@@ -3,103 +3,107 @@
 module Sincerely
   class SendController < ApplicationController
     MAX_RECIPIENTS = 50
+    EMAIL_PATTERN = /\A[^@\s]+@[^@\s]+\z/
+    RECIPIENT_DELIMITER = /[\s,;\n]+/
 
     def new
-      @templates = Sincerely::Templates::NotificationTemplate.order(:name)
+      @templates = available_templates
     end
 
     def create
-      recipients = parse_recipients(params[:recipients])
+      return render_error('No valid recipients provided') if recipients.empty?
+      return render_error("Maximum #{MAX_RECIPIENTS} recipients allowed") if recipients.size > MAX_RECIPIENTS
+      return render_error('Template not found') unless template
 
-      if recipients.empty?
-        render json: { success: false, error: 'No valid recipients provided' }, status: :unprocessable_entity
-        return
-      end
-
-      if recipients.size > MAX_RECIPIENTS
-        render json: { success: false, error: "Maximum #{MAX_RECIPIENTS} recipients allowed" },
-               status: :unprocessable_entity
-        return
-      end
-
-      template = Sincerely::Templates::NotificationTemplate.find_by(id: params[:template_id])
-      unless template
-        render json: { success: false, error: 'Template not found' }, status: :unprocessable_entity
-        return
-      end
-
-      template_data = params[:template_data]&.to_unsafe_h || {}
-
-      results = { sent: 0, failed: 0, errors: [] }
-
-      recipients.each do |recipient|
-        notification = notification_model.new(
-          recipient:,
-          notification_type: 'email',
-          template_id: template.id,
-          delivery_options: { template_data: }
-        )
-
-        if notification.save
-          begin
-            notification.deliver
-            results[:sent] += 1
-          rescue StandardError => e
-            results[:failed] += 1
-            results[:errors] << { recipient:, error: e.message }
-          end
-        else
-          results[:failed] += 1
-          results[:errors] << { recipient:, error: notification.errors.full_messages.join(', ') }
-        end
-      end
-
-      render json: {
-        success: true,
-        sent: results[:sent],
-        failed: results[:failed],
-        errors: results[:errors].first(5) # Limit error details
-      }
+      render json: send_results
     end
 
     def template_variables
-      template = Sincerely::Templates::NotificationTemplate.find_by(id: params[:id])
+      return render json: { variables: [] } unless template
 
-      unless template
-        render json: { variables: [] }
-        return
-      end
-
-      variables = extract_liquid_variables(template)
-      render json: { variables: variables.uniq.sort }
+      render json: { variables: extract_liquid_variables.uniq.sort }
     end
 
     private
 
+    def available_templates
+      Sincerely::Templates::NotificationTemplate.order(:name)
+    end
+
+    def template
+      @template ||= Sincerely::Templates::NotificationTemplate.find_by(id: params[:template_id] || params[:id])
+    end
+
+    def recipients
+      @recipients ||= parse_recipients(params[:recipients])
+    end
+
+    def template_data
+      @template_data ||= params[:template_data]&.to_unsafe_h || {}
+    end
+
+    def send_results
+      results = { sent: 0, failed: 0, errors: [] }
+
+      recipients.each { |recipient| process_recipient(recipient, results) }
+
+      { success: true, sent: results[:sent], failed: results[:failed], errors: results[:errors].first(5) }
+    end
+
+    def process_recipient(recipient, results)
+      notification = build_notification(recipient)
+
+      if notification.save
+        deliver_notification(notification, recipient, results)
+      else
+        record_failure(results, recipient, notification.errors.full_messages.join(', '))
+      end
+    end
+
+    def build_notification(recipient)
+      notification_model.new(
+        recipient:,
+        notification_type: 'email',
+        template_id: template.id,
+        delivery_options: { template_data: }
+      )
+    end
+
+    def deliver_notification(notification, recipient, results)
+      notification.deliver
+      results[:sent] += 1
+    rescue StandardError => e
+      record_failure(results, recipient, e.message)
+    end
+
+    def record_failure(results, recipient, error)
+      results[:failed] += 1
+      results[:errors] << { recipient:, error: }
+    end
+
+    def render_error(message)
+      render json: { success: false, error: message }, status: :unprocessable_entity
+    end
+
     def parse_recipients(input)
       return [] if input.blank?
 
-      # Split by comma, semicolon, space, or newline
-      input.split(/[\s,;\n]+/)
+      input.split(RECIPIENT_DELIMITER)
            .map(&:strip)
            .compact_blank
-           .grep(/\A[^@\s]+@[^@\s]+\z/)
+           .grep(EMAIL_PATTERN)
            .uniq
            .first(MAX_RECIPIENTS)
     end
 
-    def extract_liquid_variables(template)
-      content = [
-        template.subject,
-        template.html_content,
-        template.text_content
-      ].compact.join(' ')
+    def extract_liquid_variables
+      template_content.scan(/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\}\}/)
+                      .flatten
+                      .map { |v| v.split('.').first }
+    end
 
-      # Extract {{ variable }} and {{ variable.property }} patterns
-      content.scan(/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\}\}/)
-             .flatten
-             .map { |v| v.split('.').first } # Get root variable name
-             .uniq
+    def template_content
+      [template.subject, template.html_content, template.text_content].compact.join(' ')
     end
   end
 end

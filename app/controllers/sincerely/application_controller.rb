@@ -2,6 +2,19 @@
 
 module Sincerely
   class ApplicationController < ActionController::Base
+    VALID_PERIODS = %w[1h 24h 7d 30d 3m all].freeze
+    DEFAULT_PERIOD = '24h'
+    DEFAULT_PER_PAGE = 25
+
+    PERIOD_DURATIONS = {
+      '1h' => 1.hour,
+      '24h' => 24.hours,
+      '7d' => 7.days,
+      '30d' => 30.days,
+      '3m' => 3.months,
+      'all' => nil
+    }.freeze
+
     protect_from_forgery with: :exception
 
     layout 'sincerely/application'
@@ -22,60 +35,72 @@ module Sincerely
       @notification_model ||= Sincerely.notification_model
     end
 
-    def paginate(collection, per_page: 25)
-      page = (params[:page] || 1).to_i
-      offset = (page - 1) * per_page
+    def paginate(collection, per_page: DEFAULT_PER_PAGE)
+      page = current_page
       total = collection.count
 
       {
-        records: collection.offset(offset).limit(per_page),
+        records: collection.offset(page_offset(page, per_page)).limit(per_page),
         total_count: total,
         current_page: page,
         per_page:,
-        total_pages: (total.to_f / per_page).ceil
+        total_pages: total_pages(total, per_page)
       }
     end
 
-    def time_filter_start
-      period = params[:period]
-      period = '24h' unless %w[1h 24h 7d 30d 3m all].include?(period)
+    def current_page
+      (params[:page] || 1).to_i
+    end
 
-      case period
-      when '1h' then 1.hour.ago
-      when '24h' then 24.hours.ago
-      when '7d' then 7.days.ago
-      when '30d' then 30.days.ago
-      when '3m' then 3.months.ago
-      when 'all' then nil
-      end
+    def page_offset(page, per_page)
+      (page - 1) * per_page
+    end
+
+    def total_pages(total, per_page)
+      (total.to_f / per_page).ceil
+    end
+
+    def current_period
+      VALID_PERIODS.include?(params[:period]) ? params[:period] : DEFAULT_PERIOD
+    end
+
+    def time_filter_start
+      duration = PERIOD_DURATIONS[current_period]
+      duration&.ago
     end
 
     def apply_time_filter(collection, column: :created_at)
-      start_time = time_filter_start
-      return collection unless start_time
+      return collection unless time_filter_start
 
-      collection.where("#{column} >= ?", start_time)
+      collection.where("#{column} >= ?", time_filter_start)
     end
 
     def apply_notification_filter(scope)
-      filter = Sincerely.config.filter_notifications_by
-      return scope unless filter.respond_to?(:call)
+      return scope unless notification_filter_callable?
 
-      conditions = instance_exec(&filter)
-      return scope if conditions.blank?
-
-      scope.where(conditions)
+      conditions = notification_filter_conditions
+      conditions.blank? ? scope : scope.where(conditions)
     end
 
     def apply_event_filter(scope)
-      filter = Sincerely.config.filter_notifications_by
-      return scope unless filter.respond_to?(:call)
+      return scope unless notification_filter_callable?
 
-      conditions = instance_exec(&filter)
+      conditions = notification_filter_conditions
       return scope if conditions.blank?
 
-      message_ids = notification_model.where(conditions).where.not(message_id: nil).pluck(:message_id)
-      scope.where(message_id: message_ids)
+      scope.where(message_id: filtered_message_ids_for_events(conditions))
+    end
+
+    def notification_filter_callable?
+      Sincerely.config.filter_notifications_by.respond_to?(:call)
+    end
+
+    def notification_filter_conditions
+      instance_exec(&Sincerely.config.filter_notifications_by)
+    end
+
+    def filtered_message_ids_for_events(conditions)
+      notification_model.where(conditions).where.not(message_id: nil).pluck(:message_id)
     end
   end
 end

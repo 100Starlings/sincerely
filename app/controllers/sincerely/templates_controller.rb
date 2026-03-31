@@ -5,12 +5,12 @@ module Sincerely
     before_action :set_template, only: %i[show edit update preview]
 
     def index
-      @pagination = paginate(Sincerely::Templates::NotificationTemplate.order(created_at: :desc))
+      @pagination = paginate(all_templates)
       @templates = @pagination[:records]
     end
 
     def show
-      @notification_count = notification_model.where(template_id: @template.id).count
+      @notification_count = template_notification_count
     end
 
     def new
@@ -38,12 +38,7 @@ module Sincerely
     end
 
     def preview
-      sample_data = params[:sample_data].present? ? JSON.parse(params[:sample_data]) : {}
-      @rendered_subject = @template.renderer.render(@template.subject || '', { 'template_data' => sample_data })
-      @rendered_html = @template.render(:html, { 'template_data' => sample_data })
-      @rendered_text = @template.render(:text, { 'template_data' => sample_data })
-
-      render layout: false
+      render_preview
     rescue JSON::ParserError
       render plain: 'Invalid JSON in sample data', status: :bad_request
     end
@@ -56,6 +51,31 @@ module Sincerely
 
     def template_params
       params.require(:template).permit(:name, :subject, :sender, :html_content, :text_content)
+    end
+
+    def all_templates
+      Sincerely::Templates::NotificationTemplate.order(created_at: :desc)
+    end
+
+    def template_notification_count
+      notification_model.where(template_id: @template.id).count
+    end
+
+    def render_preview
+      @rendered_subject = @template.renderer.render(@template.subject || '', preview_context)
+      @rendered_html = @template.render(:html, preview_context)
+      @rendered_text = @template.render(:text, preview_context)
+      render layout: false
+    end
+
+    def preview_context
+      { 'template_data' => parsed_sample_data }
+    end
+
+    def parsed_sample_data
+      return {} unless params[:sample_data].present?
+
+      JSON.parse(params[:sample_data])
     end
   end
 end
