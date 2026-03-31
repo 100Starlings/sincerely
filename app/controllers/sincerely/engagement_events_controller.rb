@@ -23,13 +23,13 @@ module Sincerely
     end
 
     def filter_by_event_type(scope)
-      return scope unless params[:event_type].present?
+      return scope if params[:event_type].blank?
 
       scope.where(event_type: params[:event_type])
     end
 
     def filter_by_recipient(scope)
-      return scope unless params[:recipient].present?
+      return scope if params[:recipient].blank?
 
       scope.where('recipient LIKE ?', "%#{params[:recipient]}%")
     end

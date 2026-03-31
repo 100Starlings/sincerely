@@ -31,25 +31,25 @@ module Sincerely
     end
 
     def filter_by_status(scope)
-      return scope unless params[:status].present?
+      return scope if params[:status].blank?
 
       scope.where(delivery_state: params[:status])
     end
 
     def filter_by_template(scope)
-      return scope unless params[:template_id].present?
+      return scope if params[:template_id].blank?
 
       scope.where(template_id: params[:template_id])
     end
 
     def filter_by_recipient(scope)
-      return scope unless params[:recipient].present?
+      return scope if params[:recipient].blank?
 
       scope.where('recipient LIKE ?', "%#{params[:recipient]}%")
     end
 
     def filter_by_notification_type(scope)
-      return scope unless params[:notification_type].present?
+      return scope if params[:notification_type].blank?
 
       scope.where(notification_type: params[:notification_type])
     end

@@ -98,19 +98,19 @@ module Sincerely
 
     def timeline_bucket_config
       @timeline_bucket_config ||= case current_period
-      when '1h'
-        { interval: 5.minutes, format: '%H:%M', start: 1.hour.ago }
-      when '24h'
-        { interval: 1.hour, format: '%H:%M', start: 24.hours.ago }
-      when '7d'
-        { interval: 6.hours, format: '%a %H:%M', start: 7.days.ago }
-      when '30d'
-        { interval: 1.day, format: '%b %d', start: 30.days.ago }
-      when '3m'
-        { interval: 1.week, format: '%b %d', start: 3.months.ago }
-      when 'all'
-        { interval: 1.month, format: '%b %Y', start: 1.year.ago }
-      end
+                                  when '1h'
+                                    { interval: 5.minutes, format: '%H:%M', start: 1.hour.ago }
+                                  when '24h'
+                                    { interval: 1.hour, format: '%H:%M', start: 24.hours.ago }
+                                  when '7d'
+                                    { interval: 6.hours, format: '%a %H:%M', start: 7.days.ago }
+                                  when '30d'
+                                    { interval: 1.day, format: '%b %d', start: 30.days.ago }
+                                  when '3m'
+                                    { interval: 1.week, format: '%b %d', start: 3.months.ago }
+                                  when 'all'
+                                    { interval: 1.month, format: '%b %Y', start: 1.year.ago }
+                                  end
     end
 
     def generate_time_buckets

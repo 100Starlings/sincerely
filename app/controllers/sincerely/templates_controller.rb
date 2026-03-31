@@ -73,7 +73,7 @@ module Sincerely
     end
 
     def parsed_sample_data
-      return {} unless params[:sample_data].present?
+      return {} if params[:sample_data].blank?
 
       JSON.parse(params[:sample_data])
     end

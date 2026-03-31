@@ -70,7 +70,7 @@ module Sincerely
     end
 
     def apply_time_filter(collection, column: :created_at)
-      return collection unless time_filter_start
+      return collection.all unless time_filter_start
 
       collection.where("#{column} >= ?", time_filter_start)
     end
