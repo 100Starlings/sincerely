@@ -42,9 +42,7 @@
       <button type="button" class="btn btn-primary" id="sendButton" disabled>
         <span class="btn-text">Send Emails</span>
         <span class="btn-loader" style="display: none;">
-          <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="32" stroke-linecap="round"></circle>
-          </svg>
+          <%= render 'sincerely/shared/icons/spinner' %>
           Sending...
         </span>
       </button>
@@ -53,24 +51,17 @@
 
   <div class="send-overlay" id="sendOverlay">
     <div class="send-progress">
-      <svg class="progress-spinner" viewBox="0 0 50 50">
-        <circle cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
-      </svg>
+      <%= render 'sincerely/shared/icons/progress_spinner' %>
       <span class="progress-text">Sending emails...</span>
     </div>
   </div>
 
   <div class="send-result" id="sendResult" style="display: none;">
     <div class="result-icon result-success" id="resultSuccess">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M20 6L9 17l-5-5"></path>
-      </svg>
+      <%= render 'sincerely/shared/icons/check' %>
     </div>
     <div class="result-icon result-partial" id="resultPartial">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <path d="M12 8v4M12 16h.01"></path>
-      </svg>
+      <%= render 'sincerely/shared/icons/warning_circle' %>
     </div>
     <div class="result-message" id="resultMessage"></div>
     <button type="button" class="btn btn-secondary" id="resetButton">Send More</button>
