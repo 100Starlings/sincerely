@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    (function() {
-      var theme = localStorage.getItem('sincerely-theme');
-      if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        theme = 'dark';
-      }
-      if (theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-      }
-    })();
-  </script>
+  <%= javascript_include_tag 'sincerely/theme_init' %>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sincerely Dashboard</title>
