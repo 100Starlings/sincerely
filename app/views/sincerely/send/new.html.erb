@@ -350,7 +350,5 @@
 <span id="templateVariablesUrl" data-url="<%= sincerely.send_template_variables_path(':id') %>" hidden></span>
 <span id="sendCreateUrl" data-url="<%= sincerely.send_create_path %>" hidden></span>
 
-<script>
-  <%= render 'sincerely/assets/send_form' %>
-</script>
+<%= javascript_include_tag 'sincerely/send_form' %>
 
