@@ -27,86 +27,41 @@
     <h2 class="card-title">Notifications Over Time</h2>
   </div>
   <% if @notifications_timeline[:series].any? %>
-    <%
-      state_colors = {
-        'draft' => '#9ca3af',
-        'accepted' => '#B9E0B8',
-        'delivered' => '#10b981',
-        'opened' => '#78c6cc',
-        'clicked' => '#BDD9DB',
-        'bounced' => '#D4183D',
-        'rejected' => '#D4183D',
-        'complained' => '#D4183D',
-        'delayed' => '#f97316'
-      }
-
-      labels = @notifications_timeline[:labels]
-      series = @notifications_timeline[:series]
-
-      # Chart dimensions
-      chart_width = 800
-      chart_height = 220
-      padding_left = 45
-      padding_right = 20
-      padding_top = 20
-      padding_bottom = 30
-
-      plot_width = chart_width - padding_left - padding_right
-      plot_height = chart_height - padding_top - padding_bottom
-
-      max_value = series.values.flatten.max || 0
-      max_value = [max_value, 1].max  # Minimum of 1 to avoid division by zero
-
-      magnitude = 10 ** Math.log10([max_value, 1].max).floor
-      max_y = ((max_value.to_f / magnitude).ceil * magnitude).to_i
-      max_y = [max_y, 1].max
-
-      x_step = labels.length > 1 ? plot_width.to_f / (labels.length - 1) : plot_width
-    %>
+    <% labels = @notifications_timeline[:labels] %>
+    <% series = @notifications_timeline[:series] %>
+    <% lc = line_chart_config(series, labels) %>
     <div class="line-chart-container" id="lineChart">
       <div class="line-chart-wrapper">
-        <svg class="line-chart" viewBox="0 0 <%= chart_width %> <%= chart_height %>" preserveAspectRatio="xMidYMid meet">
+        <svg class="line-chart" viewBox="0 0 <%= lc[:width] %> <%= lc[:height] %>" preserveAspectRatio="xMidYMid meet">
           <%# Grid lines %>
           <% 5.times do |i| %>
-            <% y = padding_top + (plot_height * i / 4.0) %>
-            <line class="line-chart-grid" x1="<%= padding_left %>" y1="<%= y %>" x2="<%= chart_width - padding_right %>" y2="<%= y %>" />
-            <text class="line-chart-label line-chart-label-y" x="<%= padding_left - 8 %>" y="<%= y + 3 %>"><%= (max_y * (4 - i) / 4.0).round %></text>
+            <% y = lc[:padding_top] + (lc[:plot_height] * i / 4.0) %>
+            <line class="line-chart-grid" x1="<%= lc[:padding_left] %>" y1="<%= y %>" x2="<%= lc[:width] - lc[:padding_right] %>" y2="<%= y %>" />
+            <text class="line-chart-label line-chart-label-y" x="<%= lc[:padding_left] - 8 %>" y="<%= y + 3 %>"><%= (lc[:max_y] * (4 - i) / 4.0).round %></text>
           <% end %>
 
           <%# X-axis labels (show subset to avoid overlap) %>
           <% label_step = [1, (labels.length / 8.0).ceil].max %>
           <% labels.each_with_index do |label, i| %>
             <% if i % label_step == 0 || i == labels.length - 1 %>
-              <% x = padding_left + (i * x_step) %>
-              <text class="line-chart-label line-chart-label-x" x="<%= x %>" y="<%= chart_height - 8 %>"><%= label %></text>
+              <text class="line-chart-label line-chart-label-x" x="<%= lc[:padding_left] + (i * lc[:x_step]) %>" y="<%= lc[:height] - 8 %>"><%= label %></text>
             <% end %>
           <% end %>
 
           <%# Lines for each state %>
           <% series.each do |state, values| %>
-            <% color = state_colors[state.to_s] || '#6b7280' %>
-            <%
-              points = values.each_with_index.map do |value, i|
-                x = padding_left + (i * x_step)
-                y = padding_top + plot_height - (value.to_f / max_y * plot_height)
-                "#{x.round(2)},#{y.round(2)}"
-              end.join(' ')
-
-              # Area fill points
-              area_points = "#{padding_left},#{padding_top + plot_height} #{points} #{padding_left + ((values.length - 1) * x_step)},#{padding_top + plot_height}"
-            %>
-            <polygon class="line-chart-area" data-state="<%= state %>" fill="<%= color %>" points="<%= area_points %>" />
-            <polyline class="line-chart-line" data-state="<%= state %>" stroke="<%= color %>" points="<%= points %>" />
+            <% points = line_chart_points(values, lc) %>
+            <polygon class="line-chart-area" data-state="<%= state %>" fill="<%= state_color(state) %>" points="<%= line_chart_area_points(points, values, lc) %>" />
+            <polyline class="line-chart-line" data-state="<%= state %>" stroke="<%= state_color(state) %>" points="<%= points %>" />
           <% end %>
         </svg>
       </div>
 
       <%# Legend %>
       <div class="line-chart-legend">
-        <% series.each do |state, values| %>
-          <% color = state_colors[state.to_s] || '#6b7280' %>
+        <% series.each_key do |state| %>
           <div class="line-chart-legend-item" data-state="<%= state %>">
-            <span class="donut-legend-color" style="background: <%= color %>"></span>
+            <span class="donut-legend-color" style="background: <%= state_color(state) %>"></span>
             <span class="donut-legend-text"><%= state.to_s.humanize %></span>
           </div>
         <% end %>
@@ -124,63 +79,37 @@
       <h2 class="card-title">Notifications by Status</h2>
     </div>
     <% if @notifications_by_state.any? %>
-      <%
-        state_colors = {
-        'draft' => '#9ca3af',
-        'accepted' => '#B9E0B8',
-        'delivered' => '#10b981',
-        'opened' => '#78c6cc',
-        'clicked' => '#BDD9DB',
-        'bounced' => '#D4183D',
-        'rejected' => '#D4183D',
-        'complained' => '#D4183D',
-        'delayed' => '#f97316'
-      }
-        total = @notifications_by_state.values.sum
-        radius = 68
-        circumference = 2 * Math::PI * radius
-        offset = 0
-      %>
+      <% segments = donut_segment_data(@notifications_by_state) %>
       <div class="donut-chart-container" id="donutChart">
         <div class="donut-chart-wrapper">
           <svg class="donut-chart" viewBox="0 0 200 200">
-            <% @notifications_by_state.each do |state, count| %>
-              <%
-                percentage = count.to_f / total
-                dash_length = circumference * percentage
-                # Add small overlap to prevent visual gaps between segments
-                overlap = 0.5
-                visible_dash = dash_length + overlap
-                color = state_colors[state.to_s] || '#6b7280'
-              %>
+            <% segments.each do |seg| %>
               <circle
                 class="donut-segment"
-                data-state="<%= state %>"
-                cx="100" cy="100" r="<%= radius %>"
-                stroke="<%= color %>"
-                stroke-dasharray="<%= visible_dash %> <%= circumference - visible_dash %>"
-                stroke-dashoffset="<%= -offset %>"
+                data-state="<%= seg[:state] %>"
+                cx="100" cy="100" r="<%= Sincerely::ChartHelper::DONUT_RADIUS %>"
+                stroke="<%= seg[:color] %>"
+                stroke-dasharray="<%= seg[:visible_dash] %> <%= seg[:gap] %>"
+                stroke-dashoffset="<%= seg[:offset] %>"
               />
-              <% offset += dash_length %>
             <% end %>
           </svg>
           <div class="donut-center">
-            <div class="donut-center-value"><%= number_with_delimiter(total) %></div>
+            <div class="donut-center-value"><%= number_with_delimiter(@notifications_by_state.values.sum) %></div>
             <div class="donut-center-label">Total</div>
           </div>
         </div>
         <div class="donut-legend">
-          <% @notifications_by_state.each do |state, count| %>
-            <% color = state_colors[state.to_s] || '#6b7280' %>
-            <div class="donut-legend-item" data-state="<%= state %>">
-              <span class="donut-legend-color" style="background: <%= color %>"></span>
-              <span class="donut-legend-text"><%= state.to_s.humanize %></span>
-              <span class="donut-legend-count"><%= number_with_delimiter(count) %></span>
+          <% segments.each do |seg| %>
+            <div class="donut-legend-item" data-state="<%= seg[:state] %>">
+              <span class="donut-legend-color" style="background: <%= seg[:color] %>"></span>
+              <span class="donut-legend-text"><%= seg[:state].to_s.humanize %></span>
+              <span class="donut-legend-count"><%= number_with_delimiter(seg[:count]) %></span>
             </div>
           <% end %>
         </div>
       </div>
-q    <% else %>
+    <% else %>
       <div class="donut-empty">No notifications in this period</div>
     <% end %>
   </div>
@@ -231,7 +160,7 @@ q    <% else %>
               <tr<%= " class=\"clickable-row\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>
-                <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+                <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>
               </tr>
             <% end %>
           <% else %>
@@ -259,7 +188,7 @@ q    <% else %>
               <tr<%= " class=\"clickable-row\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>
-                <td><%= (event.timestamp || event.created_at).strftime('%b %d, %H:%M') %></td>
+                <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>
               </tr>
             <% end %>
           <% else %>

@@ -23,6 +23,18 @@ module Sincerely
       time.strftime('%b %d, %Y %H:%M:%S')
     end
 
+    def event_timestamp(event)
+      event.timestamp || event.created_at
+    end
+
+    def format_event_options(options)
+      return nil if options.blank?
+
+      JSON.pretty_generate(options)
+    rescue JSON::GeneratorError
+      options.to_s
+    end
+
     def event_type_badge_class(event_type)
       case event_type.to_s.downcase
       when 'delivery', 'send' then 'badge-delivered'
