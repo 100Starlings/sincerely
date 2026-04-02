@@ -1,0 +1,60 @@
+:root {
+  --primary: #D4183D;
+  --primary-dark: #70041E;
+  --success: #8ACB88;
+  --warning: #78c6cc;
+  --danger: #D4183D;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-500: #6b7280;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  --bg-primary: #ffffff;
+  --bg-secondary: #E6E6E6;
+  --text-primary: #70041E;
+  --text-secondary: #717182;
+  --border-color: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  --primary: #D4183D;
+  --primary-dark: #490C13;
+  --gray-50: #1f2937;
+  --gray-100: #374151;
+  --gray-200: #4b5563;
+  --gray-300: #6b7280;
+  --gray-500: #9ca3af;
+  --gray-700: #d1d5db;
+  --gray-900: #f9fafb;
+  --bg-primary: #1E1E1E;
+  /* --bg-primary: #9393A1; */
+  --bg-secondary: #303030;
+  /* --bg-secondary: #1E1E1E; */
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  body { overflow: auto; }
+}
+
+a { color: var(--primary); }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
