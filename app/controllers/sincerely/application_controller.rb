@@ -15,6 +15,8 @@ module Sincerely
       'all' => nil
     }.freeze
 
+    private_constant :VALID_PERIODS, :DEFAULT_PERIOD, :DEFAULT_PER_PAGE, :PERIOD_DURATIONS
+
     protect_from_forgery with: :exception
 
     layout 'sincerely/application'

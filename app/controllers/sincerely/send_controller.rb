@@ -6,6 +6,8 @@ module Sincerely
     EMAIL_PATTERN = /\A[^@\s]+@[^@\s]+\z/
     RECIPIENT_DELIMITER = /[\s,;\n]+/
 
+    private_constant :MAX_RECIPIENTS, :EMAIL_PATTERN, :RECIPIENT_DELIMITER
+
     def new
       @templates = available_templates
     end

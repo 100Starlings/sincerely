@@ -6,6 +6,8 @@ module Sincerely
     DELIVERED_STATES = %w[delivered opened clicked].freeze
     ENGAGED_STATES = %w[opened clicked].freeze
 
+    private_constant :EXCLUDED_FROM_SENT, :DELIVERED_STATES, :ENGAGED_STATES
+
     def index
       @total_notifications = filtered_notifications.count
       @notifications_by_state = filtered_notifications.group(:delivery_state).count
