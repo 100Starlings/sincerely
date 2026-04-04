@@ -156,7 +156,7 @@
         <tbody>
           <% if @recent_delivery_events.any? %>
             <% @recent_delivery_events.each do |event| %>
-              <% notification = notification_model.find_by(message_id: event.message_id) %>
+              <% notification = @notifications_by_message_id[event.message_id] %>
               <tr<%= " class=\"clickable-row\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>
@@ -184,7 +184,7 @@
         <tbody>
           <% if @recent_engagement_events.any? %>
             <% @recent_engagement_events.each do |event| %>
-              <% notification = notification_model.find_by(message_id: event.message_id) %>
+              <% notification = @notifications_by_message_id[event.message_id] %>
               <tr<%= " class=\"clickable-row\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>

@@ -17,6 +17,7 @@ module Sincerely
       @bounce_rate = calculate_bounce_rate
       @recent_delivery_events = recent_delivery_events
       @recent_engagement_events = recent_engagement_events
+      @notifications_by_message_id = preload_notifications_for_events
       @current_period = current_period
       @notifications_timeline = build_timeline_data(filtered_notifications)
     end
@@ -77,6 +78,13 @@ module Sincerely
         .where(message_id: user_message_ids)
         .order(created_at: :desc)
         .limit(5)
+    end
+
+    def preload_notifications_for_events
+      message_ids = (@recent_delivery_events + @recent_engagement_events).map(&:message_id).compact.uniq
+      return {} if message_ids.empty?
+
+      notification_model.where(message_id: message_ids).index_by(&:message_id)
     end
 
     def build_timeline_data(notifications)
