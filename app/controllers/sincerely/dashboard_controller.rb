@@ -119,7 +119,8 @@ module Sincerely
                                   when '3m'
                                     { interval: 1.week, format: '%b %d', start: 3.months.ago }
                                   when 'all'
-                                    { interval: 1.month, format: '%b %Y', start: 1.year.ago }
+                                    oldest = filtered_notifications.minimum(:created_at) || 1.year.ago
+                                    { interval: 1.month, format: '%b %Y', start: oldest }
                                   end
     end
 
