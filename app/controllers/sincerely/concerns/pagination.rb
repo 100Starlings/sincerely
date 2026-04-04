@@ -24,7 +24,7 @@ module Sincerely
       end
 
       def current_page
-        (params[:page] || 1).to_i
+        [(params[:page] || 1).to_i, 1].max
       end
 
       def page_offset(page, per_page)
