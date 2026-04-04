@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Preview: <%= @template.name %></title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'">
   <%= stylesheet_link_tag 'sincerely/template_preview' %>
 </head>
 <body>
@@ -17,7 +18,7 @@
   </div>
   <div class="preview-content">
     <div id="html-preview" class="preview-frame preview-frame-html">
-      <iframe srcdoc="<%= ERB::Util.html_escape(@rendered_html) %>"></iframe>
+      <iframe srcdoc="<%= ERB::Util.html_escape(@rendered_html) %>" sandbox="allow-same-origin"></iframe>
     </div>
     <div id="text-preview" class="preview-frame preview-frame-text" style="display: none;">
 <%= @rendered_text %>
