@@ -95,7 +95,6 @@ module Sincerely
            .compact_blank
            .grep(EMAIL_PATTERN)
            .uniq
-           .first(MAX_RECIPIENTS)
     end
 
     def extract_liquid_variables
