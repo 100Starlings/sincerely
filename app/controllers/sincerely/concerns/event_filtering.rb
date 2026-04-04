@@ -39,6 +39,13 @@ module Sincerely
         scope.pluck(:message_id).compact
       end
 
+      def preload_notifications(events)
+        message_ids = events.map(&:message_id).compact.uniq
+        return {} if message_ids.empty?
+
+        notification_model.where(message_id: message_ids).index_by(&:message_id)
+      end
+
       def available_event_types
         event_model.distinct.pluck(:event_type).compact
       end

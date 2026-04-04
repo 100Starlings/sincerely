@@ -7,6 +7,7 @@ module Sincerely
     def index
       @pagination = paginate(filtered_events)
       @events = @pagination[:records]
+      @notifications_by_message_id = preload_notifications(@events)
       @event_types = available_event_types
       @templates = available_templates
     end
