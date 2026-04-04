@@ -57,9 +57,18 @@ module Sincerely
     end
 
     def filter_by_date_range(scope)
-      scope = scope.where(created_at: Date.parse(params[:date_from])..) if params[:date_from].present?
-      scope = scope.where(created_at: ..Date.parse(params[:date_to]).end_of_day) if params[:date_to].present?
+      date_from = safe_parse_date(params[:date_from])
+      date_to   = safe_parse_date(params[:date_to])
+
+      scope = scope.where(created_at: date_from..) if date_from
+      scope = scope.where(created_at: ..date_to.end_of_day) if date_to
       scope
+    end
+
+    def safe_parse_date(value)
+      Date.iso8601(value) if value.present?
+    rescue ArgumentError
+      nil
     end
 
     def find_notification
