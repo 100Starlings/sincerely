@@ -2,6 +2,7 @@
 
 module Sincerely
   class DashboardController < ApplicationController
+    include Concerns::Periods
     include Concerns::DeliveryMetrics
     include Concerns::NotificationTimeline
 

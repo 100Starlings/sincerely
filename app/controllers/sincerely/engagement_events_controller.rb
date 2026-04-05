@@ -2,6 +2,8 @@
 
 module Sincerely
   class EngagementEventsController < ApplicationController
+    include Concerns::Pagination
+    include Concerns::Periods
     include Concerns::EventFiltering
 
     def index

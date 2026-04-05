@@ -2,6 +2,8 @@
 
 module Sincerely
   class DeliveryEventsController < ApplicationController
+    include Concerns::Pagination
+    include Concerns::Periods
     include Concerns::EventFiltering
 
     def index

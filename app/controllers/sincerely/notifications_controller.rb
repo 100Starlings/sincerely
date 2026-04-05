@@ -2,6 +2,8 @@
 
 module Sincerely
   class NotificationsController < ApplicationController
+    include Concerns::Pagination
+    include Concerns::Periods
     include Concerns::EventTimeline
 
     def index

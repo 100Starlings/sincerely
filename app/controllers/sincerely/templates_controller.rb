@@ -2,6 +2,8 @@
 
 module Sincerely
   class TemplatesController < ApplicationController
+    include Concerns::Pagination
+
     before_action :set_template, only: %i[show edit update preview]
 
     def index
