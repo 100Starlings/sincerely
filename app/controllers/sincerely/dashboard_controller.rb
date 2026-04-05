@@ -25,20 +25,20 @@ module Sincerely
       @filtered_notifications ||= apply_notification_filter(apply_time_filter(notification_model))
     end
 
-    def user_message_ids
-      @user_message_ids ||= filtered_notifications.where.not(message_id: nil).pluck(:message_id)
+    def user_message_ids_subquery
+      filtered_notifications.where.not(message_id: nil).select(:message_id)
     end
 
     def recent_delivery_events
       apply_time_filter(Sincerely::DeliveryEvent)
-        .where(message_id: user_message_ids)
+        .where(message_id: user_message_ids_subquery)
         .order(created_at: :desc)
         .limit(5)
     end
 
     def recent_engagement_events
       apply_time_filter(Sincerely::EngagementEvent)
-        .where(message_id: user_message_ids)
+        .where(message_id: user_message_ids_subquery)
         .order(created_at: :desc)
         .limit(5)
     end
