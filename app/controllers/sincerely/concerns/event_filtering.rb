@@ -36,7 +36,7 @@ module Sincerely
         scope = notification_model.all
         scope = scope.where(template_id: params[:template_id]) if params[:template_id].present?
         scope = scope.where(notification_type: params[:notification_type]) if params[:notification_type].present?
-        scope.pluck(:message_id).compact
+        scope.where.not(message_id: nil).select(:message_id)
       end
 
       def preload_notifications(events)
