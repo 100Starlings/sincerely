@@ -21,7 +21,7 @@ module Sincerely
       path = Sincerely::Engine.root.join('app', 'assets', 'images', "#{name}.svg")
       return '' unless path.exist?
 
-      raw path.read
+      raw path.read # rubocop:disable Rails/OutputSafety -- SVGs are read from the engine's own assets, not user input
     end
 
     def format_timestamp(time)
