@@ -105,6 +105,32 @@ RSpec.describe 'Sincerely::NotificationsController', type: :request do
 
         expect(response).to have_http_status(:ok)
       end
+
+      it 'treats page=0 as page 1' do
+        get '/sincerely/notifications', params: { page: 0 }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'treats negative page as page 1' do
+        get '/sincerely/notifications', params: { page: -5 }
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'with invalid date filters' do
+      it 'ignores invalid date_from and returns success' do
+        get '/sincerely/notifications', params: { date_from: 'not-a-date' }
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'ignores invalid date_to and returns success' do
+        get '/sincerely/notifications', params: { date_to: '99/99/9999' }
+
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 
@@ -153,6 +179,23 @@ RSpec.describe 'Sincerely::NotificationsController', type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('delivery')
+      end
+    end
+
+    context 'when notification has no message_id' do
+      let!(:notification_without_message_id) do
+        Notification.create!(
+          recipient: 'no-message-id@example.com',
+          notification_type: 'email',
+          delivery_state: 'draft',
+          message_id: nil
+        )
+      end
+
+      it 'returns success without querying events' do
+        get "/sincerely/notifications/#{notification_without_message_id.id}"
+
+        expect(response).to have_http_status(:ok)
       end
     end
 
