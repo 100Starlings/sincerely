@@ -20,6 +20,8 @@ module Sincerely
       end
 
       def events_for_model(model)
+        return [] if @notification.message_id.nil?
+
         model.where(message_id: @notification.message_id).map do |event|
           {
             type: event.event_type,
