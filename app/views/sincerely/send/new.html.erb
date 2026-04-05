@@ -42,7 +42,7 @@
       <button type="button" class="btn btn-primary" id="sendButton" disabled>
         <span class="btn-text">Send Emails</span>
         <span class="btn-loader" style="display: none;">
-          <%= render 'sincerely/shared/icons/spinner' %>
+          <%= inline_svg 'sincerely/spinner' %>
           Sending...
         </span>
       </button>
@@ -51,17 +51,17 @@
 
   <div class="send-overlay" id="sendOverlay">
     <div class="send-progress">
-      <%= render 'sincerely/shared/icons/progress_spinner' %>
+      <%= inline_svg 'sincerely/progress_spinner' %>
       <span class="progress-text">Sending emails...</span>
     </div>
   </div>
 
   <div class="send-result" id="sendResult" style="display: none;">
     <div class="result-icon result-success" id="resultSuccess">
-      <%= render 'sincerely/shared/icons/check' %>
+      <%= inline_svg 'sincerely/check' %>
     </div>
     <div class="result-icon result-partial" id="resultPartial">
-      <%= render 'sincerely/shared/icons/warning_circle' %>
+      <%= inline_svg 'sincerely/warning_circle' %>
     </div>
     <div class="result-message" id="resultMessage"></div>
     <button type="button" class="btn btn-secondary" id="resetButton">Send More</button>

@@ -17,6 +17,13 @@ module Sincerely
       end
     end
 
+    def inline_svg(name)
+      path = Sincerely::Engine.root.join('app', 'assets', 'images', "#{name}.svg")
+      return '' unless path.exist?
+
+      raw path.read
+    end
+
     def format_timestamp(time)
       return '-' unless time
 
