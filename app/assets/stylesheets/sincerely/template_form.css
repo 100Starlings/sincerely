@@ -22,7 +22,9 @@
   gap: 0.375rem;
 }
 
-.preview-tab:hover { color: var(--text-primary); }
+.preview-tab:hover {
+  color: var(--text-primary);
+}
 
 .preview-tab.active {
   background: var(--bg-primary);
@@ -30,10 +32,22 @@
   border-bottom: 1px solid var(--bg-primary);
 }
 
-.preview-tab svg { width: 0.875rem; height: 0.875rem; }
-.preview-container { position: relative; }
-.preview-panel { display: none; }
-.preview-panel.active { display: block; }
+.preview-tab svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.preview-container {
+  position: relative;
+}
+
+.preview-panel {
+  display: none;
+}
+
+.preview-panel.active {
+  display: block;
+}
 
 .preview-frame {
   width: 100%;
