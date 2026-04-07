@@ -47,7 +47,7 @@ module Sincerely
       def generate_time_buckets
         config = timeline_bucket_config
         start_time = config[:start].beginning_of_hour
-        (start_time.to_i..Time.current.to_i).step(config[:interval]).map { |t| Time.zone.at(t) }
+        (start_time.to_i..Time.current.to_i).step(config[:interval].to_i).map { |t| Time.zone.at(t) }
       end
 
       def find_bucket_index(time, buckets)
