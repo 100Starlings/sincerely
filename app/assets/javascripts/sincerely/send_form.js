@@ -19,7 +19,7 @@
   const sendForm = document.querySelector('.send-form');
 
   function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[^\s@]+@[^\s@]+$/.test(email);
   }
 
   function addRecipient(email) {
