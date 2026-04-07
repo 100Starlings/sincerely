@@ -68,7 +68,7 @@
       <tbody>
         <% @events.each do |event| %>
           <% notification = @notifications_by_message_id[event.message_id] %>
-          <tr<%= " class=\"clickable-row\" role=\"link\" tabindex=\"0\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
+          <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>"<% end %>>
             <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
             <td><%= truncate(event.recipient, length: 30) %></td>
             <td><code><%= truncate(event.message_id, length: 20) %></code></td>

@@ -89,7 +89,7 @@
         <tbody>
           <% if @recent_notifications.any? %>
             <% @recent_notifications.each do |notification| %>
-              <tr class="clickable-row" role="link" tabindex="0" onclick="window.location='<%= sincerely.notification_path(notification) %>'">
+              <tr class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>">
                 <td><%= truncate(notification.recipient, length: 30) %></td>
                 <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
                 <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
@@ -119,7 +119,7 @@
           <% if @recent_delivery_events.any? %>
             <% @recent_delivery_events.each do |event| %>
               <% notification = @notifications_by_message_id[event.message_id] %>
-              <tr<%= " class=\"clickable-row\" role=\"link\" tabindex=\"0\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
+              <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>"<% end %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>
                 <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>
@@ -147,7 +147,7 @@
           <% if @recent_engagement_events.any? %>
             <% @recent_engagement_events.each do |event| %>
               <% notification = @notifications_by_message_id[event.message_id] %>
-              <tr<%= " class=\"clickable-row\" role=\"link\" tabindex=\"0\" onclick=\"window.location='#{sincerely.notification_path(notification)}'\"".html_safe if notification %>>
+              <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>"<% end %>>
                 <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
                 <td><%= truncate(event.recipient, length: 25) %></td>
                 <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>

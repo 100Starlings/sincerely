@@ -70,7 +70,7 @@
       </thead>
       <tbody>
         <% @notifications.each do |notification| %>
-          <tr class="clickable-row" role="link" tabindex="0" onclick="window.location='<%= sincerely.notification_path(notification) %>'">
+          <tr class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>">
             <td><%= notification.id %></td>
             <td><%= truncate(notification.recipient, length: 35) %></td>
             <td><%= notification.template&.name || 'N/A' %></td>
