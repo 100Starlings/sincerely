@@ -31,7 +31,7 @@ module Sincerely
     end
 
     def base_notifications_scope
-      apply_notification_filter(apply_time_filter(notification_model)).order(created_at: :desc)
+      apply_notification_filter(apply_time_filter(notification_model)).includes(:template).order(created_at: :desc)
     end
 
     def filter_by_status(scope)
