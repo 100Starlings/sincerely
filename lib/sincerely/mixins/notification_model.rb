@@ -68,7 +68,11 @@ module Sincerely
         end
 
         def render_content(content_type)
-          template.render(content_type, delivery_options)
+          template.render(content_type, delivery_options_hash)
+        end
+
+        def delivery_options_hash
+          delivery_options&.stringify_keys || {}
         end
 
         def deliver
