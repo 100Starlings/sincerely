@@ -1,11 +1,19 @@
 (function() {
+  document.addEventListener('click', function(e) {
+    var row = e.target.closest('tr.clickable-row');
+    if (!row || !row.dataset.href) return;
+    if (e.target.closest('a, button, details, summary')) return;
+
+    window.location = row.dataset.href;
+  });
+
   document.addEventListener('keydown', function(e) {
     var row = e.target;
     if (!row.classList.contains('clickable-row')) return;
 
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      row.click();
+      if (row.dataset.href) window.location = row.dataset.href;
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       var next = row.nextElementSibling;
