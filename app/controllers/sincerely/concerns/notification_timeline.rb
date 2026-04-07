@@ -16,13 +16,22 @@ module Sincerely
       end
 
       def build_timeline_series(notifications, buckets)
-        notifications.each_with_object({}) do |notification, series|
-          bucket_index = find_bucket_index(notification.created_at, buckets)
-          next unless bucket_index
+        return {} if buckets.empty?
 
-          state = notification.delivery_state
+        interval = timeline_bucket_config[:interval].to_i
+        start_epoch = buckets.first.to_i
+
+        counts = notifications
+                 .unscope(:order)
+                 .group(:delivery_state, bucket_index_sql(start_epoch, interval))
+                 .count
+
+        counts.each_with_object({}) do |((state, raw_idx), count), series|
+          idx = raw_idx.to_i
+          next unless idx >= 0 && idx < buckets.length
+
           series[state] ||= Array.new(buckets.length, 0)
-          series[state][bucket_index] += 1
+          series[state][idx] = count
         end
       end
 
@@ -50,12 +59,13 @@ module Sincerely
         (start_time.to_i..Time.current.to_i).step(config[:interval].to_i).map { |t| Time.zone.at(t) }
       end
 
-      def find_bucket_index(time, buckets)
-        return nil if buckets.empty?
-
-        interval = timeline_bucket_config[:interval].to_i
-        index = ((time.to_i - buckets.first.to_i) / interval).floor
-        index if index >= 0 && index < buckets.length
+      def bucket_index_sql(start_epoch, interval)
+        epoch_sql = case ActiveRecord::Base.connection.adapter_name.downcase
+                    when 'postgresql' then 'FLOOR(EXTRACT(EPOCH FROM created_at))'
+                    when 'mysql2'     then 'FLOOR(UNIX_TIMESTAMP(created_at))'
+                    else                   "CAST(strftime('%s', created_at) AS INTEGER)"
+                    end
+        Arel.sql("FLOOR((#{epoch_sql} - #{start_epoch}) / #{interval})")
       end
     end
   end
