@@ -41,12 +41,16 @@ module Sincerely
     end
 
     def template_data
-      raw = params[:template_data]
-      @template_data ||= case raw
-                         when ActionController::Parameters then raw.permit!.to_h
-                         when Hash then raw
-                         else {}
-                         end
+      @template_data ||= begin
+        raw = params[:template_data]
+        data = case raw
+               when ActionController::Parameters then raw.to_unsafe_h
+               when Hash then raw
+               else {}
+               end
+        allowed_keys = extract_liquid_variables.uniq
+        data.slice(*allowed_keys)
+      end
     end
 
     def send_results
