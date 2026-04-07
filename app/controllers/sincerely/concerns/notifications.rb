@@ -40,7 +40,7 @@ module Sincerely
       end
 
       def filtered_message_ids_for_events(conditions)
-        notification_model.where(conditions).where.not(message_id: nil).pluck(:message_id)
+        notification_model.where(conditions).where.not(message_id: nil).select(:message_id).distinct
       end
     end
   end
