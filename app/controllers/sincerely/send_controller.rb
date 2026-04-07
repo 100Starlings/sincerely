@@ -41,7 +41,12 @@ module Sincerely
     end
 
     def template_data
-      @template_data ||= params[:template_data]&.to_unsafe_h || {}
+      raw = params[:template_data]
+      @template_data ||= case raw
+                         when ActionController::Parameters then raw.permit!.to_h
+                         when Hash then raw
+                         else {}
+                         end
     end
 
     def send_results
