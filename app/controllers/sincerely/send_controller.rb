@@ -84,7 +84,8 @@ module Sincerely
       notification.deliver
       results[:sent] += 1
     rescue StandardError => e
-      record_failure(results, recipient, e.message)
+      Rails.logger.error("Sincerely delivery failed for #{recipient}: #{e.class}: #{e.message}")
+      record_failure(results, recipient, 'Delivery failed')
     end
 
     def record_failure(results, recipient, error)
