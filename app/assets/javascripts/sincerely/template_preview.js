@@ -1,6 +1,12 @@
-function showTab(tab) {
-  document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
-  document.querySelector('.preview-tab[onclick="showTab(\'' + tab + '\')"]').classList.add('active');
-  document.getElementById('html-preview').style.display = tab === 'html' ? 'block' : 'none';
-  document.getElementById('text-preview').style.display = tab === 'text' ? 'block' : 'none';
-}
+document.querySelectorAll('.preview-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var selected = tab.dataset.tab;
+
+    document.querySelectorAll('.preview-tab').forEach(function(t) {
+      t.classList.toggle('active', t.dataset.tab === selected);
+    });
+
+    document.getElementById('html-preview').style.display = selected === 'html' ? 'block' : 'none';
+    document.getElementById('text-preview').style.display = selected === 'text' ? 'block' : 'none';
+  });
+});
