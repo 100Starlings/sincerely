@@ -31,16 +31,16 @@ module Sincerely
     end
 
     def recent_delivery_events
-      apply_time_filter(Sincerely::DeliveryEvent)
+      apply_time_filter(Sincerely::DeliveryEvent, column: :timestamp)
         .where(message_id: user_message_ids_subquery)
-        .order(created_at: :desc)
+        .order(timestamp: :desc)
         .limit(5)
     end
 
     def recent_engagement_events
-      apply_time_filter(Sincerely::EngagementEvent)
+      apply_time_filter(Sincerely::EngagementEvent, column: :timestamp)
         .where(message_id: user_message_ids_subquery)
-        .order(created_at: :desc)
+        .order(timestamp: :desc)
         .limit(5)
     end
 
