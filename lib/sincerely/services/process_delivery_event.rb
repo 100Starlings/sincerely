@@ -21,24 +21,26 @@ module Sincerely
 
         case event_type.to_sym
         when :bounce
-          notification.set_bounced!
+          notification.set_bounced! if notification.may_set_bounced?
           create_event
         when :complaint
-          notification.set_complained!
+          notification.set_complained! if notification.may_set_complained?
           create_event
         when :delivery
-          notification.set_delivered!
+          notification.set_delivered! if notification.may_set_delivered?
           create_event
         when :send
           notification.set_accepted! if notification.may_set_accepted?
         when :reject
-          notification.set_rejected!
-          notification.update(error_message: event.rejection_reason)
+          if notification.may_set_rejected?
+            notification.set_rejected!
+            notification.update(error_message: event.rejection_reason)
+          end
         when :open
-          notification.set_opened!
+          notification.set_opened! if notification.may_set_opened?
           create_event
         when :click
-          notification.set_clicked!
+          notification.set_clicked! if notification.may_set_clicked?
           create_event
         end
       end
