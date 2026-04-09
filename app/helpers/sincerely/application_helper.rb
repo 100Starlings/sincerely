@@ -18,8 +18,11 @@ module Sincerely
     end
 
     def inline_svg(name)
-      path = Sincerely::Engine.root.join('app', 'assets', 'images', "#{name}.svg")
-      return '' unless path.exist?
+      return '' unless name.match?(%r{\A[a-z0-9_\-/]+\z}i) && name.exclude?('..')
+
+      base = Sincerely::Engine.root.join('app', 'assets', 'images')
+      path = base.join("#{name}.svg")
+      return '' unless path.to_s.start_with?(base.to_s) && path.exist?
 
       raw path.read # rubocop:disable Rails/OutputSafety -- SVGs are read from the engine's own assets, not user input
     end
