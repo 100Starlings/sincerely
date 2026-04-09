@@ -49,9 +49,13 @@
           <%= inline_svg 'sincerely/sun' %>
         </button>
         <% if Sincerely.authenticate_with.present? && Sincerely.config.logout_url.present? %>
-          <a href="<%= Sincerely.config.logout_url %>" class="theme-toggle" title="<%= Sincerely.config.logout_label.presence || 'Logout' %>"<% if Sincerely.config.logout_method.present? %> data-turbo-method="<%= Sincerely.config.logout_method %>"<% end %>>
+          <%= button_to Sincerely.config.logout_url,
+                        method: Sincerely.config.logout_method.presence || :get,
+                        class: 'theme-toggle',
+                        title: Sincerely.config.logout_label.presence || 'Logout',
+                        form: { style: 'display:contents' } do %>
             <%= inline_svg 'sincerely/logout' %>
-          </a>
+          <% end %>
         <% end %>
       </div>
     </div>
