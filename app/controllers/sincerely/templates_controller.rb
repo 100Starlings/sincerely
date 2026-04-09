@@ -43,6 +43,8 @@ module Sincerely
       render_preview
     rescue JSON::ParserError
       render plain: 'Invalid JSON in sample data', status: :bad_request
+    rescue ArgumentError => e
+      render plain: e.message, status: :bad_request
     end
 
     private
@@ -77,7 +79,10 @@ module Sincerely
     def parsed_sample_data
       return {} if params[:sample_data].blank?
 
-      JSON.parse(params[:sample_data])
+      parsed = JSON.parse(params[:sample_data])
+      raise ArgumentError, 'Sample data must be a JSON object' unless parsed.is_a?(Hash)
+
+      parsed
     end
   end
 end
