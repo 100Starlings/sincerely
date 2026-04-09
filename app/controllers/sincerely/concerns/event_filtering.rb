@@ -8,7 +8,7 @@ module Sincerely
       private
 
       def filtered_events
-        scope = apply_event_filter(apply_time_filter(event_model)).order(created_at: :desc)
+        scope = apply_event_filter(apply_time_filter(event_model, column: :timestamp)).order(timestamp: :desc)
         scope = filter_by_event_type(scope)
         scope = filter_by_recipient(scope)
         filter_by_notification_attributes(scope)
