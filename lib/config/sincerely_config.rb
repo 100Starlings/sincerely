@@ -11,13 +11,13 @@ module Sincerely
 
     # Return navigation (optional)
     # Set return_url to show a "back to app" link in the footer
-    attr_accessor :return_url, :return_label
+    attr_config :return_url, :return_label
 
     # Logout configuration (optional)
     # Set logout_url to show a logout button in the navigation
     # The button only appears when authentication is configured
     # Set logout_method to :delete for Devise (default is :get)
-    attr_accessor :logout_url, :logout_label, :logout_method
+    attr_config :logout_url, :logout_label, :logout_method
 
     # Notification filtering (optional)
     # Lambda that returns a hash for where() clause to filter notifications
