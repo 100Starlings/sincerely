@@ -61,11 +61,12 @@ module Sincerely
 
       notifications_by_state.map do |state, count|
         dash_length = circumference * (count.to_f / total)
+        visible_dash = [dash_length + 0.5, circumference].min
         segment = {
           state:, count:,
           color: state_color(state),
-          visible_dash: dash_length + 0.5,
-          gap: circumference - (dash_length + 0.5),
+          visible_dash:,
+          gap: [circumference - visible_dash, 0].max,
           offset: -offset
         }
         offset += dash_length
