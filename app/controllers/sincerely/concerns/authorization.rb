@@ -6,12 +6,12 @@ module Sincerely
       extend ActiveSupport::Concern
 
       included do
-        before_action :authenticate_user!
+        before_action :authenticate_sincerely_user!
       end
 
       private
 
-      def authenticate_user!
+      def authenticate_sincerely_user!
         return unless Sincerely.authenticate_with
 
         instance_exec(&Sincerely.authenticate_with)
