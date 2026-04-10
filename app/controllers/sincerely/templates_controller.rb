@@ -45,6 +45,8 @@ module Sincerely
       render plain: 'Invalid JSON in sample data', status: :bad_request
     rescue ArgumentError => e
       render plain: e.message, status: :bad_request
+    rescue Liquid::Error => e
+      render plain: "Template rendering error: #{e.message}", status: :unprocessable_entity
     end
 
     private
