@@ -108,7 +108,7 @@ module Sincerely
     end
 
     def extract_liquid_variables
-      template_content.scan(/\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\}\}/)
+      template_content.scan(/\{\{\s*([a-zA-Z_][a-zA-Z0-9_.]*?)[\s|}]/)
                       .flatten
                       .map { |v| v.split('.').first }
     end
