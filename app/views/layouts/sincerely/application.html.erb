@@ -17,14 +17,14 @@
       <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">
         <%= inline_svg 'sincerely/menu' %>
       </button>
-      <a href="<%= sincerely.root_path %>" class="nav-brand">Sincerely</a>
+      <a href="<%= root_path %>" class="nav-brand">Sincerely</a>
       <div class="nav-links" id="navLinks">
-        <a href="<%= sincerely.root_path %>" class="<%= 'active' if controller_name == 'dashboard' %>">Dashboard</a>
-        <a href="<%= sincerely.notifications_path %>" class="<%= 'active' if controller_name == 'notifications' %>">Notifications</a>
-        <a href="<%= sincerely.delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
-        <a href="<%= sincerely.engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
-        <a href="<%= sincerely.templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
-        <a href="<%= sincerely.send_new_path %>" class="<%= 'active' if controller_name == 'send' %>">Send</a>
+        <a href="<%= root_path %>" class="<%= 'active' if controller_name == 'dashboard' %>">Dashboard</a>
+        <a href="<%= notifications_path %>" class="<%= 'active' if controller_name == 'notifications' %>">Notifications</a>
+        <a href="<%= delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
+        <a href="<%= engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
+        <a href="<%= templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
+        <a href="<%= send_new_path %>" class="<%= 'active' if controller_name == 'send' %>">Send</a>
       </div>
       <div class="nav-utils">
         <% if !%w[templates send].include?(controller_name) %>
