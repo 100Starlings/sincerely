@@ -20,7 +20,7 @@
     <div id="html-preview" class="preview-frame preview-frame-html">
       <iframe srcdoc="<%= ERB::Util.html_escape(@rendered_html) %>" sandbox="allow-same-origin"></iframe>
     </div>
-    <div id="text-preview" class="preview-frame preview-frame-text" style="display: none;">
+    <div id="text-preview" class="preview-frame preview-frame-text preview-frame--hidden">
 <%= @rendered_text %>
     </div>
   </div>
