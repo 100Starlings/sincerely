@@ -71,8 +71,8 @@
 
 <%= stylesheet_link_tag 'sincerely/send_form' %>
 
-<span id="templateVariablesUrl" data-url="<%= sincerely.send_template_variables_path(':id') %>" hidden></span>
-<span id="sendCreateUrl" data-url="<%= sincerely.send_create_path %>" hidden></span>
+<span id="templateVariablesUrl" data-url="<%= send_template_variables_path(':id') %>" hidden></span>
+<span id="sendCreateUrl" data-url="<%= send_create_path %>" hidden></span>
 
 <%= javascript_include_tag 'sincerely/send_form' %>
 
