@@ -7,7 +7,7 @@
   <div class="card-header">
     <h2 class="card-title">Filters</h2>
   </div>
-  <form method="get" action="<%= sincerely.engagement_events_path %>" class="filters-form">
+  <form method="get" action="<%= engagement_events_path %>" class="filters-form">
     <div class="filters-grid">
       <div class="filter-group">
         <label for="event_type">Status</label>
@@ -45,7 +45,7 @@
     </div>
     <div class="filter-actions">
       <button type="submit" class="btn btn-primary">Apply Filters</button>
-      <a href="<%= sincerely.engagement_events_path %>" class="btn btn-secondary">Clear</a>
+      <a href="<%= engagement_events_path %>" class="btn btn-secondary">Clear</a>
     </div>
   </form>
 </div>
@@ -68,7 +68,7 @@
       <tbody>
         <% @events.each do |event| %>
           <% notification = @notifications_by_message_id[event.message_id] %>
-          <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= sincerely.notification_path(notification) %>"<% end %>>
+          <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>"<% end %>>
             <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
             <td><%= truncate(event.recipient, length: 30) %></td>
             <td><code><%= truncate(event.message_id, length: 20) %></code></td>
