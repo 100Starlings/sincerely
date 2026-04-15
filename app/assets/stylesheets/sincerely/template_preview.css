@@ -63,6 +63,10 @@ body {
   border: none;
 }
 
+.preview-frame--hidden {
+  display: none;
+}
+
 .preview-frame-text {
   padding: 2rem;
   white-space: pre-wrap;
