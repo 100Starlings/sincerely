@@ -6,7 +6,7 @@
 <div class="card">
   <div class="card-header">
     <h2 class="card-title">All Templates</h2>
-    <a href="<%= sincerely.new_template_path %>" class="btn btn-primary">
+    <a href="<%= new_template_path %>" class="btn btn-primary">
       <%= inline_svg 'sincerely/plus' %>
       New Template
     </a>
@@ -30,10 +30,10 @@
             <td><%= truncate(template.sender, length: 30) %></td>
             <td><%= template.created_at.strftime('%b %d, %Y') %></td>
             <td class="actions-cell">
-              <a href="<%= sincerely.template_path(template) %>" class="btn-icon" title="View">
+              <a href="<%= template_path(template) %>" class="btn-icon" title="View">
                 <%= inline_svg 'sincerely/eye' %>
               </a>
-              <a href="<%= sincerely.edit_template_path(template) %>" class="btn-icon" title="Edit">
+              <a href="<%= edit_template_path(template) %>" class="btn-icon" title="Edit">
                 <%= inline_svg 'sincerely/pencil' %>
               </a>
             </td>
@@ -41,7 +41,7 @@
         <% end %>
         <% if @templates.empty? %>
           <tr>
-            <td colspan="5" class="empty-state">No templates found. <a href="<%= sincerely.new_template_path %>">Create one</a></td>
+            <td colspan="5" class="empty-state">No templates found. <a href="<%= new_template_path %>">Create one</a></td>
           </tr>
         <% end %>
       </tbody>

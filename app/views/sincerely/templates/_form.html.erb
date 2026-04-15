@@ -120,7 +120,7 @@ Welcome to our platform.' %>
 
   <div class="form-actions">
     <%= f.submit template.persisted? ? 'Update Template' : 'Create Template', class: 'btn btn-primary' %>
-    <a href="<%= template.persisted? ? sincerely.template_path(template) : sincerely.templates_path %>" class="btn btn-secondary">Cancel</a>
+    <a href="<%= template.persisted? ? template_path(template) : templates_path %>" class="btn btn-secondary">Cancel</a>
   </div>
 <% end %>
 
