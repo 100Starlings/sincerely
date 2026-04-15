@@ -55,8 +55,9 @@ module Sincerely
 
       def generate_time_buckets
         config = timeline_bucket_config
-        start_time = config[:start].beginning_of_hour
-        (start_time.to_i..Time.current.to_i).step(config[:interval].to_i).map { |t| Time.zone.at(t) }
+        interval = config[:interval].to_i
+        start_epoch = (config[:start].to_i / interval) * interval
+        (start_epoch..Time.current.to_i).step(interval).map { |t| Time.zone.at(t) }
       end
 
       def bucket_index_sql(start_epoch, interval)
