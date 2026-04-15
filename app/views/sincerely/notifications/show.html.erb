@@ -32,7 +32,7 @@
         <span class="detail-label">Template</span>
         <span class="detail-value">
           <% if @notification.template %>
-            <a href="<%= sincerely.template_path(@notification.template) %>"><%= @notification.template.name %></a>
+            <a href="<%= template_path(@notification.template) %>"><%= @notification.template.name %></a>
           <% else %>
             N/A
           <% end %>
