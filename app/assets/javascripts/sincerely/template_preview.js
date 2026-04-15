@@ -6,7 +6,7 @@ document.querySelectorAll('.preview-tab').forEach(function(tab) {
       t.classList.toggle('active', t.dataset.tab === selected);
     });
 
-    document.getElementById('html-preview').style.display = selected === 'html' ? 'block' : 'none';
-    document.getElementById('text-preview').style.display = selected === 'text' ? 'block' : 'none';
+    document.getElementById('html-preview').classList.toggle('preview-frame--hidden', selected !== 'html');
+    document.getElementById('text-preview').classList.toggle('preview-frame--hidden', selected !== 'text');
   });
 });
