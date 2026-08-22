@@ -1,6 +1,6 @@
 <% notification = notifications_by_message_id[event.message_id] %>
 <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>"<% end %>>
-  <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
+  <td><span class="badge <%= event_type_badge_class(event.event_type) %>"><%= event.event_type %></span></td>
   <td><%= truncate(event.recipient, length: recipient_length) %></td>
   <% if detailed %>
     <td><code><%= truncate(event.message_id, length: 20) %></code></td>

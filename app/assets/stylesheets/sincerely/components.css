@@ -186,31 +186,6 @@ tr.clickable-row td a {
   color: var(--warning-text);
 }
 
-.badge-delivery {
-  background: var(--success-bg);
-  color: var(--success-text);
-}
-
-.badge-bounce {
-  background: var(--danger-bg);
-  color: var(--danger-text);
-}
-
-.badge-open {
-  background: var(--warning-bg);
-  color: var(--warning-text);
-}
-
-.badge-click {
-  background: var(--purple-bg);
-  color: var(--purple-text);
-}
-
-.badge-complaint {
-  background: var(--danger-bg);
-  color: var(--danger-text);
-}
-
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -494,25 +469,20 @@ tr.clickable-row td a {
   margin-top: 4px;
 }
 
-.timeline-marker.badge-delivered,
-.timeline-marker.badge-delivery {
+.timeline-marker.badge-delivered {
   background: var(--success);
 }
 
-.timeline-marker.badge-opened,
-.timeline-marker.badge-open {
+.timeline-marker.badge-opened {
   background: var(--warning);
 }
 
-.timeline-marker.badge-clicked,
-.timeline-marker.badge-click {
+.timeline-marker.badge-clicked {
   background: var(--purple-text);
 }
 
 .timeline-marker.badge-bounced,
-.timeline-marker.badge-bounce,
-.timeline-marker.badge-complained,
-.timeline-marker.badge-complaint {
+.timeline-marker.badge-complained {
   background: var(--danger);
 }
 

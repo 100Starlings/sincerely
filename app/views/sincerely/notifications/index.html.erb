@@ -20,22 +20,14 @@
         <label for="template_id">Template</label>
         <select name="template_id" id="template_id">
           <option value="">All templates</option>
-          <%= render partial: 'sincerely/shared/template_option', collection: @templates %>
+          <%= render partial: 'sincerely/shared/template_option', collection: @templates, as: :template %>
         </select>
       </div>
       <div class="filter-group">
         <label for="recipient">Recipient</label>
         <input type="text" name="recipient" id="recipient" value="<%= params[:recipient] %>" placeholder="Search by recipient...">
       </div>
-      <div class="filter-group">
-        <label for="notification_type">Type</label>
-        <select name="notification_type" id="notification_type">
-          <option value="">All types</option>
-          <option value="email" <%= 'selected' if params[:notification_type] == 'email' %>>Email</option>
-          <option value="sms" <%= 'selected' if params[:notification_type] == 'sms' %>>SMS</option>
-          <option value="push" <%= 'selected' if params[:notification_type] == 'push' %>>Push</option>
-        </select>
-      </div>
+      <%= render 'sincerely/shared/notification_type_filter' %>
     </div>
     <div class="filter-actions">
       <button type="submit" class="btn btn-primary">Apply Filters</button>
@@ -67,7 +59,7 @@
             <td><%= truncate(notification.recipient, length: 35) %></td>
             <td><%= notification.template&.name || 'N/A' %></td>
             <td><span class="badge"><%= notification.notification_type %></span></td>
-            <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
+            <td><span class="badge <%= state_badge_class(notification.delivery_state) %>"><%= notification.delivery_state.humanize %></span></td>
             <td><%= notification.sent_at&.strftime('%b %d, %Y %H:%M') || '-' %></td>
           </tr>
         <% end %>

@@ -91,7 +91,7 @@
             <% @recent_notifications.each do |notification| %>
               <tr class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>">
                 <td><%= truncate(notification.recipient, length: 30) %></td>
-                <td><span class="badge badge-<%= notification.delivery_state %>"><%= notification.delivery_state.humanize %></span></td>
+                <td><span class="badge <%= state_badge_class(notification.delivery_state) %>"><%= notification.delivery_state.humanize %></span></td>
                 <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
               </tr>
             <% end %>
