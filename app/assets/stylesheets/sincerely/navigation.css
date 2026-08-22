@@ -21,12 +21,12 @@
   font-family: 'Jersey 10', cursive;
   font-weight: 400;
   font-size: 2.25rem;
-  color: #717182;
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
 [data-theme="dark"] .nav-brand {
-  color: #9393A1;
+  color: #9393a1;
 }
 
 .nav-toggle {

@@ -58,8 +58,8 @@
 }
 
 .tag.invalid {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .tag-remove {
@@ -108,11 +108,11 @@
 }
 
 .recipients-count.warning {
-  color: #b45309;
+  color: var(--warning-text);
 }
 
 .recipients-count.limit {
-  color: #dc2626;
+  color: var(--danger-text);
 }
 
 .template-variables {
@@ -263,13 +263,13 @@
 }
 
 .result-success {
-  background: #d1fae5;
-  color: #047857;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .result-partial {
-  background: #fef3c7;
-  color: #b45309;
+  background: var(--warning-bg);
+  color: var(--warning-text);
   display: none;
 }
 

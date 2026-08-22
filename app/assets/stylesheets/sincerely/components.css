@@ -55,7 +55,7 @@
 }
 
 .stat-value.primary {
-  color: #8ACB88;
+  color: var(--success);
 }
 
 .stat-value.success {
@@ -155,60 +155,60 @@ tr.clickable-row td a {
 }
 
 .badge-accepted {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--info-bg);
+  color: var(--info-text);
 }
 
 .badge-delivered {
-  background: #d1fae5;
-  color: #047857;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .badge-opened {
-  background: #fef3c7;
-  color: #b45309;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .badge-clicked {
-  background: #ddd6fe;
-  color: #7c3aed;
+  background: var(--purple-bg);
+  color: var(--purple-text);
 }
 
 .badge-bounced,
 .badge-rejected,
 .badge-complained {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .badge-delayed {
-  background: #fef3c7;
-  color: #b45309;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .badge-delivery {
-  background: #d1fae5;
-  color: #047857;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .badge-bounce {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .badge-open {
-  background: #fef3c7;
-  color: #b45309;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .badge-click {
-  background: #ddd6fe;
-  color: #7c3aed;
+  background: var(--purple-bg);
+  color: var(--purple-text);
 }
 
 .badge-complaint {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 /* Buttons */
@@ -506,7 +506,7 @@ tr.clickable-row td a {
 
 .timeline-marker.badge-clicked,
 .timeline-marker.badge-click {
-  background: #7c3aed;
+  background: var(--purple-text);
 }
 
 .timeline-marker.badge-bounced,
@@ -597,9 +597,9 @@ code {
 }
 
 .alert-danger {
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
+  background: var(--danger-bg);
+  color: var(--danger-text);
+  border: 1px solid var(--danger-border);
 }
 
 .alert ul {
