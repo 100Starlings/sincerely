@@ -2,15 +2,17 @@
 
 module Sincerely
   module ChartHelper
+    DANGER_COLOR = '#d4183d'
+
     STATE_COLORS = {
       'draft' => '#9ca3af',
-      'accepted' => '#B9E0B8',
+      'accepted' => '#b9e0b8',
       'delivered' => '#10b981',
       'opened' => '#78c6cc',
-      'clicked' => '#BDD9DB',
-      'bounced' => '#D4183D',
-      'rejected' => '#D4183D',
-      'complained' => '#D4183D',
+      'clicked' => '#bdd9db',
+      'bounced' => DANGER_COLOR,
+      'rejected' => DANGER_COLOR,
+      'complained' => DANGER_COLOR,
       'delayed' => '#f97316'
     }.freeze
 
