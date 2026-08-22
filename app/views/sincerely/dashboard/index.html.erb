@@ -117,14 +117,7 @@
         </thead>
         <tbody>
           <% if @recent_delivery_events.any? %>
-            <% @recent_delivery_events.each do |event| %>
-              <% notification = @notifications_by_message_id[event.message_id] %>
-              <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>"<% end %>>
-                <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
-                <td><%= truncate(event.recipient, length: 25) %></td>
-                <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>
-              </tr>
-            <% end %>
+            <%= render partial: 'sincerely/shared/event', collection: @recent_delivery_events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: false, recipient_length: 25 } %>
           <% else %>
             <tr><td colspan="3" class="empty-state">No delivery events</td></tr>
           <% end %>
@@ -145,14 +138,7 @@
         </thead>
         <tbody>
           <% if @recent_engagement_events.any? %>
-            <% @recent_engagement_events.each do |event| %>
-              <% notification = @notifications_by_message_id[event.message_id] %>
-              <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>"<% end %>>
-                <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
-                <td><%= truncate(event.recipient, length: 25) %></td>
-                <td><%= event_timestamp(event).strftime('%b %d, %H:%M') %></td>
-              </tr>
-            <% end %>
+            <%= render partial: 'sincerely/shared/event', collection: @recent_engagement_events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: false, recipient_length: 25 } %>
           <% else %>
             <tr><td colspan="3" class="empty-state">No engagement events</td></tr>
           <% end %>

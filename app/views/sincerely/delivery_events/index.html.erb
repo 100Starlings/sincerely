@@ -13,20 +13,14 @@
         <label for="event_type">Status</label>
         <select name="event_type" id="event_type">
           <option value="">All statuses</option>
-          <% @event_types.each do |type| %>
-            <option value="<%= type %>" <%= 'selected' if params[:event_type] == type %>><%= type.to_s.humanize %></option>
-          <% end %>
+          <%= render partial: 'sincerely/shared/status_option', collection: @event_types, as: :status_value, locals: { param_name: :event_type } %>
         </select>
       </div>
       <div class="filter-group">
         <label for="template_id">Template</label>
         <select name="template_id" id="template_id">
           <option value="">All templates</option>
-          <% @templates.each do |template| %>
-            <option value="<%= template.id %>" <%= 'selected' if params[:template_id] == template.id.to_s %>>
-              <%= template.name %>
-            </option>
-          <% end %>
+          <%= render partial: 'sincerely/shared/template_option', collection: @templates %>
         </select>
       </div>
       <div class="filter-group">
@@ -66,25 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @events.each do |event| %>
-          <% notification = @notifications_by_message_id[event.message_id] %>
-          <tr<% if notification %> class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>"<% end %>>
-            <td><span class="badge badge-<%= event.event_type %>"><%= event.event_type %></span></td>
-            <td><%= truncate(event.recipient, length: 30) %></td>
-            <td><code><%= truncate(event.message_id, length: 20) %></code></td>
-            <td>
-              <% if event.options.present? %>
-                <details onclick="event.stopPropagation()">
-                  <summary class="btn btn-secondary btn-sm">View</summary>
-                  <pre class="event-details"><%= format_event_options(event.options) %></pre>
-                </details>
-              <% else %>
-                -
-              <% end %>
-            </td>
-            <td><%= format_timestamp(event_timestamp(event)) %></td>
-          </tr>
-        <% end %>
+        <%= render partial: 'sincerely/shared/event', collection: @events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: true, recipient_length: 30 } %>
         <% if @events.empty? %>
           <tr>
             <td colspan="5" class="empty-state">No delivery events found</td>
