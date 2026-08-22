@@ -49,6 +49,25 @@ RSpec.describe 'Sincerely::EngagementEventsController', type: :request do
       end
     end
 
+    context 'with templates available' do
+      before do
+        Sincerely::Templates::EmailLiquidTemplate.create!(
+          name: 'Welcome Email',
+          subject: 'Welcome!',
+          sender: 'noreply@example.com',
+          html_content: '<h1>Welcome</h1>',
+          text_content: 'Welcome'
+        )
+      end
+
+      it 'renders the template filter options' do
+        get '/sincerely/engagement_events'
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('Welcome Email')
+      end
+    end
+
     context 'with filters' do
       before do
         Sincerely::EngagementEvent.create!(
