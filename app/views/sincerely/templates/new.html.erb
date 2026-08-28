@@ -1,0 +1,11 @@
+<div class="page-header page-header--visible">
+  <div class="page-header-top">
+    <button onclick="history.back()" class="btn-back" title="Back">
+      <%= inline_svg 'sincerely/chevron_left' %>
+    </button>
+    <h1 class="page-title">New Template</h1>
+  </div>
+  <p class="page-subtitle">Create a new notification template</p>
+</div>
+
+<%= render 'form', template: @template, form_url: templates_path %>

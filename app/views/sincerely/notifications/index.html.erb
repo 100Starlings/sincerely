@@ -1,0 +1,75 @@
+<div class="page-header">
+  <h1 class="page-title">Notifications</h1>
+  <p class="page-subtitle">All notifications sent through the system</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Filter Notifications</h2>
+  </div>
+  <form method="get" action="<%= notifications_path %>" class="filters-form">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="status">Status</label>
+        <select name="status" id="status">
+          <option value="">All statuses</option>
+          <%= render partial: 'sincerely/shared/status_option', collection: @states, as: :status_value, locals: { param_name: :status } %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="template_id">Template</label>
+        <select name="template_id" id="template_id">
+          <option value="">All templates</option>
+          <%= render partial: 'sincerely/shared/template_option', collection: @templates, as: :template %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="recipient">Recipient</label>
+        <input type="text" name="recipient" id="recipient" value="<%= params[:recipient] %>" placeholder="Search by recipient...">
+      </div>
+      <%= render 'sincerely/shared/notification_type_filter' %>
+    </div>
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-primary">Apply Filters</button>
+      <a href="<%= notifications_path %>" class="btn btn-secondary">Clear</a>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Results (<%= @pagination[:total_count] %>)</h2>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Recipient</th>
+          <th>Template</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Sent At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @notifications.each do |notification| %>
+          <tr class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>">
+            <td><%= notification.id %></td>
+            <td><%= truncate(notification.recipient, length: 35) %></td>
+            <td><%= notification.template&.name || 'N/A' %></td>
+            <td><span class="badge"><%= notification.notification_type %></span></td>
+            <td><span class="badge <%= state_badge_class(notification.delivery_state) %>"><%= notification.delivery_state.humanize %></span></td>
+            <td><%= notification.sent_at&.strftime('%b %d, %Y %H:%M') || '-' %></td>
+          </tr>
+        <% end %>
+        <% if @notifications.empty? %>
+          <tr>
+            <td colspan="6" class="empty-state">No notifications found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render 'sincerely/shared/pagination', pagination: @pagination %>
+</div>

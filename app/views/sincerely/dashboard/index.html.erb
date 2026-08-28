@@ -1,0 +1,151 @@
+<div class="page-header">
+  <h1 class="page-title">Dashboard</h1>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Notifications</div>
+    <div class="stat-value primary"><%= number_with_delimiter(@total_notifications) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Delivery Rate</div>
+    <div class="stat-value success"><%= @delivery_rate %>%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Open Rate</div>
+    <div class="stat-value warning"><%= @open_rate %>%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Bounce Rate</div>
+    <div class="stat-value danger"><%= @bounce_rate %>%</div>
+  </div>
+</div>
+
+<%# Line Chart - Notifications Over Time %>
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Notifications Over Time</h2>
+  </div>
+  <% if @notifications_timeline[:series].any? %>
+    <%= render 'sincerely/shared/line_chart',
+               labels: @notifications_timeline[:labels],
+               series: @notifications_timeline[:series] %>
+  <% else %>
+    <div class="line-chart-empty">No notifications in this period</div>
+  <% end %>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Notifications by Status</h2>
+    </div>
+    <% if @notifications_by_state.any? %>
+      <% segments = donut_segment_data(@notifications_by_state) %>
+      <div class="donut-chart-container" id="donutChart">
+        <div class="donut-chart-wrapper">
+          <svg class="donut-chart" viewBox="0 0 200 200">
+            <% segments.each do |seg| %>
+              <circle
+                class="donut-segment"
+                data-state="<%= seg[:state] %>"
+                cx="100" cy="100" r="<%= Sincerely::ChartHelper::DONUT_RADIUS %>"
+                stroke="<%= seg[:color] %>"
+                stroke-dasharray="<%= seg[:visible_dash] %> <%= seg[:gap] %>"
+                stroke-dashoffset="<%= seg[:offset] %>"
+              />
+            <% end %>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-center-value"><%= number_with_delimiter(@notifications_by_state.values.sum) %></div>
+            <div class="donut-center-label">Total</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <% segments.each do |seg| %>
+            <div class="donut-legend-item" data-state="<%= seg[:state] %>">
+              <span class="donut-legend-color" style="background: <%= seg[:color] %>"></span>
+              <span class="donut-legend-text"><%= seg[:state].to_s.humanize %></span>
+              <span class="donut-legend-count"><%= number_with_delimiter(seg[:count]) %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="donut-empty">No notifications in this period</div>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Notifications</h2>
+      <a href="<%= notifications_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Recipient</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          <% if @recent_notifications.any? %>
+            <% @recent_notifications.each do |notification| %>
+              <tr class="clickable-row" role="link" tabindex="0" data-href="<%= notification_path(notification) %>">
+                <td><%= truncate(notification.recipient, length: 30) %></td>
+                <td><span class="badge <%= state_badge_class(notification.delivery_state) %>"><%= notification.delivery_state.humanize %></span></td>
+                <td><%= notification.created_at.strftime('%b %d, %H:%M') %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No recent notifications</td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Delivery Events</h2>
+      <a href="<%= delivery_events_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <% if @recent_delivery_events.any? %>
+            <%= render partial: 'sincerely/shared/event', collection: @recent_delivery_events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: false, recipient_length: 25 } %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No delivery events</td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Engagement Events</h2>
+      <a href="<%= engagement_events_path %>" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Recipient</th><th>Time</th></tr>
+        </thead>
+        <tbody>
+          <% if @recent_engagement_events.any? %>
+            <%= render partial: 'sincerely/shared/event', collection: @recent_engagement_events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: false, recipient_length: 25 } %>
+          <% else %>
+            <tr><td colspan="3" class="empty-state">No engagement events</td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'sincerely/charts' %>

@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h1 class="page-title">Templates</h1>
+  <p class="page-subtitle">Manage notification templates</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">All Templates</h2>
+    <a href="<%= new_template_path %>" class="btn btn-primary">
+      <%= inline_svg 'sincerely/plus' %>
+      New Template
+    </a>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Subject</th>
+          <th>Sender</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @templates.each do |template| %>
+          <tr>
+            <td><strong><%= template.name %></strong></td>
+            <td><%= truncate(template.subject, length: 50) %></td>
+            <td><%= truncate(template.sender, length: 30) %></td>
+            <td><%= template.created_at.strftime('%b %d, %Y') %></td>
+            <td class="actions-cell">
+              <a href="<%= template_path(template) %>" class="btn-icon" title="View">
+                <%= inline_svg 'sincerely/eye' %>
+              </a>
+              <a href="<%= edit_template_path(template) %>" class="btn-icon" title="Edit">
+                <%= inline_svg 'sincerely/pencil' %>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+        <% if @templates.empty? %>
+          <tr>
+            <td colspan="5" class="empty-state">No templates found. <a href="<%= new_template_path %>">Create one</a></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render 'sincerely/shared/pagination', pagination: @pagination %>
+</div>

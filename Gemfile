@@ -12,6 +12,7 @@ group :development, :test do
   gem 'generator_spec'
   gem 'rails'
   gem 'rspec'
+  gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'

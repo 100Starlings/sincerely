@@ -1,0 +1,38 @@
+<% lc = line_chart_config(series, labels) %>
+<div class="line-chart-container" id="lineChart">
+  <div class="line-chart-wrapper">
+    <svg class="line-chart" viewBox="0 0 <%= lc[:width] %> <%= lc[:height] %>" preserveAspectRatio="xMidYMid meet">
+      <%# Grid lines %>
+      <% 5.times do |i| %>
+        <% y = lc[:padding_top] + (lc[:plot_height] * i / 4.0) %>
+        <line class="line-chart-grid" x1="<%= lc[:padding_left] %>" y1="<%= y %>" x2="<%= lc[:width] - lc[:padding_right] %>" y2="<%= y %>" />
+        <text class="line-chart-label line-chart-label-y" x="<%= lc[:padding_left] - 8 %>" y="<%= y + 3 %>"><%= (lc[:max_y] * (4 - i) / 4.0).round %></text>
+      <% end %>
+
+      <%# X-axis labels (show subset to avoid overlap) %>
+      <% label_step = [1, (labels.length / 8.0).ceil].max %>
+      <% labels.each_with_index do |label, i| %>
+        <% if i % label_step == 0 || i == labels.length - 1 %>
+          <text class="line-chart-label line-chart-label-x" x="<%= lc[:padding_left] + (i * lc[:x_step]) %>" y="<%= lc[:height] - 8 %>"><%= label %></text>
+        <% end %>
+      <% end %>
+
+      <%# Lines for each state %>
+      <% series.each do |state, values| %>
+        <% points = line_chart_points(values, lc) %>
+        <polygon class="line-chart-area" data-state="<%= state %>" fill="<%= state_color(state) %>" points="<%= line_chart_area_points(points, values, lc) %>" />
+        <polyline class="line-chart-line" data-state="<%= state %>" stroke="<%= state_color(state) %>" points="<%= points %>" />
+      <% end %>
+    </svg>
+  </div>
+
+  <%# Legend %>
+  <div class="line-chart-legend">
+    <% series.each_key do |state| %>
+      <div class="line-chart-legend-item" data-state="<%= state %>">
+        <span class="donut-legend-color" style="background: <%= state_color(state) %>"></span>
+        <span class="donut-legend-text"><%= state.to_s.humanize %></span>
+      </div>
+    <% end %>
+  </div>
+</div>

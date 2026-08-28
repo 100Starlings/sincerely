@@ -29,41 +29,50 @@ module Sincerely
           state :opened
           state :clicked
 
+          # Terminal states: bounced, complained, rejected - no transitions allowed from these
+          # Flow: draft -> accepted -> delivered -> opened -> clicked
+          #                        \-> bounced (terminal)
+          #                        \-> complained (terminal from delivered/opened/clicked)
+
           event :set_accepted do
             transitions to: :accepted, from: [:draft]
           end
 
           event :set_rejected do
-            transitions to: :rejected
+            transitions to: :rejected, from: %i[draft accepted]
           end
 
           event :set_delivered do
-            transitions to: :delivered
+            transitions to: :delivered, from: %i[draft accepted delayed]
           end
 
           event :set_bounced do
-            transitions to: :bounced
+            transitions to: :bounced, from: %i[draft accepted delivered delayed]
           end
 
           event :set_complained do
-            transitions to: :complained
+            transitions to: :complained, from: %i[delivered opened clicked]
           end
 
           event :set_delayed do
-            transitions to: :delayed
+            transitions to: :delayed, from: %i[draft accepted]
           end
 
           event :set_opened do
-            transitions to: :opened
+            transitions to: :opened, from: [:delivered]
           end
 
           event :set_clicked do
-            transitions to: :clicked
+            transitions to: :clicked, from: %i[delivered opened]
           end
         end
 
         def render_content(content_type)
-          template.render(content_type, delivery_options)
+          template.render(content_type, delivery_options_hash)
+        end
+
+        def delivery_options_hash
+          delivery_options&.stringify_keys || {}
         end
 
         def deliver

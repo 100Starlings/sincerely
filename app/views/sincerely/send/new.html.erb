@@ -1,0 +1,78 @@
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Send Email</h2>
+    <span class="recipients-limit">Max 50 recipients</span>
+  </div>
+
+  <div class="send-form">
+    <div class="form-group">
+      <label class="form-label">Recipients</label>
+      <div class="tags-input-container" id="tagsContainer">
+        <div class="tags-list" id="tagsList"></div>
+        <input
+          type="text"
+          class="tags-input"
+          id="recipientInput"
+          placeholder="Enter email addresses..."
+          autocomplete="off"
+        >
+      </div>
+      <span class="form-hint">Type and press Enter, or paste multiple emails separated by comma or space</span>
+      <div class="recipients-count" id="recipientsCount">0 / 50 recipients</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Template</label>
+      <select class="form-control" id="templateSelect">
+        <option value="">Select a template...</option>
+        <% @templates.each do |template| %>
+          <option value="<%= template.id %>"><%= template.name %></option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="template-variables" id="templateVariables" style="display: none;">
+      <div class="form-group">
+        <label class="form-label">Template Variables</label>
+        <div class="variables-grid" id="variablesGrid"></div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-primary" id="sendButton" disabled>
+        <span class="btn-text">Send Emails</span>
+        <span class="btn-loader" style="display: none;">
+          <%= inline_svg 'sincerely/spinner' %>
+          Sending...
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="send-overlay" id="sendOverlay">
+    <div class="send-progress">
+      <%= inline_svg 'sincerely/progress_spinner' %>
+      <span class="progress-text">Sending emails...</span>
+    </div>
+  </div>
+
+  <div class="send-result" id="sendResult" style="display: none;">
+    <div class="result-icon result-success" id="resultSuccess">
+      <%= inline_svg 'sincerely/check' %>
+    </div>
+    <div class="result-icon result-partial" id="resultPartial">
+      <%= inline_svg 'sincerely/warning_circle' %>
+    </div>
+    <div class="result-message" id="resultMessage"></div>
+    <button type="button" class="btn btn-secondary" id="resetButton">Send More</button>
+  </div>
+</div>
+
+
+<%= stylesheet_link_tag 'sincerely/send_form' %>
+
+<span id="templateVariablesUrl" data-url="<%= send_template_variables_path(':id') %>" hidden></span>
+<span id="sendCreateUrl" data-url="<%= send_create_path %>" hidden></span>
+
+<%= javascript_include_tag 'sincerely/send_form' %>
+

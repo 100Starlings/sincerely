@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'rails_helper'
 
 # rubocop:disable RSpec/MultipleMemoizedHelpers
 # rubocop:disable Rails/TimeZone
@@ -54,6 +54,9 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when complaint event' do
       let(:event_type) { 'complaint' }
+      let(:notification) do
+        Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'delivered')
+      end
       let(:event) do
         double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
                        ip_address: nil, user_agent: 'agent', link: nil, feedback_type: 'abuse')
@@ -98,6 +101,9 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when open event' do
       let(:event_type) { 'open' }
+      let(:notification) do
+        Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'delivered')
+      end
       let(:event) do
         double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
                        ip_address: 'IP', user_agent: 'agent', link: nil, feedback_type: nil)
@@ -116,6 +122,9 @@ describe Sincerely::Services::ProcessDeliveryEvent do
 
     context 'when click event' do
       let(:event_type) { 'click' }
+      let(:notification) do
+        Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'delivered')
+      end
       let(:event) do
         double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
                        ip_address: 'IP', user_agent: 'agent', link: 'link', feedback_type: nil)

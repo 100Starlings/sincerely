@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Preview: <%= @template.name %></title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'">
+  <%= stylesheet_link_tag 'sincerely/template_preview' %>
+</head>
+<body>
+  <div class="preview-header">
+    <h1><%= @template.name %></h1>
+    <div class="preview-meta">
+      Subject: <%= @rendered_subject %> | From: <%= @template.sender %>
+    </div>
+  </div>
+  <div class="preview-tabs">
+    <button class="preview-tab active" data-tab="html">HTML</button>
+    <button class="preview-tab" data-tab="text">Text</button>
+  </div>
+  <div class="preview-content">
+    <div id="html-preview" class="preview-frame preview-frame-html">
+      <iframe srcdoc="<%= ERB::Util.html_escape(@rendered_html) %>" sandbox="allow-same-origin"></iframe>
+    </div>
+    <div id="text-preview" class="preview-frame preview-frame-text preview-frame--hidden">
+<%= @rendered_text %>
+    </div>
+  </div>
+  <%= javascript_include_tag 'sincerely/template_preview' %>
+</body>
+</html>

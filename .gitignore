@@ -1,5 +1,9 @@
 /.bundle/
 /coverage/
 /tmp/
+/log/
 
 spec/test.log
+
+# Built gems
+*.gem

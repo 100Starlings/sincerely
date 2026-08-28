@@ -1,0 +1,9 @@
+<div class="filter-group">
+  <label for="notification_type">Type</label>
+  <select name="notification_type" id="notification_type">
+    <option value="">All types</option>
+    <option value="email" <%= 'selected' if params[:notification_type] == 'email' %>>Email</option>
+    <option value="sms" <%= 'selected' if params[:notification_type] == 'sms' %>>SMS</option>
+    <option value="push" <%= 'selected' if params[:notification_type] == 'push' %>>Push</option>
+  </select>
+</div>

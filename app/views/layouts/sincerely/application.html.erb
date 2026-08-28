@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%= javascript_include_tag 'sincerely/theme_init' %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sincerely Dashboard</title>
+  <%= csrf_meta_tags %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Jersey+10&display=swap" rel="stylesheet">
+  <%= stylesheet_link_tag 'sincerely/variables', 'sincerely/navigation', 'sincerely/layout', 'sincerely/components', 'sincerely/charts' %>
+</head>
+<body data-controller="<%= controller_name %>">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">
+        <%= inline_svg 'sincerely/menu' %>
+      </button>
+      <a href="<%= root_path %>" class="nav-brand">Sincerely</a>
+      <div class="nav-links" id="navLinks">
+        <a href="<%= root_path %>" class="<%= 'active' if controller_name == 'dashboard' %>">Dashboard</a>
+        <a href="<%= notifications_path %>" class="<%= 'active' if controller_name == 'notifications' %>">Notifications</a>
+        <a href="<%= delivery_events_path %>" class="<%= 'active' if controller_name == 'delivery_events' %>">Delivery</a>
+        <a href="<%= engagement_events_path %>" class="<%= 'active' if controller_name == 'engagement_events' %>">Engagement</a>
+        <a href="<%= templates_path %>" class="<%= 'active' if controller_name == 'templates' %>">Templates</a>
+        <a href="<%= send_new_path %>" class="<%= 'active' if controller_name == 'send' %>">Send</a>
+      </div>
+      <div class="nav-utils">
+        <% if !%w[templates send].include?(controller_name) %>
+          <% time_labels = { '1h' => '1h', '24h' => '24h', '7d' => '7d', '30d' => '30d', '3m' => '3m', 'all' => 'All' } %>
+          <div class="time-dropdown" id="timeDropdown">
+            <button class="time-dropdown-btn" onclick="toggleTimeDropdown()" title="Time filter">
+              <%= inline_svg 'sincerely/clock' %>
+              <span id="timeLabel"><%= time_labels[params[:period]] || '24h' %></span>
+            </button>
+            <div class="time-dropdown-menu">
+              <button class="time-dropdown-item" data-period="1h">1 hour</button>
+              <button class="time-dropdown-item" data-period="24h">24 hours</button>
+              <button class="time-dropdown-item" data-period="7d">7 days</button>
+              <button class="time-dropdown-item" data-period="30d">30 days</button>
+              <button class="time-dropdown-item" data-period="3m">3 months</button>
+              <button class="time-dropdown-item" data-period="all">All time</button>
+            </div>
+          </div>
+        <% end %>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <%= inline_svg 'sincerely/moon' %>
+          <%= inline_svg 'sincerely/sun' %>
+        </button>
+        <% if Sincerely.authenticate_with.present? && Sincerely.config.logout_url.present? %>
+          <%= button_to Sincerely.config.logout_url,
+                        method: Sincerely.config.logout_method.presence || :get,
+                        class: 'theme-toggle',
+                        title: Sincerely.config.logout_label.presence || 'Logout',
+                        form: { style: 'display:contents' } do %>
+            <%= inline_svg 'sincerely/logout' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main<%= ' has-return-footer' if Sincerely.config.return_url.present? %>">
+    <div class="container">
+      <% if flash[:notice] %>
+        <div class="flash flash-notice"><%= flash[:notice] %></div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div class="flash flash-alert"><%= flash[:alert] %></div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+  </main>
+
+  <% if Sincerely.config.return_url.present? %>
+    <footer class="return-footer">
+      <a href="<%= Sincerely.config.return_url %>" class="return-footer-link">
+        <%= inline_svg 'sincerely/arrow_left' %>
+        <%= Sincerely.config.return_label.presence || 'Back to app' %>
+      </a>
+    </footer>
+  <% end %>
+
+  <%= javascript_include_tag 'sincerely/layout' %>
+  <%= javascript_include_tag 'sincerely/clickable_rows' %>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<div class="page-header">
+  <h1 class="page-title">Delivery Events</h1>
+  <p class="page-subtitle">Email delivery status events from your provider</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Filters</h2>
+  </div>
+  <form method="get" action="<%= delivery_events_path %>" class="filters-form">
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label for="event_type">Status</label>
+        <select name="event_type" id="event_type">
+          <option value="">All statuses</option>
+          <%= render partial: 'sincerely/shared/status_option', collection: @event_types, as: :status_value, locals: { param_name: :event_type } %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="template_id">Template</label>
+        <select name="template_id" id="template_id">
+          <option value="">All templates</option>
+          <%= render partial: 'sincerely/shared/template_option', collection: @templates, as: :template %>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="recipient">Recipient</label>
+        <input type="text" name="recipient" id="recipient" value="<%= params[:recipient] %>" placeholder="Search by recipient...">
+      </div>
+      <%= render 'sincerely/shared/notification_type_filter' %>
+    </div>
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-primary">Apply Filters</button>
+      <a href="<%= delivery_events_path %>" class="btn btn-secondary">Clear</a>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Events (<%= @pagination[:total_count] %>)</h2>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Recipient</th>
+          <th>Message ID</th>
+          <th>Details</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'sincerely/shared/event', collection: @events, locals: { notifications_by_message_id: @notifications_by_message_id, detailed: true, recipient_length: 30 } %>
+        <% if @events.empty? %>
+          <tr>
+            <td colspan="5" class="empty-state">No delivery events found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render 'sincerely/shared/pagination', pagination: @pagination %>
+</div>

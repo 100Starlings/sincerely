@@ -1,0 +1,11 @@
+<div class="page-header page-header--visible">
+  <div class="page-header-top">
+    <button onclick="history.back()" class="btn-back" title="Back">
+      <%= inline_svg 'sincerely/chevron_left' %>
+    </button>
+    <h1 class="page-title">Edit Template</h1>
+  </div>
+  <p class="page-subtitle">Update <%= @template.name %></p>
+</div>
+
+<%= render 'form', template: @template, form_url: template_path(@template) %>

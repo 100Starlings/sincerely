@@ -33,7 +33,7 @@ module Sincerely
         @client ||= Aws::SESV2::Client.new(**client_options)
       end
 
-      def email_options # rubocop:disable Metrics/MethodLength
+      def email_options
         opts = {
           from_email_address: template.sender,
           destination: { to_addresses: [notification.recipient] },
@@ -57,7 +57,8 @@ module Sincerely
       end
 
       def subject
-        notification.delivery_options&.fetch('subject', nil) || template.subject
+        raw_subject = notification.delivery_options_hash.fetch('subject', nil) || template.subject || ''
+        template.renderer.render(raw_subject, notification.delivery_options_hash)
       end
 
       def update_notification(response)

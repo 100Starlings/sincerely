@@ -1,0 +1,98 @@
+<div class="page-header page-header--visible">
+  <div class="page-header-top">
+    <button onclick="history.back()" class="btn-back" title="Back">
+      <%= inline_svg 'sincerely/chevron_left' %>
+    </button>
+    <h1 class="page-title">Notification #<%= @notification.id %></h1>
+  </div>
+  <p class="page-subtitle">Sent to <%= @notification.recipient %></p>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Details</h2>
+    </div>
+    <div class="details-grid">
+      <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value">
+          <span class="badge badge-<%= @notification.delivery_state %>"><%= @notification.delivery_state.humanize %></span>
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Recipient</span>
+        <span class="detail-value"><%= @notification.recipient %></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Type</span>
+        <span class="detail-value"><span class="badge"><%= @notification.notification_type %></span></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Template</span>
+        <span class="detail-value">
+          <% if @notification.template %>
+            <a href="<%= template_path(@notification.template) %>"><%= @notification.template.name %></a>
+          <% else %>
+            N/A
+          <% end %>
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Message ID</span>
+        <span class="detail-value"><code><%= @notification.message_id || '-' %></code></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Delivery System</span>
+        <span class="detail-value"><%= @notification.delivery_system || '-' %></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Created At</span>
+        <span class="detail-value"><%= @notification.created_at.strftime('%b %d, %Y %H:%M:%S') %></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Sent At</span>
+        <span class="detail-value"><%= @notification.sent_at&.strftime('%b %d, %Y %H:%M:%S') || '-' %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Delivery Options</h2>
+    </div>
+    <% if @notification.delivery_options.present? %>
+      <div class="code-block">
+        <pre><%= JSON.pretty_generate(@notification.delivery_options) %></pre>
+      </div>
+    <% else %>
+      <p class="empty-state">No delivery options</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Event Timeline</h2>
+  </div>
+  <% if @timeline.any? %>
+    <div class="timeline">
+      <% @timeline.each do |event| %>
+        <div class="timeline-item">
+          <div class="timeline-marker <%= event_type_badge_class(event[:type]) %>"></div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="badge <%= event_type_badge_class(event[:type]) %>"><%= event[:type] %></span>
+              <span class="timeline-time"><%= event[:timestamp].strftime('%b %d, %Y %H:%M:%S') %></span>
+            </div>
+            <% if event[:details].present? %>
+              <div class="timeline-details"><%= event[:details] %></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty-state">No events recorded yet</p>
+  <% end %>
+</div>
