@@ -1,12 +1,13 @@
 PATH
   remote: .
   specs:
-    sincerely (1.1.0)
+    sincerely (1.1.1)
       aasm (~> 5.3)
       anyway_config (~> 2.6)
       aws-sdk-sesv2 (~> 1.54)
       aws-sdk-sns (~> 1.82)
       liquid (~> 5.5)
+      mail (>= 2.7)
       railties (>= 6)
 
 GEM

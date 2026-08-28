@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-08-28
+
+### Changed
+- Email delivery now sends a raw MIME message with images embedded inline (via `cid:`) instead of linking to an externally hosted URL, when attachments are provided. Removes the dependency on a publicly reachable host to render images in emails.
+
+### Added
+- `mail` gem dependency, used to build the raw MIME message for inline attachments
+- `Notification#render_content` accepts extra template variables, used to inject the generated `cid:` references before rendering
+
 ## [1.1.0] - 2026-08-28
 
 ### Added

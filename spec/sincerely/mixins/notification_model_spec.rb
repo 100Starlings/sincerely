@@ -82,6 +82,20 @@ RSpec.describe 'NotificationModel' do
         expect(render_content).to eq('text')
       end
     end
+
+    context 'when extra template data is provided' do
+      subject(:render_content) { model.render_content(:html, 'icon_url' => 'cid:123') }
+
+      let(:attributes) { { name: 'template', html_content: 'Hi {{ name }}, see {{ icon_url }}' } }
+      let(:model) do
+        Notification.create(recipient: 'recipient', notification_type: 'email', template:,
+                            delivery_options: { template_data: { name: 'Daniel' } })
+      end
+
+      it 'merges the extra data in without dropping the existing template data' do
+        expect(render_content).to eq('Hi Daniel, see cid:123')
+      end
+    end
   end
 
   describe 'deliver' do

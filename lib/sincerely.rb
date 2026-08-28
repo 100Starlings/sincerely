@@ -17,4 +17,4 @@ require_relative 'sincerely/services/events/aws_ses_complaint_event'
 require_relative 'sincerely/services/events/aws_ses_open_event'
 require_relative 'sincerely/templates/email_liquid_template'
 require_relative 'sincerely/version'
-require_relative 'sincerely/engine' if defined?(Rails)
+require_relative 'sincerely/engine' if defined?(Rails::Engine)

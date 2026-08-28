@@ -67,8 +67,10 @@ module Sincerely
           end
         end
 
-        def render_content(content_type)
-          template.render(content_type, delivery_options_hash)
+        def render_content(content_type, extra_template_data = {})
+          options = delivery_options_hash
+          merged_template_data = (options['template_data'] || {}).merge(extra_template_data.stringify_keys)
+          template.render(content_type, options.merge('template_data' => merged_template_data))
         end
 
         def delivery_options_hash
