@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sincerely – Own Your Notification Data</title>
+    <!-- Welcome! -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://www.figma.com" />
+  </head>
+  <body class="page">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="#" class="brand">
+          <img
+            src="assets/images/sincerely-logo-red.svg"
+            alt="Sincerely logo icon"
+            class="brand-mark"
+          />
+          <div class="brand-text">
+            <span class="brand-name">Sincerely</span>
+            <span class="brand-tagline">BY 100STARLINGS</span>
+          </div>
+        </a>
+
+        <nav class="site-nav" aria-label="Primary">
+          <button
+            type="button"
+            class="nav-toggle"
+            aria-label="Toggle navigation"
+            aria-expanded="false"
+            aria-controls="primary-nav-links"
+          >
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+          </button>
+
+          <div class="site-nav-links" id="primary-nav-links">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#principles" class="nav-link">Principles</a>
+            <a
+              href="https://github.com/100Starlings/sincerely"
+              class="nav-link nav-link-primary"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View on GitHub
+            </a>
+            <button
+              type="button"
+              class="theme-toggle"
+              id="theme-toggle"
+              role="switch"
+              aria-checked="false"
+              aria-label="Toggle dark mode"
+            >
+              <span class="theme-toggle-thumb" aria-hidden="true"></span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="section hero" aria-labelledby="hero-title">
+        <div class="hero-pill">Open Source Rails Gem</div>
+
+        <header class="hero-heading">
+          <h1 id="hero-title">
+            <span>Own your notification data.</span>
+            <span>Track every delivery.</span>
+          </h1>
+        </header>
+
+        <p class="hero-subtitle">
+          Sincerely brings observability to Rails notifications. Persist, track,
+          and query every email, SMS, and push notification your app sends.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#get-started" class="btn btn-primary" target="_blank" rel="noreferrer">Get Started</a>
+          <a href="https://github.com/100Starlings/sincerely?tab=readme-ov-file#usage" class="btn btn-outline" target="_blank" rel="noreferrer">Learn More</a>
+        </div>
+
+        <div class="hero-made-with">
+          <span>Made with</span>
+          <img
+            src="assets/images/heart-icon.svg"
+            alt="Heart icon"
+            class="hero-heart"
+          />
+          <a href="https://www.100starlings.com/" class="footer-link">by 100 Starlings</a>
+        </div>
+
+        <figure class="hero-illustration-envelope hide-on-mobile">
+          <img
+            src="assets/images/envelope-icon.png"
+            alt="Notification envelope illustration"
+          />
+        </figure>
+
+        <figure class="hero-illustration-diamond hide-on-mobile">
+          <img
+            src="assets/images/gem-icon.png"
+            alt="Notification gem illustration"
+          />
+        </figure>
+
+        <figure class="hero-illustration-chat hide-on-mobile">
+          <img
+            src="assets/images/balloon-icon.png"
+            alt="Notification chat balloon illustration"
+          />
+        </figure>
+    
+      </section>
+
+      <!-- Problem / Approach -->
+      <section class="section problem" aria-labelledby="problem-title">
+        <figure class="problem-section-illustration hide-on-mobile">
+          <img
+            src="assets/images/mobile-icon.png"
+            alt="Notification mobile illustration"
+          />
+        </figure>
+        <div class="problem-content">
+          <header>
+            <h2 id="problem-title">The notification visibility problem</h2>
+          </header>
+          <div class="problem-content-inner">
+            <p>
+              Most Rails apps implement notifications as mailers, background jobs,
+              or third-party integrations. This approach creates blind spots:
+            </p>
+            <ul class="problem-list">
+              <li>No persistent record of what was sent</li>
+              <li>Delivery tracking requires paid add-ons</li>
+              <li>Communication data locked in external dashboards</li>
+              <li>No way to query notification history</li>
+            </ul>
+          </div>
+          <div class="approach-card" aria-label="Sincerely's approach">
+            <h3>Sincerely's approach</h3>
+            <ul class="approach-list">
+              <li>Every notification is a database record</li>
+              <li>Delivery events captured via webhooks</li>
+              <li>Full communication history in your database</li>
+              <li>Query and analyze with ActiveRecord</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Core Capabilities -->
+      <section
+        class="section capabilities"
+        id="features"
+        aria-labelledby="capabilities-title"
+      >
+        <header class="section-header">
+          <h2 id="capabilities-title">Core Capabilities</h2>
+          <p>
+            Everything you need to own and observe your notification
+            infrastructure
+          </p>
+        </header>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-5.svg"
+                alt="Database icon"
+              />
+            </div>
+            <h3>Persistent Records</h3>
+            <p>
+              Every notification is stored as a first-class model in your
+              database with full lifecycle tracking.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-1.svg"
+                alt="Branch icon"
+              />
+            </div>
+            <h3>Lifecycle States</h3>
+            <p>
+              Track notifications through states: draft → accepted → delivered →
+              engaged with event-driven updates.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-2.svg"
+                alt="Integration icon"
+              />
+            </div>
+            <h3>Webhook Integration</h3>
+            <p>
+              Capture delivery and engagement events from AWS SES or other
+              providers via webhook handlers.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-3.svg"
+                alt="Envelope icon"
+              />
+            </div>
+            <h3>Delivery Abstraction</h3>
+            <p>
+              Pluggable delivery systems. Start with AWS SES, swap providers
+              without changing your code.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-4.svg"
+                alt="Arrow up icon"
+              />
+            </div>
+            <h3>Queryable History</h3>
+            <p>
+              Use ActiveRecord to analyze patterns, build dashboards, and
+              understand your communication data.
+            </p>
+          </article>
+
+          <article class="card">
+            <div class="card-icon">
+              <img
+                src="assets/images/Icon-5.svg"
+                alt="Database icon"
+              />
+            </div>
+            <h3>Data Ownership</h3>
+            <p>
+              Your notification data lives in your database, not locked away in
+              a third-party service.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Dashboard -->
+      <section
+        class="section dashboard"
+        aria-labelledby="dashboard-title"
+      >
+        <div class="dashboard-inner">
+          <div class="dashboard-content">
+            <header>
+              <h2 id="dashboard-title">A Dashboard for Your Notifications</h2>
+            </header>
+            <p>
+              Sincerely includes a built-in interface to manage and monitor notifications
+              directly inside your Rails application.
+            </p>
+            <p>
+              View notification analytics such as deliveries, bounces, spam reports,
+              opens and clicks. Filter notifications by recipient, status, template, or
+              date to quickly investigate issues.
+            </p>
+            <p>
+              Create and manage notification templates
+              and send messages while keeping a clear record of everything that was delivered.
+            </p>
+          </div>
+
+          <div class="dashboard-illustration">
+            <img
+              src="assets/images/dashboard-dark.png"
+              alt="Notification dashboard illustration"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- API Example -->
+      <section class="section api" aria-labelledby="api-title">
+        <figure class="api-section-illustration hide-on-mobile">
+          <img
+            src="assets/images/gem-icon.png"
+            alt="Notification gem illustration"
+          />
+        </figure>
+        <header class="section-header">
+          <h2 id="api-title">Simple, Rails-native API</h2>
+          <p>Sincerely feels like Rails. No complex integrations, just familiar patterns.</p>
+        </header>
+
+        <div class="code-block" role="region" aria-label="Ruby API example">
+          <button class="code-copy-btn" type="button" aria-label="Copy code">
+            Copy
+          </button>
+          <pre><code># Create and send a notification
+notification = Notification.create!(
+  recipient: user,
+  subject: "Welcome to our platform",
+  body: render_template(:welcome_email)
+)
+
+notification.deliver!
+# =&gt; :accepted
+
+# Query notification history
+Notification.where(recipient: user)
+  .delivered
+  .where("created_at &gt; ?", 1.week.ago)
+
+# Track engagement
+notification.opened?   # =&gt; true
+notification.clicked?  # =&gt; false
+notification.bounced?  # =&gt; false
+
+# Event-driven state updates
+notification.events
+  .where(event_type: "delivered")
+  .order(occurred_at: :desc)</code></pre>
+        </div>
+      </section>
+
+      <!-- Product Principles -->
+      <section
+        class="section principles"
+        id="principles"
+        aria-labelledby="principles-title"
+      >
+        <figure class="principles-section-illustration hide-on-mobile">
+          <img
+            src="assets/images/envelope-icon.png"
+            alt="Notification envelope illustration"
+          />
+        </figure>
+        <header class="section-header">
+          <h2 id="principles-title">Product Principles</h2>
+          <p>The core beliefs that guide Sincerely's design</p>
+        </header>
+
+        <div class="principles-grid">
+          <article class="principle">
+            <h3>Data ownership matters</h3>
+            <p>Teams should own their communication data, not rely on external dashboards.</p>
+          </article>
+
+          <article class="principle">
+            <h3>Notifications are domain objects</h3>
+            <p>They should be persisted, stateful, and queryable just like any other model.</p>
+          </article>
+
+          <article class="principle">
+            <h3>Delivery is observable</h3>
+            <p>Accepted does not mean delivered. Track the full lifecycle with real events.</p>
+          </article>
+
+          <article class="principle">
+            <h3>Events drive truth</h3>
+            <p>Notification state changes only through delivery and engagement events.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Built for Teams -->
+      <section class="section audiences" aria-labelledby="audiences-title">
+        <figure class="audiences-section-illustration hide-on-mobile">
+          <img
+            src="assets/images/mag-glass-icon.png"
+            alt="Notification magnifying glass illustration"
+          />
+        </figure>
+        <header class="section-header">
+          <h2 id="audiences-title">Built for teams that need visibility</h2>
+        </header>
+
+        <div class="audience-columns">
+          <article class="audience-card">
+            <h3>Perfect for</h3>
+            <ul>
+              <li>Mid-to-large Rails teams</li>
+              <li>Early-stage MVPs</li>
+              <li>Small indie projects</li>
+              <li>B2B or B2C products with business-critical notifications</li>
+              <li>Teams using AWS infrastructure (SES)</li>
+              <li>Tech leads and platform engineers</li>
+              <li>Teams needing communication analytics</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- Get Started -->
+      <section
+        class="section get-started"
+        id="get-started"
+        aria-labelledby="get-started-title"
+      >
+        <figure class="get-started-section-illustration hide-on-mobile">
+          <img
+            src="assets/images/flag-icon.png"
+            alt="Notification flag illustration"
+          />
+        </figure>
+        <header class="section-header">
+          <h2 id="get-started-title">Get Started</h2>
+          <p>Add Sincerely to your Rails app in minutes</p>
+        </header>
+
+        <div class="steps">
+          <article class="step">
+            <h3>1. Add to your Gemfile</h3>
+            <div class="step-code">
+              <button class="code-copy-btn" type="button" aria-label="Copy code">
+                Copy
+              </button>
+              <code>gem 'sincerely'</code>
+            </div>
+          </article>
+
+          <article class="step">
+            <h3>2. Install and migrate</h3>
+            <div class="step-code">
+              <button class="code-copy-btn" type="button" aria-label="Copy code">
+                Copy
+              </button>
+              <code>bundle install</code>
+              <code>rails sincerely:install</code>
+              <code>rails db:migrate</code>
+            </div>
+          </article>
+
+          <article class="step">
+            <h3>3. Configure your delivery provider</h3>
+            <div class="step-code">
+              <button class="code-copy-btn" type="button" aria-label="Copy code">
+                Copy
+              </button>
+              <code>
+# config/sincerely.yml </code>
+<code> defaults: &defaults </code>
+<code> delivery_methods: </code>
+<code>  email: </code>
+<code>    delivery_system: Sincerely::DeliverySystems::EmailAwsSes </code>
+<code>   options: </code>
+<code>    region: region </code>
+<code>   access_key_id: your_access_key_id </code>
+<code>   secret_access_key: your_secret_access_key </code>
+<code>   configuration_set_name: config_set
+              </code>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="section final-cta" aria-labelledby="cta-title">
+        <header class="section-header section-header-centered">
+          <h2 id="cta-title">Start tracking your notifications today</h2>
+          <p>
+            Open source, Rails-native, and built for teams that value data ownership.
+          </p>
+        </header>
+
+        <div class="hero-actions hero-actions-center">
+          <a href="https://github.com/100Starlings/sincerely" class="btn btn-light" target="_blank" rel="noreferrer">View on GitHub</a>
+          <a href="https://rubygems.org" class="btn btn-outline-light" target="_blank" rel="noreferrer">
+            See on RubyGems
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo-mark" aria-hidden="true">
+            <img
+              src="assets/images/sincerely-logo-gray.svg"
+              alt="Sincerely logo icon"
+            />
+          </div>
+          <span class="footer-brand-name">Sincerely</span>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="https://github.com/100Starlings/sincerely?tab=readme-ov-file#usage" class="footer-link">Documentation</a>
+          <a href="https://github.com/100Starlings/sincerely" class="footer-link">GitHub</a>
+          <a href="https://rubygems.org" class="footer-link">RubyGems</a>
+        </nav>
+
+        <div class="footer-made-with">
+          <span>Made with</span>
+          <img
+            src="assets/images/heart-icon.svg"
+            alt="Heart icon"
+            class="hero-heart"
+          />
+          <a href="https://www.100starlings.com/" class="footer-link">by 100 Starlings</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (() => {
+        const storageKey = "theme";
+        const root = document.documentElement;
+
+        const getSystemTheme = () =>
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+
+        const getInitialTheme = () => {
+          const saved = localStorage.getItem(storageKey);
+          if (saved === "light" || saved === "dark") return saved;
+          return getSystemTheme();
+        };
+
+        const setTheme = (theme) => {
+          root.setAttribute("data-theme", theme);
+          const toggles = document.querySelectorAll("#theme-toggle");
+          toggles.forEach((toggle) => {
+            toggle.setAttribute("aria-checked", String(theme === "dark"));
+          });
+        };
+
+        setTheme(getInitialTheme());
+
+        document.addEventListener("click", (event) => {
+          const toggle = event.target.closest("#theme-toggle");
+          if (!toggle) return;
+          const current = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+          const next = current === "dark" ? "light" : "dark";
+          setTheme(next);
+          localStorage.setItem(storageKey, next);
+        });
+      })();
+
+      // Mobile nav toggle
+      (() => {
+        const nav = document.querySelector(".site-nav");
+        const toggle = document.querySelector(".nav-toggle");
+        const links = document.getElementById("primary-nav-links");
+
+        if (!nav || !toggle || !links) return;
+
+        toggle.addEventListener("click", () => {
+          const isOpen = nav.classList.toggle("site-nav-open");
+          toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+      })();
+      // Code copy button behavior (API and steps)
+      (() => {
+        document.addEventListener("click", async (event) => {
+          const button = event.target.closest(".code-copy-btn");
+          if (!button) return;
+
+          const container = button.closest(".code-block, .step-code");
+          if (!container) return;
+
+          const codeEl = container.querySelector("pre, code");
+          if (!codeEl) return;
+
+          const text = codeEl.innerText.replace(/\s+$/, "");
+
+          try {
+            await navigator.clipboard.writeText(text);
+            const originalLabel = button.textContent;
+            button.textContent = "Copied!";
+            setTimeout(() => {
+              button.textContent = originalLabel;
+            }, 1500);
+          } catch (error) {
+            console.error("Copy failed", error);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
