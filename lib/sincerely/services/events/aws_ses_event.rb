@@ -14,6 +14,7 @@ module Sincerely
             when 'click' then AwsSesClickEvent.new(event_payload)
             when 'open' then AwsSesOpenEvent.new(event_payload)
             when 'complaint' then AwsSesComplaintEvent.new(event_payload)
+            when 'reject' then AwsSesRejectEvent.new(event_payload)
             else new(event_payload)
             end
           end

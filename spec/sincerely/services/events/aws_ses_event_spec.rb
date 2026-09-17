@@ -76,7 +76,8 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
         event_type: 'reject',
         message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
         recipient: 'sender@example.com',
-        timestamp: Time.parse('2016-10-14T17:38:15.211Z')
+        timestamp: Time.parse('2016-10-14T17:38:15.211Z'),
+        rejection_reason: 'Bad content'
       )
     end
   end
