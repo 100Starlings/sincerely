@@ -91,7 +91,10 @@ describe Sincerely::Services::ProcessDeliveryEvent do
     end
 
     context 'when reject event' do
-      let(:event) { double(:event, event_type:, message_id:, rejection_reason: 'rejected') } # rubocop:disable RSpec/VerifiedDoubles
+      let(:event) do
+        instance_double(Sincerely::Services::Events::AwsSesRejectEvent,
+                        event_type:, message_id:, rejection_reason: 'rejected')
+      end
       let(:event_type) { 'reject' }
 
       it 'updates the status' do
