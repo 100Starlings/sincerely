@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-09-17
+
+### Added
+- Inline attachments accept an optional `encoding` (e.g. `base64`), passed through to the MIME part's `Content-Transfer-Encoding`. Lets callers embed binary images such as PNGs, whose raw bytes cannot survive the JSON-serialized `delivery_options` column.
+
+## [1.1.2] - 2026-09-17
+
+### Added
+- `AwsSesRejectEvent`, carrying the rejection reason reported by SES
+
 ## [1.1.1] - 2026-08-28
 
 ### Changed

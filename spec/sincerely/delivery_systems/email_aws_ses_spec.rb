@@ -124,6 +124,47 @@ RSpec.describe Sincerely::DeliverySystems::EmailAwsSes do
           )
         end
       end
+
+      context 'when an inline attachment declares a transfer encoding' do # rubocop:disable RSpec/MultipleMemoizedHelpers
+        let(:binary) { (0..255).to_a.pack('C*') }
+
+        let(:template) do
+          Sincerely::Templates::EmailLiquidTemplate.create(
+            subject: 'Spam',
+            sender: 'no-reply@example.com',
+            html_content: '<img src="{{ logo_url }}">',
+            text_content: 'logo: {{ logo_url }}'
+          )
+        end
+
+        let(:notification) do
+          Notification.create(
+            recipient: 'john@doe.com',
+            notification_type: 'email',
+            template:,
+            delivery_options: {
+              attachments: [
+                { variable: 'logo_url', filename: 'logo.png', mime_type: 'image/png',
+                  content: Base64.strict_encode64(binary), encoding: 'base64' }
+              ]
+            }
+          )
+        end
+
+        it 'marks the MIME part with that encoding' do
+          expect(ses_client).to(
+            have_received(:send_email).with(satisfy do |args|
+              args[:content][:raw][:data].include?('Content-Transfer-Encoding: base64')
+            end)
+          )
+        end
+
+        it 'delivers the binary payload intact rather than encoding it a second time' do
+          expect(ses_client).to(have_received(:send_email).with(satisfy do |args|
+            Mail.new(args[:content][:raw][:data]).attachments.first.body.decoded == binary
+          end))
+        end
+      end
     end
   end
 end

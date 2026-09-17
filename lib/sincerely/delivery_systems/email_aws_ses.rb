@@ -84,8 +84,9 @@ module Sincerely
         attachments.each_with_object({}) do |attachment, cid_by_variable|
           message.attachments.inline[attachment['filename']] = {
             mime_type: attachment['mime_type'],
-            content: attachment['content']
-          }
+            content: attachment['content'],
+            encoding: attachment['encoding']
+          }.compact
           cid_by_variable[attachment['variable']] = message.attachments[attachment['filename']].url
         end
       end
