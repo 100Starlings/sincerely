@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sincerely (1.1.1)
+    sincerely (1.1.2)
       aasm (~> 5.3)
       anyway_config (~> 2.6)
       aws-sdk-sesv2 (~> 1.54)
