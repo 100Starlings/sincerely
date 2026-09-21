@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2026-09-21
+
+### Fixed
+- Template preview no longer strips the formatting of HTML emails. The preview page's CSP was inherited by the `srcdoc` iframe rendering the email, and `style-src 'self'` blocked the inline `style` attributes emails are built from. Inline styles and `data:` images are now permitted; scripts stay blocked.
+
 ## [1.1.3] - 2026-09-17
 
 ### Added

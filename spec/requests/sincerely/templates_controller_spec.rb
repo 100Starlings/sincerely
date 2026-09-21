@@ -262,5 +262,21 @@ RSpec.describe 'Sincerely::TemplatesController', type: :request do
 
       expect(response).to have_http_status(:bad_request)
     end
+
+    it 'permits the inline styles and data images an HTML email is built from' do
+      get "/sincerely/templates/#{template.id}/preview"
+
+      csp = response.body[/<meta http-equiv="Content-Security-Policy" content="([^"]*)"/, 1]
+      expect(csp).to include("style-src 'self' 'unsafe-inline'")
+      expect(csp).to include("img-src 'self' data:")
+    end
+
+    it 'keeps inline styles in the previewed markup' do
+      template.update!(html_content: '<p style="color: #ff0000">Hello</p>')
+
+      get "/sincerely/templates/#{template.id}/preview"
+
+      expect(response.body).to include('style=&quot;color: #ff0000&quot;')
+    end
   end
 end
