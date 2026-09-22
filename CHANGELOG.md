@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-09-22
+
+### Security
+- The AWS SES webhook now rejects SNS messages whose `TopicArn` is not the configured one, with `403 Forbidden`. Signature verification alone only proves that a message was signed by SNS, not that it came from our topic: any AWS account could subscribe the public endpoint, have the subscription auto-confirmed, and publish SES-shaped events for message ids it knows.
+
+### Added
+- `topic_arn` option for the email delivery method, holding the ARN of the SNS topic the SES configuration set publishes to
+
+### Changed
+- **Breaking**: the webhook rejects every message when `topic_arn` is not configured. Existing installations must add it to `config/sincerely.yml` before upgrading, or delivery events stop being processed.
+
 ## [1.1.4] - 2026-09-21
 
 ### Fixed

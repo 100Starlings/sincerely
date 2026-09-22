@@ -64,6 +64,7 @@ defaults: &defaults
         access_key_id: your_access_key_id
         secret_access_key: your_secret_access_key
         configuration_set_name: config_set
+        topic_arn: arn:aws:sns:region:account-id:your-topic
     sms:
 ```
 
@@ -71,6 +72,7 @@ defaults: &defaults
 * `access_key_id`: AWS access key id
 * `secret_access_key`: AWS secret access key
 * `configuration_set_name`: the name of the configuration set to use when sending the email, you don't need to specify the configuration set option if you don't want to handle SES email sending events
+* `topic_arn`: the ARN of the SNS topic the configuration set publishes events to. Required by the webhook described in the `Callbacks` section, which rejects messages coming from any other topic
 
 Sincerely uses the `aws-sdk-sesv2` gem to send emails. See [sesv2](https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SESV2.html) for details.
 
@@ -150,7 +152,7 @@ Please note that the notification state is updated only if the event callback is
 
 `EmailAwsSes` delivery system handles SES email sending events. To enable it make sure:
 * you have run the `events` task described in the `Getting Started` section
-* you have set the `configuration_set_name` option described in the `Configuration` section
+* you have set the `configuration_set_name` and `topic_arn` options described in the `Configuration` section
 * you have run the following task that generates the webhook controller for you
 ```bash
 rails g sincerely:aws_ses_webhook_controller SES_WEBHOOK
