@@ -18,6 +18,8 @@ module Sincerely
           def create
             verifier.authenticate!(request.raw_post)
 
+            return head :forbidden unless trusted_topic?
+
             case sns_message_type
             when 'SubscriptionConfirmation'
               confirm_subscription
@@ -50,6 +52,20 @@ module Sincerely
 
           def token
             posted_message_body['Token']
+          end
+
+          def trusted_topic?
+            expected_topic_arn = delivery_options[:topic_arn]
+
+            if expected_topic_arn.blank?
+              logger&.error('[Sincerely] SNS webhook rejected: no topic_arn configured for the email delivery method')
+              return false
+            end
+
+            return true if topic_arn == expected_topic_arn
+
+            logger&.error("[Sincerely] SNS webhook rejected: unexpected TopicArn #{topic_arn.inspect}")
+            false
           end
 
           def event_payload
