@@ -29,6 +29,9 @@ module Sincerely
         when :delivery
           notification.set_delivered! if notification.may_set_delivered?
           create_event
+        when :delay
+          notification.set_delayed! if notification.may_set_delayed?
+          create_event
         when :send
           notification.set_accepted! if notification.may_set_accepted?
         when :reject
@@ -51,7 +54,7 @@ module Sincerely
 
       def create_event
         case event_type.to_sym
-        when :bounce, :delivery
+        when :bounce, :delivery, :delay
           Sincerely::DeliveryEvent.create(
             message_id:, delivery_system:, event_type:, recipient:, timestamp:, options:,
             delivery_event_type: event.delivery_event_type, delivery_event_subtype: event.delivery_event_subtype

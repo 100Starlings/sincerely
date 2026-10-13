@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- SES `DeliveryDelay` events are now handled by the webhook. They were previously ignored, so a notification whose delivery was being retried stayed `accepted` and the `delayed` state was never reached. The notification now moves to `delayed` and a `delay` delivery event is recorded with the delay type, the delayed recipient's status and diagnostic code, and the time SES stops retrying.
+
 ## [1.2.0] - 2026-09-22
 
 ### Security

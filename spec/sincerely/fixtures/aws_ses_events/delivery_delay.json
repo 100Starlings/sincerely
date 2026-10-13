@@ -1,0 +1,73 @@
+{
+  "eventType": "DeliveryDelay",
+  "mail": {
+    "timestamp": "2020-06-16T00:15:40.641Z",
+    "source": "Sender Name <sender@example.com>",
+    "sourceArn": "arn:aws:ses:us-east-1:123456789012:identity/sender@example.com",
+    "sendingAccountId": "123456789012",
+    "messageId": "EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000",
+    "destination": [
+      "recipient@example.com"
+    ],
+    "headersTruncated": false,
+    "headers": [
+      {
+        "name": "From",
+        "value": "Sender Name <sender@example.com>"
+      },
+      {
+        "name": "To",
+        "value": "recipient@example.com"
+      },
+      {
+        "name": "Subject",
+        "value": "Message sent from Amazon SES"
+      },
+      {
+        "name": "MIME-Version",
+        "value": "1.0"
+      },
+      {
+        "name": "Content-Type",
+        "value": "multipart/alternative; boundary=\"----=_Part_7307378_1629847660.1516840721503\""
+      }
+    ],
+    "commonHeaders": {
+      "from": [
+        "Sender Name <sender@example.com>"
+      ],
+      "to": [
+        "recipient@example.com"
+      ],
+      "messageId": "EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000",
+      "subject": "Message sent from Amazon SES"
+    },
+    "tags": {
+      "ses:configuration-set": [
+        "ConfigSet"
+      ],
+      "ses:source-ip": [
+        "192.0.2.0"
+      ],
+      "ses:from-domain": [
+        "example.com"
+      ],
+      "ses:caller-identity": [
+        "ses_user"
+      ]
+    }
+  },
+  "deliveryDelay": {
+    "timestamp": "2020-06-16T00:25:40.095Z",
+    "delayType": "TransientCommunicationFailure",
+    "expirationTime": "2020-06-16T00:25:40.914Z",
+    "delayedRecipients": [
+      {
+        "emailAddress": "recipient@example.com",
+        "status": "4.4.1",
+        "diagnosticCode": "smtp; 421 4.4.1 Unable to connect to remote host"
+      }
+    ],
+    "reportingMTA": "dsn; a7-31.smtp-out.us-west-2.amazonses.com"
+  }
+}

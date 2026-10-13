@@ -68,6 +68,30 @@ RSpec.describe Sincerely::Services::Events::AwsSesEvent do
     end
   end
 
+  context 'when delivery delay event' do
+    let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/delivery_delay.json')) }
+
+    it 'returns a delivery delay event' do
+      expect(aws_ses_event).to be_a(Sincerely::Services::Events::AwsSesDeliveryDelayEvent)
+    end
+
+    it 'returns event properties' do
+      expect(aws_ses_event).to have_attributes(
+        event_type: 'delay',
+        message_id: 'EXAMPLE7c191be45-e9aedb9a-02f9-4d12-a87d-dd0099a07f8a-000000',
+        recipient: 'recipient@example.com',
+        timestamp: Time.parse('2020-06-16T00:25:40.095Z'),
+        delivery_event_type: 'TransientCommunicationFailure',
+        delivery_event_subtype: nil,
+        options: {
+          status: '4.4.1',
+          diagnostic_code: 'smtp; 421 4.4.1 Unable to connect to remote host',
+          expiration_time: '2020-06-16T00:25:40.914Z'
+        }
+      )
+    end
+  end
+
   context 'when reject event' do
     let(:event) { JSON.parse(File.read('spec/sincerely/fixtures/aws_ses_events/reject.json')) }
 

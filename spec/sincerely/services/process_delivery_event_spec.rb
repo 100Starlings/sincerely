@@ -90,6 +90,58 @@ describe Sincerely::Services::ProcessDeliveryEvent do
       end
     end
 
+    context 'when delay event' do
+      let(:event_type) { 'delay' }
+      let(:delay_options) { { status: '4.4.1', diagnostic_code: 'smtp; 421', expiration_time: timestamp } }
+      let(:notification) do
+        Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'accepted')
+      end
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: delay_options, # rubocop:disable RSpec/VerifiedDoubles
+                       delivery_event_type: 'TransientCommunicationFailure', delivery_event_subtype: nil)
+      end
+
+      it 'updates the status' do
+        expect(notification.reload.delayed?).to be true
+      end
+
+      it 'creates an event record' do
+        expect(Sincerely::DeliveryEvent.first)
+          .to(have_attributes(message_id:, delivery_system:, event_type:, recipient:, timestamp: timestamp_parsed,
+                              options: delay_options.stringify_keys,
+                              delivery_event_type: 'TransientCommunicationFailure', delivery_event_subtype: nil))
+      end
+
+      context 'when the notification is already delivered' do
+        let(:notification) do
+          Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'delivered')
+        end
+
+        it 'keeps the delivered status' do
+          expect(notification.reload.delivered?).to be true
+        end
+
+        it 'still creates an event record' do
+          expect(Sincerely::DeliveryEvent.count).to eq(1)
+        end
+      end
+    end
+
+    context 'when delivery event after a delay' do
+      let(:event_type) { 'delivery' }
+      let(:notification) do
+        Notification.create(recipient:, notification_type: 'email', message_id:, delivery_state: 'delayed')
+      end
+      let(:event) do
+        double(:event, event_type:, message_id:, recipient:, timestamp:, delivery_system:, options: nil, # rubocop:disable RSpec/VerifiedDoubles
+                       delivery_event_type: nil, delivery_event_subtype: nil)
+      end
+
+      it 'updates the status' do
+        expect(notification.reload.delivered?).to be true
+      end
+    end
+
     context 'when reject event' do
       let(:event) do
         instance_double(Sincerely::Services::Events::AwsSesRejectEvent,
